@@ -1,0 +1,33 @@
+repos:
+  # Formatação C++ com clang-format (usa seu .clang-format existente)
+  - repo: https://github.com/pre-commit/mirrors-clang-format
+    rev: v18.1.8
+    hooks:
+      - id: clang-format
+        types_or: [c++, c]
+        args: [--style=file] # respeita seu .clang-format
+
+  # Lint estático leve, roda só nos arquivos staged
+  - repo: https://github.com/pocc/pre-commit-hooks
+    rev: v1.3.5
+    hooks:
+      - id: cppcheck
+        args: [--enable=warning, performance, portability, --error-exitcode=1]
+
+  # Hooks genéricos de higiene de repo
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-added-large-files
+        args: [--maxkb=5000]
+      - id: check-merge-conflict
+      - id: mixed-line-ending
+
+  # Conventional Commits na mensagem
+  - repo: https://github.com/jorisroovers/gitlint
+    rev: v0.19.1
+    hooks:
+      - id: gitlint
+        stages: [commit-msg]

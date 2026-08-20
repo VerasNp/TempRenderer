@@ -1,0 +1,16 @@
+[general]
+regex-style-search=true
+ignore=T5,B6
+
+[title-match-regex]
+regex=^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\(.+\))?!?: .{1,88}$
+
+[title-max-length]
+line-length=100
+
+[body-max-line-length]
+line-length=100
+
+[ignore-by-title]
+regex=^Merge.*
+ignore=title-match-regex
