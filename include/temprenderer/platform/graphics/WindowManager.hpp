@@ -10,9 +10,8 @@ struct WindowProps {
   unsigned int width;
   unsigned int height;
 
-  explicit WindowProps(std::string title_ = "LeninCanvas",
-                       const unsigned int width_ = 1280,
-                       const unsigned int height_ = 768)
+  explicit WindowProps(std::string title_, const unsigned int width_,
+                       const unsigned int height_)
       : title(std::move(title_)), width(width_), height(height_) {}
 };
 class WindowManager : public ISubsystem {
@@ -23,7 +22,7 @@ public:
   void startUp() override;
   void shutDown() override;
 
-  bool createWindow(const WindowProps &props = WindowProps());
+  bool createWindow(const WindowProps &props);
   void update() const;
   bool shouldClose() const;
   [[nodiscard]] unsigned int getWidth() const { return this->width_; };

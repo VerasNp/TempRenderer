@@ -12,6 +12,7 @@ int main() {
           "engine_config.toml");
   gRendererManager.setEngineConfig(engineConfig);
   gRendererManager.startUp();
+  gRendererManager.run();
   gRendererManager.shutDown();
   gLoggerManager.shutDown();
 }

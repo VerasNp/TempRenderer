@@ -34,6 +34,7 @@ void WindowManager::shutDown() {
   LC_LOG(core::logging::LogLevel::INFO, "Shutting down Window");
   glfwDestroyWindow(static_cast<GLFWwindow *>(this->window_));
   glfwTerminate();
+  isGLFWInit = false;
 }
 
 bool WindowManager::createWindow(const WindowProps &props) {
