@@ -1,5 +1,5 @@
 #include "temprenderer/renderer/RendererManager.hpp"
-#include "temprenderer/core/config/EngineConfig.hpp"
+#include "temprenderer/core/config/ApplicationConfig.hpp"
 #include "temprenderer/core/logging/LoggerManager.hpp"
 #include "temprenderer/platform/graphics/WindowManager.hpp"
 #include <cassert>
@@ -39,7 +39,7 @@ void RendererManager::shutDown() {
 }
 
 void RendererManager::setEngineConfig(
-    const core::config::EngineConfig &config) {
+    const core::config::ApplicationConfig &config) {
   this->config_ = config;
   configSet_ = true;
 }

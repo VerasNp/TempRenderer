@@ -1,11 +1,12 @@
-#include "temprenderer/core/config/EngineConfig.hpp"
+#include "temprenderer/core/config/ApplicationConfig.hpp"
 
 #include "temprenderer/core/logging/LoggerManager.hpp"
 
 #include <toml++/toml.hpp>
 
 namespace temprenderer::core::config {
-EngineConfig EngineConfigLoader::loadFromFile(const std::string &path) {
+ApplicationConfig
+ApplicationConfigLoader::loadFromFile(const std::string &path) {
   toml::table table;
   try {
     LC_LOG(logging::LogLevel::INFO, "Loading config from " + path + "...");
@@ -15,7 +16,7 @@ EngineConfig EngineConfigLoader::loadFromFile(const std::string &path) {
     throw std::runtime_error(std::string("Erro no arquivo de config: ") +
                              err.description().data());
   }
-  EngineConfig config;
+  ApplicationConfig config;
   if (auto window = table["window"].as_table()) {
     config.window.title = (*window)["title"].value_or(config.window.title);
     config.window.width = (*window)["width"].value_or(config.window.width);

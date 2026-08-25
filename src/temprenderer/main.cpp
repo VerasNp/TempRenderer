@@ -1,18 +1,17 @@
-#include "temprenderer/core/config/EngineConfig.hpp"
+#include "temprenderer/Application.hpp"
+#include "temprenderer/core/config/ApplicationConfig.hpp"
 #include "temprenderer/core/logging/LoggerManager.hpp"
-#include "temprenderer/renderer/RendererManager.hpp"
 
 temprenderer::core::logging::LoggerManager gLoggerManager;
-temprenderer::renderer::RendererManager gRendererManager;
+temprenderer::Application gApplication;
 
 int main() {
-  gLoggerManager.startUp();
-  const temprenderer::core::config::EngineConfig engineConfig =
-      temprenderer::core::config::EngineConfigLoader::loadFromFile(
+  const temprenderer::core::config::ApplicationConfig engineConfig =
+      temprenderer::core::config::ApplicationConfigLoader::loadFromFile(
           "engine_config.toml");
-  gRendererManager.setEngineConfig(engineConfig);
-  gRendererManager.startUp();
-  gRendererManager.run();
-  gRendererManager.shutDown();
+  gLoggerManager.startUp();
+  gApplication.startUp();
+  gApplication.run();
+  gApplication.shutDown();
   gLoggerManager.shutDown();
 }

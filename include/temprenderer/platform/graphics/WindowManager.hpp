@@ -1,5 +1,10 @@
 #pragma once
 
+#ifdef API_OPENGL
+#include <glad/glad.h>
+#endif
+
+#include "GLFW/glfw3.h"
 #include "temprenderer/ISubsystem.hpp"
 
 #include <string>
@@ -27,6 +32,7 @@ public:
   bool shouldClose() const;
   [[nodiscard]] unsigned int getWidth() const { return this->width_; };
   [[nodiscard]] unsigned int getHeight() const { return this->height_; };
+  [[nodiscard]] GLFWwindow *getWindowContext();
 
 private:
   struct WindowData {
@@ -36,7 +42,7 @@ private:
   };
 
   WindowData data_;
-  void *window_ = nullptr;
+  GLFWwindow *window_ = nullptr;
   unsigned int width_ = 0;
   unsigned int height_ = 0;
 };

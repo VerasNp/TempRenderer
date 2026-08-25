@@ -9,12 +9,12 @@ struct WindowConfig {
   unsigned int height = 720;
 };
 
-struct EngineConfig {
+struct ApplicationConfig {
   WindowConfig window;
 };
 
-class EngineConfigLoader {
+class ApplicationConfigLoader {
 public:
-  static EngineConfig loadFromFile(const std::string &path);
+  static ApplicationConfig loadFromFile(const std::string &path);
 };
 } // namespace temprenderer::core::config

@@ -1,11 +1,6 @@
 #include "temprenderer/platform/graphics/WindowManager.hpp"
 #include "temprenderer/core/logging/LoggerManager.hpp"
 
-#ifdef API_OPENGL
-#include <glad/glad.h>
-#endif
-
-#include <GLFW/glfw3.h>
 #include <iostream>
 
 namespace temprenderer::platform::graphics {
@@ -55,15 +50,14 @@ bool WindowManager::createWindow(const WindowProps &props) {
   }
 
 #ifdef API_OPENGL
-  glfwMakeContextCurrent(static_cast<GLFWwindow *>(this->window_));
+  glfwMakeContextCurrent(this->window_);
   if (gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress)) ==
       0) {
     LC_LOG(core::logging::LogLevel::ERROR, "Failed to initialize GLAD");
     exit(1);
   }
   glfwSetFramebufferSizeCallback(
-      static_cast<GLFWwindow *>(this->window_),
-      [](GLFWwindow *window, const int width, const int height) {
+      this->window_, [](GLFWwindow *window, const int width, const int height) {
         glViewport(0, 0, width, height);
       });
 #endif
@@ -73,12 +67,16 @@ bool WindowManager::createWindow(const WindowProps &props) {
 
 void WindowManager::update() const {
 #ifdef API_OPENGL
-  glfwSwapBuffers(static_cast<GLFWwindow *>(this->window_));
+  glfwSwapBuffers(this->window_);
 #endif
   glfwPollEvents();
 }
 
 bool WindowManager::shouldClose() const {
-  return glfwWindowShouldClose(static_cast<GLFWwindow *>(this->window_)) != 0;
+  return glfwWindowShouldClose(this->window_) != 0;
+}
+
+GLFWwindow *WindowManager::getWindowContext() {
+  return glfwGetCurrentContext();
 }
 } // namespace temprenderer::platform::graphics
