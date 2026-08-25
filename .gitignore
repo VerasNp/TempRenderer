@@ -66,4 +66,8 @@ vcpkg_installed/
 Testing/
 .cache/
 
+# Jetbrains
 .idea
+
+# Project specific
+engine_config.toml

@@ -1,5 +1,7 @@
 Checks: >
   readability-*,
+  -modernize-use-equals-default,
+  -cppcoreguidelines-pro-type-member-init
 
 WarningsAsErrors: ''
 
