@@ -7,7 +7,6 @@ void Application::startUp() {
   if (this->isApplicationInit_) {
     return;
   }
-  this->windowManager_.startUp();
   LC_LOG(core::logging::LogLevel::INFO, "Starting application");
   this->windowManager_.startUp();
   const platform::graphics::WindowProps windowsProps{
@@ -42,8 +41,4 @@ void Application::run() {
   }
 }
 
-void Application::setWindowManager(
-    platform::graphics::WindowManager windowManager) {
-  this->windowManager_ = windowManager;
-}
 } // namespace temprenderer

@@ -29,6 +29,7 @@ file(
         "${source_dir}/temprenderer/core/config/ApplicationConfig.cpp"
         "${source_dir}/temprenderer/platform/graphics/WindowManager.cpp"
         "${source_dir}/temprenderer/renderer/RendererManager.cpp"
+        "${source_dir}/temprenderer/renderer/Canvas.cpp"
         "${source_dir}/temprenderer/Application.cpp"
         "${source_dir}/temprenderer/pd/editor/EditorManager.cpp"
 )
