@@ -10,6 +10,7 @@ int main() {
       temprenderer::core::config::ApplicationConfigLoader::loadFromFile(
           "engine_config.toml");
   gLoggerManager.startUp();
+  gApplication.setApplicationConfig(engineConfig);
   gApplication.startUp();
   gApplication.run();
   gApplication.shutDown();

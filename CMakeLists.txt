@@ -27,12 +27,14 @@ file(
         "${source_dir}/temprenderer/main.cpp"
         "${source_dir}/temprenderer/core/logging/LoggerManager.cpp"
         "${source_dir}/temprenderer/core/config/ApplicationConfig.cpp"
+        "${source_dir}/temprenderer/pd/editor/EditorManager.cpp"
         "${source_dir}/temprenderer/platform/graphics/WindowManager.cpp"
-        "${source_dir}/temprenderer/renderer/RendererManager.cpp"
+        "${source_dir}/temprenderer/renderer/Camera.cpp"
         "${source_dir}/temprenderer/renderer/Canvas.cpp"
         "${source_dir}/temprenderer/renderer/RayCastIntegrator.cpp"
+        "${source_dir}/temprenderer/renderer/RendererManager.cpp"
+        "${source_dir}/temprenderer/renderer/Sphere.cpp"
         "${source_dir}/temprenderer/Application.cpp"
-        "${source_dir}/temprenderer/pd/editor/EditorManager.cpp"
 )
 
 set(include_dir "${PROJECT_SOURCE_DIR}/include")

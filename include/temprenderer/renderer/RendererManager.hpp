@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Canvas.hpp"
 #include "temprenderer/ISubsystem.hpp"
 #include "temprenderer/core/config/ApplicationConfig.hpp"
 #include "temprenderer/platform/graphics/WindowManager.hpp"
@@ -7,19 +8,20 @@
 namespace temprenderer::renderer {
 class RendererManager : public ISubsystem {
 public:
-  RendererManager() = default;
-  ~RendererManager() override = default;
-
   void startUp() override;
   void shutDown() override;
+  void createQuad();
 
-  void setEngineConfig(const core::config::ApplicationConfig &config);
-  void run() const;
+  void compileShaders();
+  void setCanvas(const Canvas &canvas) const;
+
+  void draw() const;
 
 private:
-  platform::graphics::WindowManager window_;
-  core::config::ApplicationConfig config_{};
   bool isRendererInit_ = false;
-  bool configSet_ = false;
+  unsigned int textureId_ = 0;
+  unsigned int vao_ = 0, vbo_ = 0, ebo_ = 0;
+  unsigned int shaderProgram_ = 0;
+  unsigned int canvasWidth_ = 0, canvasHeight_ = 0;
 };
 } // namespace temprenderer::renderer

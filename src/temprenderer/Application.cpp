@@ -22,9 +22,9 @@ void Application::startUp() {
     this->isApplicationInit_ = false;
     return;
   }
-  this->editorManager_.setWindowManager(this->windowManager_);
-  this->editorManager_.startUp();
-  this->isApplicationInit_ = true;
+  // this->editorManager_.setWindowManager(this->windowManager_);
+  // this->editorManager_.startUp();
+  this->renderManager_.startUp();
 
   /**
    * SEPARAR EM CONFIGURAÇÃO A PARTIR DAQUI
@@ -33,37 +33,41 @@ void Application::startUp() {
       this->config_.camera.eye,
       this->config_.render.resolutionWidth,
       this->config_.render.resolutionHeight,
-      this->config_.render.viewportWidth,
-      this->config_.render.viewportHeight,
+      static_cast<unsigned int>(this->config_.render.viewportWidth),
+      static_cast<unsigned int>(this->config_.render.viewportHeight),
   };
-
-  scene::Sphere sphere({0, 0, -10.F}, 1.0F);
-
+  scene::Sphere sphere({0, 0, 34}, 30.0F);
   renderer::RayCastIntegrator integrator(
       camera, this->config_.render.resolutionWidth,
-      this->config_.render.resolutionHeight, core::math::Color{255, 0, 0, 1},
-      core::math::Color{100, 100, 100, 1});
+      this->config_.render.resolutionHeight, core::math::Color{255, 0, 0},
+      core::math::Color{100, 100, 100});
   renderer::Canvas canvas = integrator.render(sphere);
-
+  this->renderManager_.setCanvas(canvas);
   /**
    * ATE AQUI
    */
+  this->isApplicationInit_ = true;
 }
 
 void Application::shutDown() {
   if (!this->isApplicationInit_) {
     return;
   }
-  this->editorManager_.shutDown();
+  // this->editorManager_.shutDown();
   this->windowManager_.shutDown();
   this->isApplicationInit_ = false;
+}
+void Application::setApplicationConfig(
+    const core::config::ApplicationConfig &config) {
+  this->config_ = config;
 }
 
 void Application::run() {
   while (!this->windowManager_.shouldClose()) {
     this->windowManager_.update();
-    this->editorManager_.beginFrame();
-    this->editorManager_.endFrame();
+    // this->editorManager_.beginFrame();
+    // this->editorManager_.endFrame();
+    this->renderManager_.draw();
   }
 }
 

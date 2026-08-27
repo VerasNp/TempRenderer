@@ -14,10 +14,13 @@ public:
   void run();
   void shutDown() override;
 
+  void setApplicationConfig(const core::config::ApplicationConfig &config);
+
 private:
   bool isApplicationInit_ = false;
   platform::graphics::WindowManager windowManager_;
   pd::editor::EditorManager editorManager_;
   core::config::ApplicationConfig config_;
+  renderer::RendererManager renderManager_;
 };
 } // namespace temprenderer

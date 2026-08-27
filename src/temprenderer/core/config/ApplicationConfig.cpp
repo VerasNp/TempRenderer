@@ -23,13 +23,19 @@ ApplicationConfigLoader::loadFromFile(const std::string &path) {
     config.window.width = (*window)["width"].value_or(config.window.width);
     config.window.height = (*window)["height"].value_or(config.window.height);
   }
-
   if (auto render = table["render"].as_table()) {
     config.render.resolutionWidth =
         (*render)["resolution_width"].value_or(config.render.resolutionWidth);
-    const std::string aspectStr =
-        (*render)["aspect_ratio"].value_or(std::string("widescreen"));
-    config.render.aspectRatio = RenderConfig::stringToAspectRatio(aspectStr);
+    const auto aspectStr = (*render)["aspect_ratio"].value<std::string>();
+    if (!aspectStr) {
+      LC_LOG(logging::LogLevel::ERROR,
+             "aspect_ratio was not found or is not a string");
+      config.render.aspectRatio = AspectRatio::WIDESCREEN;
+    } else {
+      LC_LOG(logging::LogLevel::INFO, "aspect_ratio = [" + *aspectStr + "]");
+
+      config.render.aspectRatio = RenderConfig::stringToAspectRatio(*aspectStr);
+    }
     config.render.resolutionHeight = RenderConfig::calculateResolutionHeight(
         config.render.aspectRatio, config.render.resolutionWidth);
     config.render.viewportHeight =
