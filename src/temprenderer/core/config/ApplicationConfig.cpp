@@ -38,6 +38,18 @@ ApplicationConfigLoader::loadFromFile(const std::string &path) {
         config.render.resolutionWidth, config.render.resolutionHeight,
         config.render.viewportHeight);
   }
+
+  if (auto camera = table["camera"].as_table()) {
+    if (auto eyeTable = (*camera)["eye"].as_table()) {
+      kwp::Scalar x = eyeTable->get_as<double>("x")->get();
+      kwp::Scalar y = eyeTable->get_as<double>("y")->get();
+      kwp::Scalar z = eyeTable->get_as<double>("z")->get();
+      config.camera.eye = kwp::Point3{x, y, z};
+    }
+
+    config.camera.focalLength =
+        (*camera)["focal_length"].value_or(config.camera.focalLength);
+  }
   return config;
 }
 

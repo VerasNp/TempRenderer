@@ -1,5 +1,8 @@
 #include "temprenderer/Application.hpp"
 #include "temprenderer/core/logging/LoggerManager.hpp"
+#include "temprenderer/renderer/Camera.hpp"
+#include "temprenderer/renderer/RayCastIntegrator.hpp"
+#include "temprenderer/renderer/Sphere.hpp"
 
 namespace temprenderer {
 
@@ -22,6 +25,29 @@ void Application::startUp() {
   this->editorManager_.setWindowManager(this->windowManager_);
   this->editorManager_.startUp();
   this->isApplicationInit_ = true;
+
+  /**
+   * SEPARAR EM CONFIGURAÇÃO A PARTIR DAQUI
+   */
+  renderer::Camera camera{
+      this->config_.camera.eye,
+      this->config_.render.resolutionWidth,
+      this->config_.render.resolutionHeight,
+      this->config_.render.viewportWidth,
+      this->config_.render.viewportHeight,
+  };
+
+  scene::Sphere sphere({0, 0, -10.F}, 1.0F);
+
+  renderer::RayCastIntegrator integrator(
+      camera, this->config_.render.resolutionWidth,
+      this->config_.render.resolutionHeight, core::math::Color{255, 0, 0, 1},
+      core::math::Color{100, 100, 100, 1});
+  renderer::Canvas canvas = integrator.render(sphere);
+
+  /**
+   * ATE AQUI
+   */
 }
 
 void Application::shutDown() {

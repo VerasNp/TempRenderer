@@ -3,7 +3,26 @@ namespace temprenderer::renderer {
 Camera::Camera(const kwp::Point3 &eye, unsigned int resolutionWidth,
                unsigned int resolutionHeight, unsigned int imageWidth,
                unsigned int imageHeight) {
-  this->viewPortDx_ = imageWidth / resolutionWidth;
-  this->viewPortDy_ = imageWidth / resolutionWidth;
+  this->eye_ = eye;
+  this->resolutionWidth_ = resolutionWidth;
+  this->resolutionHeight_ = resolutionHeight;
+  this->viewPortPixelDx_ = imageWidth / resolutionWidth;
+  this->viewPortPixelDy_ = imageHeight / resolutionHeight;
+  this->viewPortUpperLeft_ =
+      (this->eye_ - kwp::Vec3(0, 0, this->cameraConfig_.focalLength)) -
+      (imageWidth / 2) - (imageHeight / 2);
+}
+
+core::math::Ray Camera::generateRay(unsigned int col,
+                                    unsigned int row) const noexcept {
+  const kwp::Scalar pixelXCenter = this->viewPortUpperLeft_.x +
+                                   (this->viewPortPixelDx_ / 2) +
+                                   (col * this->viewPortPixelDx_);
+  const kwp::Scalar pixelYCenter = this->viewPortUpperLeft_.y -
+                                   (this->viewPortPixelDy_ / 2) -
+                                   (row * this->viewPortPixelDy_);
+  const kwp::Scalar pixelZCenter = -this->cameraConfig_.focalLength;
+  const kwp::Point3 target{pixelXCenter, pixelYCenter, pixelZCenter};
+  return core::math::Ray(this->eye_, (target - this->eye_).normalize());
 }
 } // namespace temprenderer::renderer
