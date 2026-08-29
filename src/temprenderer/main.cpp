@@ -1,16 +1,15 @@
 #include "temprenderer/Application.hpp"
-#include "temprenderer/core/config/ApplicationConfig.hpp"
+#include "temprenderer/core/cli/CliOptions.hpp"
 #include "temprenderer/core/logging/LoggerManager.hpp"
 
 temprenderer::core::logging::LoggerManager gLoggerManager;
 temprenderer::Application gApplication;
 
-int main() {
-  const temprenderer::core::config::ApplicationConfig engineConfig =
-      temprenderer::core::config::ApplicationConfigLoader::loadFromFile(
-          "engine_config.toml");
+int main(int argc, char **argv) {
+  auto [configPath, verbose] = temprenderer::core::cli::parse(argc, argv);
+  temprenderer::core::logging::LoggerManager::setVerbose(verbose);
+  temprenderer::Application::setConfigFilePath(configPath);
   gLoggerManager.startUp();
-  gApplication.setApplicationConfig(engineConfig);
   gApplication.startUp();
   gApplication.run();
   gApplication.shutDown();

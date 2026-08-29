@@ -1,4 +1,6 @@
 #include "temprenderer/Application.hpp"
+
+#include "temprenderer/core/debug/ApplicationDebug.hpp"
 #include "temprenderer/core/logging/LoggerManager.hpp"
 #include "temprenderer/renderer/Camera.hpp"
 #include "temprenderer/renderer/RayCastIntegrator.hpp"
@@ -10,6 +12,10 @@ void Application::startUp() {
   if (this->isApplicationInit_) {
     return;
   }
+  const core::config::ApplicationConfig engineConfig =
+      core::config::ApplicationConfigLoader::loadFromFile(configFilePath);
+  this->config_ = engineConfig;
+  LC_DUMP_DIE();
   LC_LOG(core::logging::LogLevel::INFO, "Starting application");
   this->windowManager_.startUp();
   const platform::graphics::WindowProps windowsProps{

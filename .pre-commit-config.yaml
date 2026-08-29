@@ -1,3 +1,5 @@
+exclude: ^(include/glad|include/cli11)/
+
 repos:
   # Formatação C++ com clang-format (usa seu .clang-format existente)
   - repo: https://github.com/pre-commit/mirrors-clang-format

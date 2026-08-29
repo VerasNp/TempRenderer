@@ -16,11 +16,17 @@ public:
 
   void setApplicationConfig(const core::config::ApplicationConfig &config);
 
+  static void setConfigFilePath(const std::string &path) {
+    configFilePath = path;
+  };
+
 private:
   bool isApplicationInit_ = false;
   platform::graphics::WindowManager windowManager_;
   pd::editor::EditorManager editorManager_;
   core::config::ApplicationConfig config_;
   renderer::RendererManager renderManager_;
+
+  static inline std::string configFilePath;
 };
 } // namespace temprenderer

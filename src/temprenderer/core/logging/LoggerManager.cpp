@@ -9,13 +9,13 @@ static bool isLoggerInit = false;
 void LoggerManager::startUp() {
   if (!isLoggerInit) {
     isLoggerInit = true;
-    LC_LOG(LogLevel::INFO, "Starting up logger");
+    LC_LOG_VERBOSE(LogLevel::INFO, "Starting up logger");
   }
 }
 
 void LoggerManager::shutDown() {
   if (isLoggerInit) {
-    LC_LOG(LogLevel::INFO, "Shutting down logger");
+    LC_LOG_VERBOSE(LogLevel::INFO, "Shutting down logger");
     isLoggerInit = false;
   }
 }
@@ -36,9 +36,17 @@ static std::string getTimestamp() {
 }
 
 void LoggerManager::log(const LogLevel logLevel, const std::string &message) {
-  if (isLoggerInit) {
-    std::cout << "[" << getTimestamp() << "] " << levelToString(logLevel)
-              << ": " << message << "\n";
+  if (!isLoggerInit) {
+    return;
+  }
+  std::cout << "[" << getTimestamp() << "] " << levelToString(logLevel) << ": "
+            << message << "\n";
+}
+
+void LoggerManager::logVerbose(const LogLevel logLevel,
+                               const std::string &message) {
+  if (isVerbose) {
+    log(logLevel, message);
   }
 }
 
