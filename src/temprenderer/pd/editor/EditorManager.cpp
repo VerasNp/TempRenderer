@@ -3,16 +3,26 @@
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
+#include "temprenderer/core/logging/LoggerManager.hpp"
 
 namespace temprenderer::pd::editor {
 void EditorManager::startUp() {
+  if (this->isEditorInit_) {
+    return;
+  }
+  LC_LOG_VERBOSE(core::logging::LogLevel::INFO, "Starting up editor manager");
   IMGUI_CHECKVERSION();
   ImGui::CreateContext();
+  ImGui::GetIO().IniFilename = nullptr;
   ImGui_ImplGlfw_InitForOpenGL(this->windowManager_->getWindowContext(), true);
   ImGui_ImplOpenGL3_Init("#version 330");
+  this->isEditorInit_ = true;
 }
 
 void EditorManager::beginFrame() {
+  if (!this->isEditorInit_) {
+    return;
+  }
   ImGui_ImplOpenGL3_NewFrame();
   ImGui_ImplGlfw_NewFrame();
   ImGui::NewFrame();
@@ -20,14 +30,22 @@ void EditorManager::beginFrame() {
 }
 
 void EditorManager::endFrame() {
+  if (!this->isEditorInit_) {
+    return;
+  }
   ImGui::Render(); // só monta os draw commands, ainda não desenha na GPU
   ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData()); // isso sim desenha
 }
 
 void EditorManager::shutDown() {
+  if (!this->isEditorInit_) {
+    return;
+  }
+  LC_LOG_VERBOSE(core::logging::LogLevel::INFO, "Shutting down editor manager");
   ImGui_ImplOpenGL3_Shutdown();
   ImGui_ImplGlfw_Shutdown();
   ImGui::DestroyContext();
+  this->isEditorInit_ = false;
 }
 
 void EditorManager::setWindowManager(

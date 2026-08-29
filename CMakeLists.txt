@@ -14,7 +14,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_POLICY_VERSION_MINIMUM 3.5)
 
 if (NOT API_GRAPHIC)
-    set(API_GRAPHIC "opengl" CACHE STRING "Choose the Graphic API" FORCE)
+  set(API_GRAPHIC "opengl" CACHE STRING "Choose the Graphic API" FORCE)
 endif ()
 
 include(cmake/APIGraphicsDetection.cmake)
@@ -43,7 +43,7 @@ set(include_dir "${PROJECT_SOURCE_DIR}/include")
 option(temprenderer_BUILD_TESTS "Compile with tests" ON)
 
 if (NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "Escolha o tipo de build: Debug ou Release" FORCE)
+  set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "Escolha o tipo de build: Debug ou Release" FORCE)
 endif ()
 
 include(cmake/SetupExternalLibs.cmake)
@@ -68,12 +68,16 @@ target_link_libraries(${PROJECT_NAME}
 
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy
-        ${CMAKE_SOURCE_DIR}/engine_config.toml
+        ${CMAKE_SOURCE_DIR}/config.toml
         $<TARGET_FILE_DIR:${PROJECT_NAME}>
+
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_SOURCE_DIR}/shaders
+        $<TARGET_FILE_DIR:${PROJECT_NAME}>/shaders
 )
 
 
 if (temprenderer_BUILD_TESTS)
-    enable_testing()
-    add_subdirectory(tests)
+  enable_testing()
+  add_subdirectory(tests)
 endif ()

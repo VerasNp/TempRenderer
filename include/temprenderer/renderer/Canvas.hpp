@@ -19,6 +19,12 @@ public:
   [[nodiscard]] const core::math::Color *data() const noexcept {
     return pixels_.data();
   }
+  [[nodiscard]] unsigned int getRenderingWidth() const noexcept {
+    return this->renderingWidth_;
+  }
+  [[nodiscard]] unsigned int getRenderingHeight() const noexcept {
+    return this->renderingHeight_;
+  }
 
 private:
   unsigned int renderingWidth_;

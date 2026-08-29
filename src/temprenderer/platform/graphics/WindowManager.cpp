@@ -8,7 +8,7 @@ static bool isGLFWInit = false;
 
 void WindowManager::startUp() {
   if (!isGLFWInit) {
-    LC_LOG(core::logging::LogLevel::INFO, "Staring up Window");
+    LC_LOG_VERBOSE(core::logging::LogLevel::INFO, "Staring up window manager");
     if (glfwInit() == 0) {
       LC_LOG(core::logging::LogLevel::ERROR, "Failed to initialize GLFW");
       exit(1);
@@ -26,8 +26,8 @@ void WindowManager::startUp() {
 }
 
 void WindowManager::shutDown() {
-  LC_LOG(core::logging::LogLevel::INFO, "Shutting down Window");
-  glfwDestroyWindow(static_cast<GLFWwindow *>(this->window_));
+  LC_LOG_VERBOSE(core::logging::LogLevel::INFO, "Shutting down window manager");
+  glfwDestroyWindow(this->window_);
   glfwTerminate();
   isGLFWInit = false;
 }
@@ -61,15 +61,20 @@ bool WindowManager::createWindow(const WindowProps &props) {
         glViewport(0, 0, width, height);
       });
 #endif
-  LC_LOG(core::logging::LogLevel::INFO, "Created GLFW window");
+  LC_LOG_VERBOSE(core::logging::LogLevel::INFO, "Created GLFW window");
   return true;
 }
 
 void WindowManager::update() const {
 #ifdef API_OPENGL
+  glfwPollEvents();
+#endif
+}
+
+void WindowManager::swapBuffers() const {
+#ifdef API_OPENGL
   glfwSwapBuffers(this->window_);
 #endif
-  glfwPollEvents();
 }
 
 bool WindowManager::shouldClose() const {

@@ -1,16 +1,16 @@
 #include "temprenderer/renderer/Camera.hpp"
 namespace temprenderer::renderer {
 Camera::Camera(const kwp::Point3 &eye, unsigned int resolutionWidth,
-               unsigned int resolutionHeight, unsigned int imageWidth,
-               unsigned int imageHeight) {
+               unsigned int resolutionHeight, float viewportWidth,
+               float viewportHeight) {
   this->eye_ = eye;
   this->resolutionWidth_ = resolutionWidth;
   this->resolutionHeight_ = resolutionHeight;
-  this->viewPortPixelDx_ = imageWidth / resolutionWidth;
-  this->viewPortPixelDy_ = imageHeight / resolutionHeight;
+  this->viewPortPixelDx_ = viewportWidth / resolutionWidth;
+  this->viewPortPixelDy_ = viewportHeight / resolutionHeight;
   this->viewPortUpperLeft_ =
-      (this->eye_ - kwp::Vec3(0, 0, this->cameraConfig_.focalLength)) -
-      (imageWidth / 2) - (imageHeight / 2);
+      this->eye_ - kwp::Vec3(0, 0, this->cameraConfig_.focalLength) -
+      kwp::Vec3(viewportWidth / 2, 0, 0) + kwp::Vec3(0, viewportHeight / 2, 0);
 }
 
 core::math::Ray Camera::generateRay(unsigned int col,

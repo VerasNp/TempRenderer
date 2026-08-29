@@ -7,8 +7,8 @@ namespace temprenderer::renderer {
 class Camera {
 public:
   Camera(const kwp::Point3 &eye, unsigned int resolutionWidth,
-         unsigned int resolutionHeight, unsigned int imageWidth,
-         unsigned int imageHeight);
+         unsigned int resolutionHeight, float viewportWidth,
+         float viewportHeight);
 
   core::math::Ray generateRay(unsigned int col,
                               unsigned int row) const noexcept;

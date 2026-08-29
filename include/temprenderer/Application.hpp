@@ -7,9 +7,6 @@
 namespace temprenderer {
 class Application : public ISubsystem {
 public:
-  Application() = default;
-  ~Application() override = default;
-
   void startUp() override;
   void run();
   void shutDown() override;

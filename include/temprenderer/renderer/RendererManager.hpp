@@ -13,7 +13,7 @@ public:
   void createQuad();
 
   void compileShaders();
-  void setCanvas(const Canvas &canvas) const;
+  void setCanvas(const Canvas &canvas);
 
   void draw() const;
 
@@ -22,6 +22,7 @@ private:
   unsigned int textureId_ = 0;
   unsigned int vao_ = 0, vbo_ = 0, ebo_ = 0;
   unsigned int shaderProgram_ = 0;
-  unsigned int canvasWidth_ = 0, canvasHeight_ = 0;
+  unsigned int canvasWidth_ = 0;
+  unsigned int canvasHeight_ = 0;
 };
 } // namespace temprenderer::renderer

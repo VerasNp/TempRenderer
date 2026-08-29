@@ -15,8 +15,8 @@ void Application::startUp() {
   const core::config::ApplicationConfig engineConfig =
       core::config::ApplicationConfigLoader::loadFromFile(configFilePath);
   this->config_ = engineConfig;
-  LC_DUMP_DIE();
-  LC_LOG(core::logging::LogLevel::INFO, "Starting application");
+  LC_LOG_VERBOSE(core::logging::LogLevel::INFO,
+                 "Begin to start up the application");
   this->windowManager_.startUp();
   const platform::graphics::WindowProps windowsProps{
       this->config_.window.title,
@@ -28,8 +28,8 @@ void Application::startUp() {
     this->isApplicationInit_ = false;
     return;
   }
-  // this->editorManager_.setWindowManager(this->windowManager_);
-  // this->editorManager_.startUp();
+  this->editorManager_.setWindowManager(this->windowManager_);
+  this->editorManager_.startUp();
   this->renderManager_.startUp();
 
   /**
@@ -39,19 +39,19 @@ void Application::startUp() {
       this->config_.camera.eye,
       this->config_.render.resolutionWidth,
       this->config_.render.resolutionHeight,
-      static_cast<unsigned int>(this->config_.render.viewportWidth),
-      static_cast<unsigned int>(this->config_.render.viewportHeight),
+      this->config_.render.viewportWidth,
+      this->config_.render.viewportHeight,
   };
-  scene::Sphere sphere({0, 0, 34}, 30.0F);
+  scene::Sphere sphere({0, 0, -100}, 20.0F);
   renderer::RayCastIntegrator integrator(
       camera, this->config_.render.resolutionWidth,
       this->config_.render.resolutionHeight, core::math::Color{255, 0, 0},
       core::math::Color{100, 100, 100});
   renderer::Canvas canvas = integrator.render(sphere);
   this->renderManager_.setCanvas(canvas);
-  /**
-   * ATE AQUI
-   */
+  // /**
+  //  * ATE AQUI
+  //  */
   this->isApplicationInit_ = true;
 }
 
@@ -59,7 +59,10 @@ void Application::shutDown() {
   if (!this->isApplicationInit_) {
     return;
   }
-  // this->editorManager_.shutDown();
+  LC_LOG_VERBOSE(core::logging::LogLevel::INFO,
+                 "Begin to shut down the application");
+  this->renderManager_.shutDown();
+  this->editorManager_.shutDown();
   this->windowManager_.shutDown();
   this->isApplicationInit_ = false;
 }
@@ -71,9 +74,12 @@ void Application::setApplicationConfig(
 void Application::run() {
   while (!this->windowManager_.shouldClose()) {
     this->windowManager_.update();
-    // this->editorManager_.beginFrame();
-    // this->editorManager_.endFrame();
+    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     this->renderManager_.draw();
+    this->editorManager_.beginFrame();
+    this->editorManager_.endFrame();
+    this->windowManager_.swapBuffers();
   }
 }
 

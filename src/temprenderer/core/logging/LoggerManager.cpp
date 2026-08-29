@@ -9,13 +9,13 @@ static bool isLoggerInit = false;
 void LoggerManager::startUp() {
   if (!isLoggerInit) {
     isLoggerInit = true;
-    LC_LOG_VERBOSE(LogLevel::INFO, "Starting up logger");
+    LC_LOG_VERBOSE(LogLevel::INFO, "Starting up logger manager");
   }
 }
 
 void LoggerManager::shutDown() {
   if (isLoggerInit) {
-    LC_LOG_VERBOSE(LogLevel::INFO, "Shutting down logger");
+    LC_LOG_VERBOSE(LogLevel::INFO, "Shutting down logger manager");
     isLoggerInit = false;
   }
 }

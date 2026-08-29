@@ -29,6 +29,7 @@ public:
 
   bool createWindow(const WindowProps &props);
   void update() const;
+  void swapBuffers() const;
   bool shouldClose() const;
   [[nodiscard]] unsigned int getWidth() const { return this->width_; };
   [[nodiscard]] unsigned int getHeight() const { return this->height_; };
