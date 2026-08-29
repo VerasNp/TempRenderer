@@ -71,3 +71,8 @@ Testing/
 
 # Project specific
 config.toml
+
+# Doxygen
+html/
+latex/
+doxygen_sqlite3.db
