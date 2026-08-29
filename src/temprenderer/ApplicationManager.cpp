@@ -12,9 +12,6 @@ void ApplicationManager::startUp() {
   if (this->isApplicationInit_) {
     return;
   }
-  const core::config::ApplicationConfig engineConfig =
-      core::config::ApplicationConfigLoader::loadFromFile(configFilePath);
-  this->config_ = engineConfig;
   LC_LOG_VERBOSE(core::logging::LogLevel::INFO,
                  "Begin to start up the application");
   this->windowManager_.startUp();

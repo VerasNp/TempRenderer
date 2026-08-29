@@ -61,4 +61,23 @@ macro(setup_external_libs)
 
   add_library(cl11 INTERFACE)
   target_include_directories(cl11 INTERFACE include/cli11)
+
+  find_package(Doxygen)
+
+  if (DOXYGEN_FOUND)
+    set(DOXYGEN_IN ${CMAKE_SOURCE_DIR}/docs/Doxyfile.in)
+    set(DOXYGEN_OUT ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
+
+    configure_file(${DOXYGEN_IN} ${DOXYGEN_OUT} @ONLY)
+
+    add_custom_target(temprenderer_docs
+            COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_OUT}
+            WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+            COMMENT "Gerando documentacao com Doxygen"
+            VERBATIM
+    )
+
+  else ()
+    message(STATUS "Doxygen nao encontrado — target 'docs' nao sera criado")
+  endif ()
 endmacro()

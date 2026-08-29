@@ -11,7 +11,7 @@ SOURCES := $(call rwildcard,include/,*.hpp) \
            $(call rwildcard,tests/,*.cpp)
 
 .PHONY: help configure build test rebuild \
-        clean format format-check tidy compdb run
+        clean format format-check tidy compdb run docs
 
 help:
 	@echo "Comandos disponiveis:"
@@ -24,6 +24,7 @@ help:
 	@echo "  make compdb           - Recria o link compile_commands.json na raiz (para clangd)"
 	@echo "  make clean            - Remove todos os diretorios de build"
 	@echo "  make run              - Executa programa"
+	@echo "  make docs             - Gera e abre documentação da aplicação"
 
 # -----------------------------------------------------------------------------
 # Build Debug
@@ -43,7 +44,7 @@ test: build
 rebuild: clean build
 
 # -----------------------------------------------------------------------------
-# Formatacão e lint
+# Formatação e lint
 # -----------------------------------------------------------------------------
 
 format:
@@ -62,8 +63,18 @@ tidy: configure
 compdb: configure
 	ln -sf $(BUILD_DIR_DEBUG)/compile_commands.json compile_commands.json
 
+# -----------------------------------------------------------------------------
+# Executa aplicação
+# -----------------------------------------------------------------------------
 run: build
 	 ./$(TARGET) $(RUN_ARGS)
+
+# -----------------------------------------------------------------------------
+# Documentação
+# -----------------------------------------------------------------------------
+docs:
+	cmake --build build/debug --target temprenderer_docs && \
+  xdg-open build/debug/docs/html/index.html
 
 # -----------------------------------------------------------------------------
 # Limpeza

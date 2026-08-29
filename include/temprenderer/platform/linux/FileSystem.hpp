@@ -14,7 +14,7 @@ struct FileSystem {
       return "";
     }
     std::stringstream buffer;
-    buffer << fileStream.rdbuf(); // Read the entire file buffer
+    buffer << fileStream.rdbuf();
     return buffer.str();
   }
 };

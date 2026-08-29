@@ -73,6 +73,5 @@ Testing/
 config.toml
 
 # Doxygen
-html/
-latex/
-doxygen_sqlite3.db
+docs/html/
+docs/xml/

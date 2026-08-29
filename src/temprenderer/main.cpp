@@ -3,15 +3,18 @@
 #include "temprenderer/core/logging/LoggerManager.hpp"
 
 temprenderer::core::logging::LoggerManager gLoggerManager;
-temprenderer::ApplicationManager gApplication;
+temprenderer::ApplicationManager gApplicationManager;
 
 int main(int argc, char **argv) {
   auto [configPath, verbose] = temprenderer::core::cli::parse(argc, argv);
   temprenderer::core::logging::LoggerManager::setVerbose(verbose);
-  temprenderer::ApplicationManager::setConfigFilePath(configPath);
+  const temprenderer::core::config::ApplicationConfig applicationConfig =
+      temprenderer::core::config::ApplicationConfigLoader::loadFromFile(
+          configPath);
+  gApplicationManager.setApplicationConfig(applicationConfig);
   gLoggerManager.startUp();
-  gApplication.startUp();
-  gApplication.run();
-  gApplication.shutDown();
+  gApplicationManager.startUp();
+  gApplicationManager.run();
+  gApplicationManager.shutDown();
   gLoggerManager.shutDown();
 }

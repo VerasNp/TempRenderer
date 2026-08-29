@@ -17,7 +17,7 @@ if (NOT API_GRAPHIC)
   set(API_GRAPHIC "opengl" CACHE STRING "Choose the Graphic API" FORCE)
 endif ()
 
-include(cmake/APIGraphicsDetection.cmake)
+include("cmake/APIGraphicsDetection.cmake")
 set_api_graphics_detection_vars()
 
 set(source_dir "${PROJECT_SOURCE_DIR}/src/")
@@ -38,7 +38,7 @@ file(
         "${source_dir}/temprenderer/ApplicationManager.cpp"
 )
 
-set(include_dir "${PROJECT_SOURCE_DIR}/include")
+set(include_dir "${PROJECT_SOURCE_DIR}/include/temprenderer")
 
 option(temprenderer_BUILD_TESTS "Compile with tests" ON)
 
@@ -46,7 +46,7 @@ if (NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "Escolha o tipo de build: Debug ou Release" FORCE)
 endif ()
 
-include(cmake/SetupExternalLibs.cmake)
+include("cmake/SetupExternalLibs.cmake")
 setup_external_libs()
 
 add_executable(${PROJECT_NAME} ${source_files})
