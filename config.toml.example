@@ -1,0 +1,13 @@
+[window]
+title =
+width =
+height =
+
+[render]
+resolution_width =
+aspect_ratio =
+viewport_height =
+
+[camera]
+eye =
+focal_length =
