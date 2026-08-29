@@ -1,4 +1,4 @@
-#include "temprenderer/Application.hpp"
+#include "temprenderer/ApplicationManager.hpp"
 
 #include "temprenderer/core/debug/ApplicationDebug.hpp"
 #include "temprenderer/core/logging/LoggerManager.hpp"
@@ -8,7 +8,7 @@
 
 namespace temprenderer {
 
-void Application::startUp() {
+void ApplicationManager::startUp() {
   if (this->isApplicationInit_) {
     return;
   }
@@ -55,7 +55,7 @@ void Application::startUp() {
   this->isApplicationInit_ = true;
 }
 
-void Application::shutDown() {
+void ApplicationManager::shutDown() {
   if (!this->isApplicationInit_) {
     return;
   }
@@ -66,12 +66,12 @@ void Application::shutDown() {
   this->windowManager_.shutDown();
   this->isApplicationInit_ = false;
 }
-void Application::setApplicationConfig(
+void ApplicationManager::setApplicationConfig(
     const core::config::ApplicationConfig &config) {
   this->config_ = config;
 }
 
-void Application::run() {
+void ApplicationManager::run() {
   while (!this->windowManager_.shouldClose()) {
     this->windowManager_.update();
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);

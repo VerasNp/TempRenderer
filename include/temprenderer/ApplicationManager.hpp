@@ -5,7 +5,7 @@
 #include "renderer/RendererManager.hpp"
 
 namespace temprenderer {
-class Application : public ISubsystem {
+class ApplicationManager : public ISubsystem {
 public:
   void startUp() override;
   void run();

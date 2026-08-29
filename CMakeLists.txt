@@ -35,7 +35,7 @@ file(
         "${source_dir}/temprenderer/renderer/RayCastIntegrator.cpp"
         "${source_dir}/temprenderer/renderer/RendererManager.cpp"
         "${source_dir}/temprenderer/renderer/Sphere.cpp"
-        "${source_dir}/temprenderer/Application.cpp"
+        "${source_dir}/temprenderer/ApplicationManager.cpp"
 )
 
 set(include_dir "${PROJECT_SOURCE_DIR}/include")
