@@ -37,6 +37,8 @@ public:
   void setApplicationConfig(const core::config::ApplicationConfig &config);
 
 private:
+  void renderScene();
+
   bool isApplicationInit_ = false;
   platform::graphics::WindowManager windowManager_;
   pd::editor::EditorManager editorManager_;

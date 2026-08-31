@@ -19,6 +19,7 @@ void EditorManager::startUp() {
   this->isEditorInit_ = true;
 }
 
+// NOLINTNEXTLINE(readability-make-member-function-const)
 void EditorManager::beginFrame() {
   if (!this->isEditorInit_) {
     return;
@@ -26,15 +27,18 @@ void EditorManager::beginFrame() {
   ImGui_ImplOpenGL3_NewFrame();
   ImGui_ImplGlfw_NewFrame();
   ImGui::NewFrame();
-  ImGui::ShowDemoWindow();
+
+  this->mainLayout_.draw();
+  this->renderResult_.draw();
 }
 
+// NOLINTNEXTLINE(readability-make-member-function-const)
 void EditorManager::endFrame() {
   if (!this->isEditorInit_) {
     return;
   }
-  ImGui::Render(); // só monta os draw commands, ainda não desenha na GPU
-  ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData()); // isso sim desenha
+  ImGui::Render();
+  ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
 void EditorManager::shutDown() {

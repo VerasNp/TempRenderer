@@ -3,7 +3,7 @@
 
 namespace temprenderer::renderer {
 
-core::math::Color RayCastIntegrator::Li(const core::math::Ray &ray,
+core::math::Color RayCastIntegrator::li(const core::math::Ray &ray,
                                         const scene::Hittable &world) const {
   return world.intersect(ray) ? hitColor_ : backgroundColor_;
 }

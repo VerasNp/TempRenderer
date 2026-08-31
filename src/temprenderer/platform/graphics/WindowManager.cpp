@@ -4,36 +4,39 @@
 #include <iostream>
 
 namespace temprenderer::platform::graphics {
-static bool isGLFWInit = false;
 
 void WindowManager::startUp() {
-  if (!isGLFWInit) {
-    LC_LOG_VERBOSE(core::logging::LogLevel::INFO, "Staring up window manager");
-    if (glfwInit() == 0) {
-      LC_LOG(core::logging::LogLevel::ERROR, "Failed to initialize GLFW");
-      exit(1);
-    }
-#ifndef API_OPENGL
-    glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-    glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
-#else
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-#endif
-    isGLFWInit = true;
+  if (this->isWindowInit_) {
+    return;
   }
+  LC_LOG_VERBOSE(core::logging::LogLevel::INFO, "Staring up window manager");
+  if (glfwInit() == 0) {
+    LC_LOG(core::logging::LogLevel::ERROR, "Failed to initialize GLFW");
+    exit(1);
+  }
+#ifndef API_OPENGL
+  glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+  glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+#else
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+  glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+#endif
+  this->isWindowInit_ = true;
 }
 
 void WindowManager::shutDown() {
+  if (!this->isWindowInit_) {
+    return;
+  }
   LC_LOG_VERBOSE(core::logging::LogLevel::INFO, "Shutting down window manager");
   glfwDestroyWindow(this->window_);
   glfwTerminate();
-  isGLFWInit = false;
+  this->isWindowInit_ = false;
 }
 
 bool WindowManager::createWindow(const WindowProps &props) {
-  if (!isGLFWInit) {
+  if (!this->isWindowInit_) {
     LC_LOG(core::logging::LogLevel::ERROR, "GLFW not initialized");
     return false;
   }
@@ -65,23 +68,25 @@ bool WindowManager::createWindow(const WindowProps &props) {
   return true;
 }
 
+// NOLINTNEXTLINE(readability-convert-member-functions-to-static)
 void WindowManager::update() const {
-#ifdef API_OPENGL
+  if (!this->isWindowInit_) {
+    return;
+  }
   glfwPollEvents();
-#endif
 }
 
 void WindowManager::swapBuffers() const {
-#ifdef API_OPENGL
+  if (!this->isWindowInit_) {
+    return;
+  }
   glfwSwapBuffers(this->window_);
-#endif
 }
 
 bool WindowManager::shouldClose() const {
+  if (!this->isWindowInit_) {
+    return false;
+  }
   return glfwWindowShouldClose(this->window_) != 0;
-}
-
-GLFWwindow *WindowManager::getWindowContext() {
-  return glfwGetCurrentContext();
 }
 } // namespace temprenderer::platform::graphics

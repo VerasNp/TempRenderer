@@ -41,8 +41,7 @@ void logConfigVerbose(const ApplicationConfig &config) {
 
 } // namespace
 
-ApplicationConfig
-ApplicationConfigLoader::loadFromFile(const std::string &path) {
+ApplicationConfig ApplicationConfig::loadFromFile(const std::string &path) {
   toml::table table;
   try {
     LC_LOG_VERBOSE(logging::LogLevel::INFO, "Loading config from " + path);

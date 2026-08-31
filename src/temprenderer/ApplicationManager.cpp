@@ -12,8 +12,8 @@ void ApplicationManager::startUp() {
   if (this->isApplicationInit_) {
     return;
   }
-  LC_LOG_VERBOSE(core::logging::LogLevel::INFO,
-                 "Begin to start up the application");
+  LC_LOG(core::logging::LogLevel::INFO,
+         "Starting up application manager, workers working...");
   this->windowManager_.startUp();
   const platform::graphics::WindowProps windowsProps{
       this->config_.window.title,
@@ -28,27 +28,14 @@ void ApplicationManager::startUp() {
   this->editorManager_.setWindowManager(this->windowManager_);
   this->editorManager_.startUp();
   this->renderManager_.startUp();
-
-  /**
-   * SEPARAR EM CONFIGURAÇÃO A PARTIR DAQUI
-   */
-  renderer::Camera camera{
-      this->config_.camera.eye,
-      this->config_.render.resolutionWidth,
-      this->config_.render.resolutionHeight,
-      this->config_.render.viewportWidth,
-      this->config_.render.viewportHeight,
-  };
-  scene::Sphere sphere({0, 0, -100}, 20.0F);
-  renderer::RayCastIntegrator integrator(
-      camera, this->config_.render.resolutionWidth,
-      this->config_.render.resolutionHeight, core::math::Color{255, 0, 0},
-      core::math::Color{100, 100, 100});
-  renderer::Canvas canvas = integrator.render(sphere);
-  this->renderManager_.setCanvas(canvas);
-  // /**
-  //  * ATE AQUI
-  //  */
+  this->editorManager_.mainLayout().setOnRenderRequested([this]() {
+    this->renderScene();
+    this->editorManager_.renderResult().setTexture(
+        this->renderManager_.getTextureId(),
+        this->config_.render.resolutionWidth,
+        this->config_.render.resolutionHeight);
+    this->editorManager_.renderResult().open();
+  });
   this->isApplicationInit_ = true;
 }
 
@@ -67,13 +54,28 @@ void ApplicationManager::setApplicationConfig(
     const core::config::ApplicationConfig &config) {
   this->config_ = config;
 }
+void ApplicationManager::renderScene() {
+  renderer::Camera camera{
+      this->config_.camera.eye,
+      this->config_.render.resolutionWidth,
+      this->config_.render.resolutionHeight,
+      this->config_.render.viewportWidth,
+      this->config_.render.viewportHeight,
+  };
+  scene::Sphere sphere({0, 0, -100}, 20.0F);
+  renderer::RayCastIntegrator integrator(
+      camera, this->config_.render.resolutionWidth,
+      this->config_.render.resolutionHeight, core::math::Color{255, 0, 0},
+      core::math::Color{100, 100, 100});
+  renderer::Canvas canvas = integrator.render(sphere);
+  this->renderManager_.setCanvas(canvas);
+}
 
 void ApplicationManager::run() {
   while (!this->windowManager_.shouldClose()) {
     this->windowManager_.update();
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    this->renderManager_.draw();
     this->editorManager_.beginFrame();
     this->editorManager_.endFrame();
     this->windowManager_.swapBuffers();

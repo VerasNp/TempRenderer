@@ -2,10 +2,11 @@
 
 #include "Canvas.hpp"
 #include "temprenderer/ISubsystem.hpp"
-#include "temprenderer/core/config/ApplicationConfig.hpp"
-#include "temprenderer/platform/graphics/WindowManager.hpp"
 
 namespace temprenderer::renderer {
+/**
+ * @brief Displays a CPU-computed Canvas on screen.
+ */
 class RendererManager : public ISubsystem {
 public:
   void startUp() override;
@@ -16,6 +17,8 @@ public:
   void setCanvas(const Canvas &canvas);
 
   void draw() const;
+
+  [[nodiscard]] unsigned int getTextureId() const { return this->textureId_; };
 
 private:
   bool isRendererInit_ = false;

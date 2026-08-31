@@ -4,12 +4,21 @@
 #include "temprenderer/core/math/Ray.hpp"
 
 namespace temprenderer::renderer {
+/**
+ * @brief Represents the camera used to generate rays for rendering.
+ */
 class Camera {
 public:
   Camera(const kwp::Point3 &eye, unsigned int resolutionWidth,
          unsigned int resolutionHeight, float viewportWidth,
          float viewportHeight);
-
+  /**
+   * @brief Generates a ray passing through a pixel.
+   *
+   * @param col Horizontal pixel coordinate.
+   * @param row Vertical pixel coordinate.
+   * @return The ray corresponding to the specified pixel
+   */
   core::math::Ray generateRay(unsigned int col,
                               unsigned int row) const noexcept;
 
