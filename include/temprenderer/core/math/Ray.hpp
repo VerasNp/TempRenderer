@@ -22,6 +22,14 @@ public:
     return origin_ + (direction_ * t);
   }
 
+  [[nodiscard]] const kwp::Point3 &getOrigin() const noexcept {
+    return this->origin_;
+  }
+
+  [[nodiscard]] const kwp::Vec3 &getDirection() const noexcept {
+    return this->direction_;
+  }
+
 private:
   kwp::Point3 origin_;
   kwp::Vec3 direction_;

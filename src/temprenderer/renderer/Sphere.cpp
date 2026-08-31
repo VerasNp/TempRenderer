@@ -8,12 +8,13 @@ temprenderer::scene::Sphere::Sphere(const kwp::Point3 &center,
 }
 bool temprenderer::scene::Sphere::intersect(
     const core::math::Ray &ray) const noexcept {
-  const kwp::Vec3 w = (ray.origin_ - this->center_);
+  const kwp::Vec3 w = (ray.getOrigin() - this->center_);
   kwp::Scalar a = 1;
-  kwp::Scalar b = 2 * (dot(w, ray.direction_));
-  kwp::Scalar c = dot(w, w) - static_cast<kwp::Scalar>(this->radius_) *
-                                  static_cast<kwp::Scalar>(this->radius_);
-  kwp::Scalar t0, t1;
+  kwp::Scalar b = 2 * (dot(w, ray.getDirection()));
+  kwp::Scalar c = dot(w, w) - (static_cast<kwp::Scalar>(this->radius_) *
+                               static_cast<kwp::Scalar>(this->radius_));
+  kwp::Scalar t0;
+  kwp::Scalar t1;
   if (!core::math::quadratic(a, b, c, &t0, &t1)) {
     return false;
   }

@@ -1,5 +1,5 @@
 #pragma once
-#include "Canvas.hpp"
+#include "core/config/ApplicationConfig.hpp"
 #include "kwp/Point3.hpp"
 #include "temprenderer/core/math/Ray.hpp"
 

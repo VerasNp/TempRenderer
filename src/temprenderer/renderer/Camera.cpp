@@ -1,4 +1,5 @@
 #include "temprenderer/renderer/Camera.hpp"
+
 namespace temprenderer::renderer {
 Camera::Camera(const kwp::Point3 &eye, unsigned int resolutionWidth,
                unsigned int resolutionHeight, float viewportWidth,
