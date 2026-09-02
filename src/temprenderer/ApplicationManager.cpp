@@ -56,7 +56,7 @@ void ApplicationManager::setApplicationConfig(
 }
 void ApplicationManager::renderScene() {
   renderer::Camera camera{
-      this->config_.camera.eye,
+      this->config_.scene.camera.eye,
       this->config_.render.resolutionWidth,
       this->config_.render.resolutionHeight,
       this->config_.render.viewportWidth,

@@ -5,6 +5,8 @@
 
 #include <kwp/kwp_config.hpp>
 #include <string>
+#include <variant>
+#include <vector>
 
 namespace temprenderer::core::config {
 enum class AspectRatio { WIDESCREEN, STANDARD, ULTRAWIDE };
@@ -108,6 +110,37 @@ struct CameraConfig {
   kwp::Scalar focalLength = 1.0F;
 };
 
+struct LightConfig {
+  kwp::Point3 position{0, 0, 0};
+};
+
+enum class ObjectType { SPHERE, OBJECT };
+
+struct SphereConfig {
+  kwp::Point3 position{0, 0, 0};
+  float radius = 1.0F;
+};
+
+struct ColorConfig {
+  int r = 255;
+  int g = 255;
+  int b = 255;
+};
+
+struct ObjectConfig {
+  ObjectType type = ObjectType::OBJECT;
+  std::variant<SphereConfig> props;
+  ColorConfig color;
+
+  static ObjectType stringToObjectType(const std::string &type) noexcept;
+};
+
+struct SceneConfig {
+  CameraConfig camera;
+  LightConfig light;
+  std::vector<ObjectConfig> objects;
+};
+
 /**
  * @brief General application config
  */
@@ -121,9 +154,9 @@ struct ApplicationConfig {
    */
   RenderConfig render;
   /**
-   * Camera configs
+   * Scene config
    */
-  CameraConfig camera;
+  SceneConfig scene;
 
   /**
    * @brief Loads application config from file

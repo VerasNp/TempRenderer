@@ -1,4 +1,6 @@
 #include "temprenderer/core/config/ApplicationConfig.hpp"
+
+#include "core/debug/ApplicationDebug.hpp"
 #include "temprenderer/core/logging/LoggerManager.hpp"
 
 #include <format>
@@ -35,8 +37,24 @@ void logConfigVerbose(const ApplicationConfig &config) {
                   config.render.resolutionHeight,
                   RenderConfig::aspectRatioToScalar(config.render.aspectRatio),
                   config.render.viewportWidth, config.render.viewportHeight,
-                  config.camera.eye.x, config.camera.eye.y, config.camera.eye.z,
-                  config.camera.focalLength));
+                  config.scene.camera.eye.x, config.scene.camera.eye.y,
+                  config.scene.camera.eye.z, config.scene.camera.focalLength));
+}
+
+void loadPosition3DData(const toml::table &table) {
+  // kwp::Point3 position;
+  // auto *const xNode = table.get_as<double>("x");
+  // auto *const yNode = table.get_as<double>("y");
+  // auto *const zNode = table.get_as<double>("z");
+  // if (xNode == nullptr || yNode == nullptr || zNode == nullptr) {
+  //   LC_LOG(logging::LogLevel::ERROR,
+  //          "light.position: 'x', 'y' or 'z' missing or not a float, "
+  //          "keeping default eye position");
+  // } else {
+  //   position = kwp::Point3{static_cast<float>(xNode->get()),
+  //                          static_cast<float>(yNode->get()),
+  //                          static_cast<float>(zNode->get())};
+  // }
 }
 
 } // namespace
@@ -86,26 +104,67 @@ ApplicationConfig ApplicationConfig::loadFromFile(const std::string &path) {
       LC_LOG_VERBOSE(logging::LogLevel::INFO,
                      "Render config loaded successfully");
     }
-    if (auto *const camera = table["camera"].as_table()) {
-      LC_LOG_VERBOSE(logging::LogLevel::INFO, "Loading camera config");
-      if (auto *const eyeTable = (*camera)["eye"].as_table()) {
-        auto *const xNode = eyeTable->get_as<double>("x");
-        auto *const yNode = eyeTable->get_as<double>("y");
-        auto *const zNode = eyeTable->get_as<double>("z");
-        if (xNode == nullptr || yNode == nullptr || zNode == nullptr) {
-          LC_LOG(logging::LogLevel::ERROR,
-                 "camera.eye: 'x', 'y' or 'z' missing or not a float, "
-                 "keeping default eye position");
-        } else {
-          config.camera.eye = kwp::Point3{static_cast<float>(xNode->get()),
-                                          static_cast<float>(yNode->get()),
-                                          static_cast<float>(zNode->get())};
+    if (auto *const scene = table["scene"].as_table()) {
+      LC_LOG_VERBOSE(logging::LogLevel::INFO, "Loading scene config");
+      if (auto *const camera = (*scene)["camera"].as_table()) {
+        LC_LOG_VERBOSE(logging::LogLevel::INFO, "Loading camera config");
+        if (auto *const eyeTable = (*camera)["eye"].as_table()) {
+          auto *const xNode = eyeTable->get_as<double>("x");
+          auto *const yNode = eyeTable->get_as<double>("y");
+          auto *const zNode = eyeTable->get_as<double>("z");
+          if (xNode == nullptr || yNode == nullptr || zNode == nullptr) {
+            LC_LOG(logging::LogLevel::ERROR,
+                   "camera.eye: 'x', 'y' or 'z' missing or not a float, "
+                   "keeping default eye position");
+          } else {
+            config.scene.camera.eye =
+                kwp::Point3{static_cast<float>(xNode->get()),
+                            static_cast<float>(yNode->get()),
+                            static_cast<float>(zNode->get())};
+          }
         }
+        config.scene.camera.focalLength =
+            (*camera)["focal_length"].value_or(config.scene.camera.focalLength);
+        LC_LOG_VERBOSE(logging::LogLevel::INFO,
+                       "Camera config loaded successfully");
       }
-      config.camera.focalLength =
-          (*camera)["focal_length"].value_or(config.camera.focalLength);
-      LC_LOG_VERBOSE(logging::LogLevel::INFO,
-                     "Camera config loaded successfully");
+      if (auto *const light = (*scene)["light"].as_table()) {
+        LC_LOG_VERBOSE(logging::LogLevel::INFO, "Loading light config");
+        if (auto *const eyeTable = (*light)["position"].as_table()) {
+          auto *const xNode = eyeTable->get_as<double>("x");
+          auto *const yNode = eyeTable->get_as<double>("y");
+          auto *const zNode = eyeTable->get_as<double>("z");
+          if (xNode == nullptr || yNode == nullptr || zNode == nullptr) {
+            LC_LOG(logging::LogLevel::ERROR,
+                   "light.position: 'x', 'y' or 'z' missing or not a float, "
+                   "keeping default eye position");
+          } else {
+            config.scene.light.position =
+                kwp::Point3{static_cast<float>(xNode->get()),
+                            static_cast<float>(yNode->get()),
+                            static_cast<float>(zNode->get())};
+          }
+        }
+        LC_LOG_VERBOSE(logging::LogLevel::INFO,
+                       "Light config loaded successfully");
+      }
+      if (auto *const objects = (*scene)["objects"].as_array()) {
+        LC_LOG_VERBOSE(logging::LogLevel::INFO, "Loading objects config");
+        config.scene.objects.resize(objects->size());
+        for (int i = 0; i < objects->size(); ++i) {
+          auto *const object = (*objects)[i].as_table();
+          auto type = (*object)["type"].value<std::string>();
+          config.scene.objects[i].type =
+              ObjectConfig::stringToObjectType(type.value());
+          auto *props = (*object)["props"].as_table();
+          setObjectProps(type, props);
+          // if (auto *const position = table["position"].as_table()) {
+          //   config.scene.objects[i].props(*props);
+          // }
+        }
+        LC_LOG_VERBOSE(logging::LogLevel::INFO,
+                       "Objects config loaded successfully");
+      }
     }
   } catch (const std::exception &err) {
     LC_LOG(logging::LogLevel::ERROR,
@@ -162,6 +221,14 @@ float RenderConfig::calculateViewportWidth(
     const float viewportHeight) noexcept {
   return viewportHeight *
          (static_cast<float>(resolutionWidth) / resolutionHeight);
+}
+
+ObjectType
+ObjectConfig::stringToObjectType(const std::string &objectType) noexcept {
+  if (objectType == "sphere") {
+    return ObjectType::SPHERE;
+  }
+  return ObjectType::OBJECT;
 }
 
 } // namespace temprenderer::core::config
