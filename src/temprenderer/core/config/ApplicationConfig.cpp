@@ -41,20 +41,46 @@ void logConfigVerbose(const ApplicationConfig &config) {
                   config.scene.camera.eye.z, config.scene.camera.focalLength));
 }
 
-void loadPosition3DData(const toml::table &table) {
-  // kwp::Point3 position;
-  // auto *const xNode = table.get_as<double>("x");
-  // auto *const yNode = table.get_as<double>("y");
-  // auto *const zNode = table.get_as<double>("z");
-  // if (xNode == nullptr || yNode == nullptr || zNode == nullptr) {
-  //   LC_LOG(logging::LogLevel::ERROR,
-  //          "light.position: 'x', 'y' or 'z' missing or not a float, "
-  //          "keeping default eye position");
-  // } else {
-  //   position = kwp::Point3{static_cast<float>(xNode->get()),
-  //                          static_cast<float>(yNode->get()),
-  //                          static_cast<float>(zNode->get())};
-  // }
+kwp::Point3 loadPosition3DData(const toml::table &table) {
+  kwp::Point3 position;
+  auto *const xNode = table.get_as<double>("x");
+  auto *const yNode = table.get_as<double>("y");
+  auto *const zNode = table.get_as<double>("z");
+  if (xNode == nullptr || yNode == nullptr || zNode == nullptr) {
+    LC_LOG(logging::LogLevel::ERROR,
+           "position: 'x', 'y' or 'z' missing or not a float, "
+           "keeping default eye position");
+  } else {
+    position = kwp::Point3{static_cast<float>(xNode->get()),
+                           static_cast<float>(yNode->get()),
+                           static_cast<float>(zNode->get())};
+  }
+  return position;
+}
+
+ColorConfig loadRGBData(const toml::table &table) {
+  ColorConfig color;
+  auto rNode = table["r"].value_or<int>(INFINITY);
+  auto gNode = table["g"].value_or<int>(INFINITY);
+  auto bNode = table["b"].value_or<int>(INFINITY);
+  if (rNode == INFINITY || gNode == INFINITY || bNode == INFINITY) {
+    LC_LOG(logging::LogLevel::ERROR,
+           "rgb: 'r', 'g' or 'b' missing or not a float, "
+           "keeping default eye position");
+  } else {
+    color = ColorConfig{.r = rNode, .g = gNode, .b = bNode};
+  }
+  return color;
+}
+
+void setObjectProps(ObjectConfig &object, const toml::table &table) {
+  if (object.type == ObjectType::SPHERE) {
+    if (auto *const position = table["position"].as_table()) {
+      get<SphereConfig>(object.props).position = loadPosition3DData(*position);
+    }
+    get<SphereConfig>(object.props).radius =
+        table["radius"].value_or(get<SphereConfig>(object.props).radius);
+  }
 }
 
 } // namespace
@@ -157,10 +183,9 @@ ApplicationConfig ApplicationConfig::loadFromFile(const std::string &path) {
           config.scene.objects[i].type =
               ObjectConfig::stringToObjectType(type.value());
           auto *props = (*object)["props"].as_table();
-          setObjectProps(type, props);
-          // if (auto *const position = table["position"].as_table()) {
-          //   config.scene.objects[i].props(*props);
-          // }
+          setObjectProps(config.scene.objects[i], *props);
+          auto *color = (*object)["color"].as_table();
+          config.scene.objects[i].color = loadRGBData(*color);
         }
         LC_LOG_VERBOSE(logging::LogLevel::INFO,
                        "Objects config loaded successfully");

@@ -1,13 +1,23 @@
 [window]
-title =
-width =
-height =
+title = "TempRenderer"
+width = 800
+height = 600
 
 [render]
-resolution_width =
-aspect_ratio =
-viewport_height =
+resolution_width = 800
+aspect_ratio = "4:3"
+viewport_height = 2
 
-[camera]
-eye =
-focal_length =
+[scene]
+
+[scene.camera]
+eye = { x = 0.0, y = 0.0, z = 0.0 }
+focal_length = 4
+
+[scene.light]
+position = { x = 0.0 , y = 5.0 , z = 0.0 }
+
+[[scene.objects]]
+type = "sphere"
+props = { position = { x = 0.0 , y = 0.0 , z = -100.0 }, radius = 20.0 }
+color = { r = 255, g = 0, b = 0 }
