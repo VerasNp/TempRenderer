@@ -1,5 +1,6 @@
 #include "temprenderer/ApplicationManager.hpp"
 
+#include "scene/SceneComposer.hpp"
 #include "temprenderer/core/debug/ApplicationDebug.hpp"
 #include "temprenderer/core/logging/LoggerManager.hpp"
 #include "temprenderer/renderer/Camera.hpp"
@@ -28,6 +29,14 @@ void ApplicationManager::startUp() {
   this->editorManager_.setWindowManager(this->windowManager_);
   this->editorManager_.startUp();
   this->renderManager_.startUp();
+  this->scene_ = scene::SceneComposer::compose(this->config_.scene);
+  this->camera_ = renderer::Camera{
+      this->config_.camera.eye,
+      this->config_.render.resolutionWidth,
+      this->config_.render.resolutionHeight,
+      this->config_.render.viewportWidth,
+      this->config_.render.viewportHeight,
+  };
   this->editorManager_.mainLayout().setOnRenderRequested([this]() {
     this->renderScene();
     this->editorManager_.renderResult().setTexture(
@@ -55,19 +64,10 @@ void ApplicationManager::setApplicationConfig(
   this->config_ = config;
 }
 void ApplicationManager::renderScene() {
-  renderer::Camera camera{
-      this->config_.scene.camera.eye,
-      this->config_.render.resolutionWidth,
-      this->config_.render.resolutionHeight,
-      this->config_.render.viewportWidth,
-      this->config_.render.viewportHeight,
-  };
-  scene::Sphere sphere({0, 0, -100}, 20.0F);
   renderer::RayCastIntegrator integrator(
-      camera, this->config_.render.resolutionWidth,
-      this->config_.render.resolutionHeight, core::math::Color{255, 0, 0},
-      core::math::Color{100, 100, 100});
-  renderer::Canvas canvas = integrator.render(sphere);
+      this->camera_.value(), this->config_.render.resolutionWidth,
+      this->config_.render.resolutionHeight, core::math::Color{100, 100, 100});
+  renderer::Canvas canvas = integrator.render(this->scene_);
   this->renderManager_.setCanvas(canvas);
 }
 

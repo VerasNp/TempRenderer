@@ -4,7 +4,11 @@
 #include "core/config/ApplicationConfig.hpp"
 #include "pd/editor/EditorManager.hpp"
 #include "platform/graphics/WindowManager.hpp"
+#include "renderer/Camera.hpp"
 #include "renderer/RendererManager.hpp"
+#include "scene/Scene.hpp"
+
+#include <optional>
 
 namespace temprenderer {
 /**
@@ -44,5 +48,7 @@ private:
   pd::editor::EditorManager editorManager_;
   core::config::ApplicationConfig config_;
   renderer::RendererManager renderManager_;
+  scene::Scene scene_;
+  std::optional<renderer::Camera> camera_;
 };
 } // namespace temprenderer

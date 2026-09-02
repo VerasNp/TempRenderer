@@ -35,6 +35,7 @@ file(
         "${source_dir}/temprenderer/renderer/RayCastIntegrator.cpp"
         "${source_dir}/temprenderer/renderer/RendererManager.cpp"
         "${source_dir}/temprenderer/renderer/Sphere.cpp"
+        "${source_dir}/temprenderer/scene/SceneComposer.cpp"
         "${source_dir}/temprenderer/ApplicationManager.cpp"
 )
 

@@ -5,12 +5,12 @@
 int main(int argc, char **argv) {
   temprenderer::core::logging::LoggerManager gLoggerManager;
   temprenderer::ApplicationManager gApplicationManager;
+  gLoggerManager.startUp();
   auto [configPath, verbose] = temprenderer::core::cli::parse(argc, argv);
   temprenderer::core::logging::LoggerManager::setVerbose(verbose);
   const temprenderer::core::config::ApplicationConfig applicationConfig =
       temprenderer::core::config::ApplicationConfig::loadFromFile(configPath);
   gApplicationManager.setApplicationConfig(applicationConfig);
-  gLoggerManager.startUp();
   gApplicationManager.startUp();
   gApplicationManager.run();
   gApplicationManager.shutDown();

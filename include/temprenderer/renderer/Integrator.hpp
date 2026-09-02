@@ -1,6 +1,6 @@
 #pragma once
 #include "temprenderer/renderer/Canvas.hpp"
-#include "temprenderer/scene/Hittable.hpp"
+#include "temprenderer/scene/Scene.hpp"
 
 namespace temprenderer::renderer {
 /**
@@ -13,10 +13,10 @@ public:
   /**
    * @brief Renders the given scene into a fully resolved Canvas.
    *
-   * @param world The scene to render against
+   * @param scene The scene to render against
    * @return A Canvas containing the resolved color of every pixel.
    */
-  [[nodiscard]] virtual Canvas render(const scene::Hittable &world) = 0;
+  [[nodiscard]] virtual Canvas render(const scene::Scene &scene) = 0;
 };
 
 } // namespace temprenderer::renderer

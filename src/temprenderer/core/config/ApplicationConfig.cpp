@@ -1,6 +1,4 @@
 #include "temprenderer/core/config/ApplicationConfig.hpp"
-
-#include "core/debug/ApplicationDebug.hpp"
 #include "temprenderer/core/logging/LoggerManager.hpp"
 
 #include <format>
@@ -12,7 +10,31 @@
 namespace temprenderer::core::config {
 
 namespace {
+std::string formatObjectConfig(const ObjectConfig &obj, size_t index) {
+  std::string propsStr = std::visit(
+      []<typename T0>(const T0 &props) -> std::string {
+        using T = std::decay_t<T0>;
+        if constexpr (std::is_same_v<T, SphereConfig>) {
+          return std::format("pos=({:.1f}, {:.1f}, {:.1f}) radius={:.1f}",
+                             props.position.x, props.position.y,
+                             props.position.z, props.radius);
+        } else {
+          return "props=<unknown>";
+        }
+      },
+      obj.props);
+
+  return std::format("  [{}] type={} {} color=({}, {}, {})\n", index,
+                     static_cast<int>(obj.type), propsStr, obj.color.r,
+                     obj.color.g, obj.color.b);
+}
+
 void logConfigVerbose(const ApplicationConfig &config) {
+  std::string objectsStr;
+  for (size_t i = 0; i < config.scene.objects.size(); ++i) {
+    objectsStr += formatObjectConfig(config.scene.objects[i], i);
+  }
+
   LC_LOG_VERBOSE(
       logging::LogLevel::INFO,
       std::format("\n===== ApplicationConfig (verbose) =====\n"
@@ -31,14 +53,20 @@ void logConfigVerbose(const ApplicationConfig &config) {
                   "  eye.y        = {}\n"
                   "  eye.z        = {}\n"
                   "  focal_length = {}\n"
+                  "[scene.light]\n"
+                  "  position = ({}, {}, {})\n"
+                  "[scene.objects] ({} total)\n"
+                  "{}"
                   "========================================",
                   config.window.title, config.window.width,
                   config.window.height, config.render.resolutionWidth,
                   config.render.resolutionHeight,
                   RenderConfig::aspectRatioToScalar(config.render.aspectRatio),
                   config.render.viewportWidth, config.render.viewportHeight,
-                  config.scene.camera.eye.x, config.scene.camera.eye.y,
-                  config.scene.camera.eye.z, config.scene.camera.focalLength));
+                  config.camera.eye.x, config.camera.eye.y, config.camera.eye.z,
+                  config.camera.focalLength, config.scene.light.position.x,
+                  config.scene.light.position.y, config.scene.light.position.z,
+                  config.scene.objects.size(), objectsStr));
 }
 
 kwp::Point3 loadPosition3DData(const toml::table &table) {
@@ -58,17 +86,17 @@ kwp::Point3 loadPosition3DData(const toml::table &table) {
   return position;
 }
 
-ColorConfig loadRGBData(const toml::table &table) {
-  ColorConfig color;
-  auto rNode = table["r"].value_or<int>(INFINITY);
-  auto gNode = table["g"].value_or<int>(INFINITY);
-  auto bNode = table["b"].value_or<int>(INFINITY);
+math::Color loadRGBData(const toml::table &table) {
+  math::Color color = {};
+  auto rNode = table["r"].value_or<uint8_t>(INFINITY);
+  auto gNode = table["g"].value_or<uint8_t>(INFINITY);
+  auto bNode = table["b"].value_or<uint8_t>(INFINITY);
   if (rNode == INFINITY || gNode == INFINITY || bNode == INFINITY) {
     LC_LOG(logging::LogLevel::ERROR,
            "rgb: 'r', 'g' or 'b' missing or not a float, "
            "keeping default eye position");
   } else {
-    color = ColorConfig{.r = rNode, .g = gNode, .b = bNode};
+    color = math::Color{.r = rNode, .g = gNode, .b = bNode};
   }
   return color;
 }
@@ -130,30 +158,29 @@ ApplicationConfig ApplicationConfig::loadFromFile(const std::string &path) {
       LC_LOG_VERBOSE(logging::LogLevel::INFO,
                      "Render config loaded successfully");
     }
+    if (auto *const camera = table["camera"].as_table()) {
+      LC_LOG_VERBOSE(logging::LogLevel::INFO, "Loading camera config");
+      if (auto *const eyeTable = (*camera)["eye"].as_table()) {
+        auto *const xNode = eyeTable->get_as<double>("x");
+        auto *const yNode = eyeTable->get_as<double>("y");
+        auto *const zNode = eyeTable->get_as<double>("z");
+        if (xNode == nullptr || yNode == nullptr || zNode == nullptr) {
+          LC_LOG(logging::LogLevel::ERROR,
+                 "camera.eye: 'x', 'y' or 'z' missing or not a float, "
+                 "keeping default eye position");
+        } else {
+          config.camera.eye = kwp::Point3{static_cast<float>(xNode->get()),
+                                          static_cast<float>(yNode->get()),
+                                          static_cast<float>(zNode->get())};
+        }
+      }
+      config.camera.focalLength =
+          (*camera)["focal_length"].value_or(config.camera.focalLength);
+      LC_LOG_VERBOSE(logging::LogLevel::INFO,
+                     "Camera config loaded successfully");
+    }
     if (auto *const scene = table["scene"].as_table()) {
       LC_LOG_VERBOSE(logging::LogLevel::INFO, "Loading scene config");
-      if (auto *const camera = (*scene)["camera"].as_table()) {
-        LC_LOG_VERBOSE(logging::LogLevel::INFO, "Loading camera config");
-        if (auto *const eyeTable = (*camera)["eye"].as_table()) {
-          auto *const xNode = eyeTable->get_as<double>("x");
-          auto *const yNode = eyeTable->get_as<double>("y");
-          auto *const zNode = eyeTable->get_as<double>("z");
-          if (xNode == nullptr || yNode == nullptr || zNode == nullptr) {
-            LC_LOG(logging::LogLevel::ERROR,
-                   "camera.eye: 'x', 'y' or 'z' missing or not a float, "
-                   "keeping default eye position");
-          } else {
-            config.scene.camera.eye =
-                kwp::Point3{static_cast<float>(xNode->get()),
-                            static_cast<float>(yNode->get()),
-                            static_cast<float>(zNode->get())};
-          }
-        }
-        config.scene.camera.focalLength =
-            (*camera)["focal_length"].value_or(config.scene.camera.focalLength);
-        LC_LOG_VERBOSE(logging::LogLevel::INFO,
-                       "Camera config loaded successfully");
-      }
       if (auto *const light = (*scene)["light"].as_table()) {
         LC_LOG_VERBOSE(logging::LogLevel::INFO, "Loading light config");
         if (auto *const eyeTable = (*light)["position"].as_table()) {

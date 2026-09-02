@@ -2,12 +2,14 @@
 #include "temprenderer/core/math/utils.hpp"
 namespace temprenderer::renderer {} // namespace temprenderer::renderer
 temprenderer::scene::Sphere::Sphere(const kwp::Point3 &center,
-                                    kwp::Scalar radius) noexcept {
+                                    kwp::Scalar radius,
+                                    core::math::Color color) noexcept {
   this->radius_ = radius;
   this->center_ = center;
+  this->color_ = color;
 }
 bool temprenderer::scene::Sphere::intersect(
-    const core::math::Ray &ray) const noexcept {
+    const core::math::Ray &ray, SurfaceInteraction *isec) const noexcept {
   const kwp::Vec3 w = (ray.getOrigin() - this->center_);
   kwp::Scalar a = 1;
   kwp::Scalar b = 2 * (dot(w, ray.getDirection()));
@@ -24,5 +26,7 @@ bool temprenderer::scene::Sphere::intersect(
       return false;
     }
   }
+  isec->point = ray(t0);
+  isec->color = color_;
   return true;
 }

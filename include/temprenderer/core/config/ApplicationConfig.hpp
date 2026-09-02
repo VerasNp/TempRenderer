@@ -1,5 +1,6 @@
 #pragma once
 
+#include "core/math/Color.hpp"
 #include "kwp/Point3.hpp"
 #include "kwp/Vec3.hpp"
 
@@ -121,22 +122,15 @@ struct SphereConfig {
   float radius = 1.0F;
 };
 
-struct ColorConfig {
-  int r = 255;
-  int g = 255;
-  int b = 255;
-};
-
 struct ObjectConfig {
   ObjectType type = ObjectType::OBJECT;
   std::variant<SphereConfig> props;
-  ColorConfig color;
+  math::Color color;
 
   static ObjectType stringToObjectType(const std::string &type) noexcept;
 };
 
 struct SceneConfig {
-  CameraConfig camera;
   LightConfig light;
   std::vector<ObjectConfig> objects;
 };
@@ -153,6 +147,10 @@ struct ApplicationConfig {
    * Render configs
    */
   RenderConfig render;
+  /**
+   * Camera config
+   */
+  CameraConfig camera;
   /**
    * Scene config
    */
