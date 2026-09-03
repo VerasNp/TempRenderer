@@ -1,6 +1,7 @@
 #pragma once
 #include "Hittable.hpp"
 #include "renderer/Camera.hpp"
+#include "renderer/Light.hpp"
 
 #include <memory>
 #include <vector>
@@ -32,8 +33,16 @@ public:
     return hitAnything;
   }
 
+  [[nodiscard]] std::shared_ptr<renderer::Light> getLight() const {
+    return this->light_;
+  }
+
+  void setLight(const std::shared_ptr<renderer::Light> &light) {
+    this->light_ = light;
+  };
+
 private:
-  // std::shared_ptr<Light> light_;
+  std::shared_ptr<renderer::Light> light_;
   std::vector<std::shared_ptr<Hittable>> objects_;
 };
 } // namespace temprenderer::scene
