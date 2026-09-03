@@ -29,7 +29,7 @@ void ApplicationManager::startUp() {
   this->editorManager_.setWindowManager(this->windowManager_);
   this->editorManager_.startUp();
   this->renderManager_.startUp();
-  this->scene_ = scene::SceneComposer::compose(this->config_.scene);
+  // this->scene_ = scene::SceneComposer::compose(this->config_.scene);
   this->camera_ = renderer::Camera{
       this->config_.camera.eye,
       this->config_.render.resolutionWidth,

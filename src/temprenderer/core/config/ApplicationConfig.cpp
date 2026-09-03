@@ -10,106 +10,64 @@
 namespace temprenderer::core::config {
 
 namespace {
-std::string formatObjectConfig(const ObjectConfig &obj, size_t index) {
-  std::string propsStr = std::visit(
-      []<typename T0>(const T0 &props) -> std::string {
-        using T = std::decay_t<T0>;
-        if constexpr (std::is_same_v<T, SphereConfig>) {
-          return std::format("pos=({:.1f}, {:.1f}, {:.1f}) radius={:.1f}",
-                             props.position.x, props.position.y,
-                             props.position.z, props.radius);
-        } else {
-          return "props=<unknown>";
-        }
-      },
-      obj.props);
+// std::string formatObjectConfig(const ObjectConfig &obj, size_t index) {
+//   std::string propsStr = std::visit(
+//       []<typename T0>(const T0 &props) -> std::string {
+//         using T = std::decay_t<T0>;
+//         if constexpr (std::is_same_v<T, SphereConfig>) {
+//           return std::format("pos=({:.1f}, {:.1f}, {:.1f}) radius={:.1f}",
+//                              props.position.x, props.position.y,
+//                              props.position.z, props.radius);
+//         } else {
+//           return "props=<unknown>";
+//         }
+//       },
+//       obj.props);
+//
+//   return std::format("  [{}] type={} {} color=({}, {}, {})\n", index,
+//                      static_cast<int>(obj.type), propsStr, obj.color.r,
+//                      obj.color.g, obj.color.b);
+// }
 
-  return std::format("  [{}] type={} {} color=({}, {}, {})\n", index,
-                     static_cast<int>(obj.type), propsStr, obj.color.r,
-                     obj.color.g, obj.color.b);
-}
-
-void logConfigVerbose(const ApplicationConfig &config) {
-  std::string objectsStr;
-  for (size_t i = 0; i < config.scene.objects.size(); ++i) {
-    objectsStr += formatObjectConfig(config.scene.objects[i], i);
-  }
-
-  LC_LOG_VERBOSE(
-      logging::LogLevel::INFO,
-      std::format("\n===== ApplicationConfig (verbose) =====\n"
-                  "[window]\n"
-                  "  title  = {}\n"
-                  "  width  = {}\n"
-                  "  height = {}\n"
-                  "[render]\n"
-                  "  resolution_width  = {}\n"
-                  "  resolution_height = {}\n"
-                  "  aspect_ratio      = {}\n"
-                  "  viewport_width    = {}\n"
-                  "  viewport_height   = {}\n"
-                  "[camera]\n"
-                  "  eye.x        = {}\n"
-                  "  eye.y        = {}\n"
-                  "  eye.z        = {}\n"
-                  "  focal_length = {}\n"
-                  "[scene.light]\n"
-                  "  position = ({}, {}, {})\n"
-                  "[scene.objects] ({} total)\n"
-                  "{}"
-                  "========================================",
-                  config.window.title, config.window.width,
-                  config.window.height, config.render.resolutionWidth,
-                  config.render.resolutionHeight,
-                  RenderConfig::aspectRatioToScalar(config.render.aspectRatio),
-                  config.render.viewportWidth, config.render.viewportHeight,
-                  config.camera.eye.x, config.camera.eye.y, config.camera.eye.z,
-                  config.camera.focalLength, config.scene.light.position.x,
-                  config.scene.light.position.y, config.scene.light.position.z,
-                  config.scene.objects.size(), objectsStr));
-}
-
-kwp::Point3 loadPosition3DData(const toml::table &table) {
-  kwp::Point3 position;
-  auto *const xNode = table.get_as<double>("x");
-  auto *const yNode = table.get_as<double>("y");
-  auto *const zNode = table.get_as<double>("z");
-  if (xNode == nullptr || yNode == nullptr || zNode == nullptr) {
-    LC_LOG(logging::LogLevel::ERROR,
-           "position: 'x', 'y' or 'z' missing or not a float, "
-           "keeping default eye position");
-  } else {
-    position = kwp::Point3{static_cast<float>(xNode->get()),
-                           static_cast<float>(yNode->get()),
-                           static_cast<float>(zNode->get())};
-  }
-  return position;
-}
-
-math::Color loadRGBData(const toml::table &table) {
-  math::Color color = {};
-  auto rNode = table["r"].value_or<uint8_t>(INFINITY);
-  auto gNode = table["g"].value_or<uint8_t>(INFINITY);
-  auto bNode = table["b"].value_or<uint8_t>(INFINITY);
-  if (rNode == INFINITY || gNode == INFINITY || bNode == INFINITY) {
-    LC_LOG(logging::LogLevel::ERROR,
-           "rgb: 'r', 'g' or 'b' missing or not a float, "
-           "keeping default eye position");
-  } else {
-    color = math::Color{.r = rNode, .g = gNode, .b = bNode};
-  }
-  return color;
-}
-
-void setObjectProps(ObjectConfig &object, const toml::table &table) {
-  if (object.type == ObjectType::SPHERE) {
-    if (auto *const position = table["position"].as_table()) {
-      get<SphereConfig>(object.props).position = loadPosition3DData(*position);
-    }
-    get<SphereConfig>(object.props).radius =
-        table["radius"].value_or(get<SphereConfig>(object.props).radius);
-  }
-}
+// void logConfigVerbose(const ApplicationConfig &config) {
+//   std::string objectsStr;
+//   for (size_t i = 0; i < config.scene.objects.size(); ++i) {
+//     objectsStr += formatObjectConfig(config.scene.objects[i], i);
+//   }
+//
+//   LC_LOG_VERBOSE(
+//       logging::LogLevel::INFO,
+//       std::format("\n===== ApplicationConfig (verbose) =====\n"
+//                   "[window]\n"
+//                   "  title  = {}\n"
+//                   "  width  = {}\n"
+//                   "  height = {}\n"
+//                   "[render]\n"
+//                   "  resolution_width  = {}\n"
+//                   "  resolution_height = {}\n"
+//                   "  aspect_ratio      = {}\n"
+//                   "  viewport_width    = {}\n"
+//                   "  viewport_height   = {}\n"
+//                   "[camera]\n"
+//                   "  eye.x        = {}\n"
+//                   "  eye.y        = {}\n"
+//                   "  eye.z        = {}\n"
+//                   "  focal_length = {}\n"
+//                   "[scene.light]\n"
+//                   "  position = ({}, {}, {})\n"
+//                   "[scene.objects] ({} total)\n"
+//                   "{}"
+//                   "========================================",
+//                   config.window.title, config.window.width,
+//                   config.window.height, config.render.resolutionWidth,
+//                   config.render.resolutionHeight,
+//                   RenderConfig::aspectRatioToScalar(config.render.aspectRatio),
+//                   config.render.viewportWidth, config.render.viewportHeight,
+//                   config.camera.eye.x, config.camera.eye.y, config.camera.eye.z,
+//                   config.camera.focalLength, config.scene.light.position.x,
+//                   config.scene.light.position.y, config.scene.light.position.z,
+//                   config.scene.objects.size(), objectsStr));
+// }
 
 } // namespace
 
@@ -180,43 +138,7 @@ ApplicationConfig ApplicationConfig::loadFromFile(const std::string &path) {
                      "Camera config loaded successfully");
     }
     if (auto *const scene = table["scene"].as_table()) {
-      LC_LOG_VERBOSE(logging::LogLevel::INFO, "Loading scene config");
-      if (auto *const light = (*scene)["light"].as_table()) {
-        LC_LOG_VERBOSE(logging::LogLevel::INFO, "Loading light config");
-        if (auto *const eyeTable = (*light)["position"].as_table()) {
-          auto *const xNode = eyeTable->get_as<double>("x");
-          auto *const yNode = eyeTable->get_as<double>("y");
-          auto *const zNode = eyeTable->get_as<double>("z");
-          if (xNode == nullptr || yNode == nullptr || zNode == nullptr) {
-            LC_LOG(logging::LogLevel::ERROR,
-                   "light.position: 'x', 'y' or 'z' missing or not a float, "
-                   "keeping default eye position");
-          } else {
-            config.scene.light.position =
-                kwp::Point3{static_cast<float>(xNode->get()),
-                            static_cast<float>(yNode->get()),
-                            static_cast<float>(zNode->get())};
-          }
-        }
-        LC_LOG_VERBOSE(logging::LogLevel::INFO,
-                       "Light config loaded successfully");
-      }
-      if (auto *const objects = (*scene)["objects"].as_array()) {
-        LC_LOG_VERBOSE(logging::LogLevel::INFO, "Loading objects config");
-        config.scene.objects.resize(objects->size());
-        for (int i = 0; i < objects->size(); ++i) {
-          auto *const object = (*objects)[i].as_table();
-          auto type = (*object)["type"].value<std::string>();
-          config.scene.objects[i].type =
-              ObjectConfig::stringToObjectType(type.value());
-          auto *props = (*object)["props"].as_table();
-          setObjectProps(config.scene.objects[i], *props);
-          auto *color = (*object)["color"].as_table();
-          config.scene.objects[i].color = loadRGBData(*color);
-        }
-        LC_LOG_VERBOSE(logging::LogLevel::INFO,
-                       "Objects config loaded successfully");
-      }
+      config.scene = SceneConfig::loadSceneConfig(*scene);
     }
   } catch (const std::exception &err) {
     LC_LOG(logging::LogLevel::ERROR,
@@ -224,7 +146,7 @@ ApplicationConfig ApplicationConfig::loadFromFile(const std::string &path) {
                "': " + err.what());
     throw;
   }
-  logConfigVerbose(config);
+  // logConfigVerbose(config);
   LC_LOG_VERBOSE(logging::LogLevel::INFO,
                  "Application config loaded successfully");
   return config;
@@ -274,13 +196,4 @@ float RenderConfig::calculateViewportWidth(
   return viewportHeight *
          (static_cast<float>(resolutionWidth) / resolutionHeight);
 }
-
-ObjectType
-ObjectConfig::stringToObjectType(const std::string &objectType) noexcept {
-  if (objectType == "sphere") {
-    return ObjectType::SPHERE;
-  }
-  return ObjectType::OBJECT;
-}
-
 } // namespace temprenderer::core::config

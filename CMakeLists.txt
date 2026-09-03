@@ -28,6 +28,7 @@ file(
         "${source_dir}/temprenderer/core/cli/CliOptions.cpp"
         "${source_dir}/temprenderer/core/logging/LoggerManager.cpp"
         "${source_dir}/temprenderer/core/config/ApplicationConfig.cpp"
+        "${source_dir}/temprenderer/core/config/SceneConfig.cpp"
         "${source_dir}/temprenderer/pd/editor/EditorManager.cpp"
         "${source_dir}/temprenderer/platform/graphics/WindowManager.cpp"
         "${source_dir}/temprenderer/renderer/Camera.cpp"
@@ -35,7 +36,7 @@ file(
         "${source_dir}/temprenderer/renderer/RayCastIntegrator.cpp"
         "${source_dir}/temprenderer/renderer/RendererManager.cpp"
         "${source_dir}/temprenderer/renderer/Sphere.cpp"
-        "${source_dir}/temprenderer/scene/SceneComposer.cpp"
+#        "${source_dir}/temprenderer/scene/SceneComposer.cpp"
         "${source_dir}/temprenderer/ApplicationManager.cpp"
 )
 

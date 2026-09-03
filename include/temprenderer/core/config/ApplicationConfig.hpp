@@ -1,12 +1,10 @@
 #pragma once
 
-#include "core/math/Color.hpp"
+#include "SceneConfig.hpp"
 #include "kwp/Point3.hpp"
-#include "kwp/Vec3.hpp"
 
 #include <kwp/kwp_config.hpp>
 #include <string>
-#include <variant>
 #include <vector>
 
 namespace temprenderer::core::config {
@@ -109,30 +107,6 @@ struct CameraConfig {
    * Distance from canvas
    */
   kwp::Scalar focalLength = 1.0F;
-};
-
-struct LightConfig {
-  kwp::Point3 position{0, 0, 0};
-};
-
-enum class ObjectType { SPHERE, OBJECT };
-
-struct SphereConfig {
-  kwp::Point3 position{0, 0, 0};
-  float radius = 1.0F;
-};
-
-struct ObjectConfig {
-  ObjectType type = ObjectType::OBJECT;
-  std::variant<SphereConfig> props;
-  math::Color color;
-
-  static ObjectType stringToObjectType(const std::string &type) noexcept;
-};
-
-struct SceneConfig {
-  LightConfig light;
-  std::vector<ObjectConfig> objects;
 };
 
 /**
