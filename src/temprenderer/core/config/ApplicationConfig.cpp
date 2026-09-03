@@ -1,8 +1,10 @@
 #include "temprenderer/core/config/ApplicationConfig.hpp"
+
+#include "core/config/RenderConfig.hpp"
+#include "core/config/WindowConfig.hpp"
 #include "temprenderer/core/logging/LoggerManager.hpp"
 
 #include <format>
-#include <kwp/kwp_config.hpp>
 #include <toml++/toml.hpp>
 
 #include <string>
@@ -16,17 +18,21 @@ namespace {
 //         using T = std::decay_t<T0>;
 //         if constexpr (std::is_same_v<T, SphereConfig>) {
 //           return std::format("pos=({:.1f}, {:.1f}, {:.1f}) radius={:.1f}",
-//                              props.position.x, props.position.y,
-//                              props.position.z, props.radius);
+//                              props.center.x, props.center.y, props.center.z,
+//                              props.radius);
 //         } else {
 //           return "props=<unknown>";
 //         }
 //       },
 //       obj.props);
-//
-//   return std::format("  [{}] type={} {} color=({}, {}, {})\n", index,
-//                      static_cast<int>(obj.type), propsStr, obj.color.r,
-//                      obj.color.g, obj.color.b);
+//   return std::format(
+//       "  [{}] type={}\n"
+//       "    props=({})\n"
+//       "    material=(kd=({}, {}, {}), ks=({}, {}, {}), alpha={})\n",
+//       index, SceneConfig::objectTypeToString(obj.type), propsStr,
+//       obj.material.kd.r, obj.material.kd.g, obj.material.kd.b,
+//       obj.material.ks.r, obj.material.ks.g, obj.material.ks.b,
+//       obj.material.alpha);
 // }
 
 // void logConfigVerbose(const ApplicationConfig &config) {
@@ -55,6 +61,8 @@ namespace {
 //                   "  focal_length = {}\n"
 //                   "[scene.light]\n"
 //                   "  position = ({}, {}, {})\n"
+//                   "  color = ({}, {}, {})\n"
+//                   "  intensity = {}\n"
 //                   "[scene.objects] ({} total)\n"
 //                   "{}"
 //                   "========================================",
@@ -66,9 +74,10 @@ namespace {
 //                   config.camera.eye.x, config.camera.eye.y, config.camera.eye.z,
 //                   config.camera.focalLength, config.scene.light.position.x,
 //                   config.scene.light.position.y, config.scene.light.position.z,
+//                   config.scene.light.color.r, config.scene.light.color.g,
+//                   config.scene.light.color.b, config.scene.light.intensity,
 //                   config.scene.objects.size(), objectsStr));
 // }
-
 } // namespace
 
 ApplicationConfig ApplicationConfig::loadFromFile(const std::string &path) {
@@ -81,61 +90,16 @@ ApplicationConfig ApplicationConfig::loadFromFile(const std::string &path) {
     throw std::runtime_error(std::string("Erro no arquivo de config: ") +
                              err.description().data());
   }
-
   ApplicationConfig config;
   try {
     if (auto *const window = table["window"].as_table()) {
-      LC_LOG_VERBOSE(logging::LogLevel::INFO, "Loading window config");
-      config.window.title = (*window)["title"].value_or(config.window.title);
-      config.window.width = (*window)["width"].value_or(config.window.width);
-      config.window.height = (*window)["height"].value_or(config.window.height);
-      LC_LOG_VERBOSE(logging::LogLevel::INFO,
-                     "Window config loaded successfully");
+      config.window = WindowConfig::loadWindowConfig(*window);
     }
     if (auto *const render = table["render"].as_table()) {
-      LC_LOG_VERBOSE(logging::LogLevel::INFO, "Loading render config");
-      config.render.resolutionWidth =
-          (*render)["resolution_width"].value_or(config.render.resolutionWidth);
-      if (const auto aspectStr = (*render)["aspect_ratio"].value<std::string>();
-          !aspectStr) {
-        LC_LOG(
-            logging::LogLevel::ERROR,
-            "aspect_ratio was not found or is not a string, using WIDESCREEN");
-        config.render.aspectRatio = AspectRatio::WIDESCREEN;
-      } else {
-        config.render.aspectRatio =
-            RenderConfig::stringToAspectRatio(*aspectStr);
-      }
-      config.render.resolutionHeight = RenderConfig::calculateResolutionHeight(
-          config.render.aspectRatio, config.render.resolutionWidth);
-      config.render.viewportHeight =
-          (*render)["viewport_height"].value_or(config.render.viewportHeight);
-      config.render.viewportWidth = RenderConfig::calculateViewportWidth(
-          config.render.resolutionWidth, config.render.resolutionHeight,
-          config.render.viewportHeight);
-      LC_LOG_VERBOSE(logging::LogLevel::INFO,
-                     "Render config loaded successfully");
+      config.render = RenderConfig::loadRenderConfig(*render);
     }
     if (auto *const camera = table["camera"].as_table()) {
-      LC_LOG_VERBOSE(logging::LogLevel::INFO, "Loading camera config");
-      if (auto *const eyeTable = (*camera)["eye"].as_table()) {
-        auto *const xNode = eyeTable->get_as<double>("x");
-        auto *const yNode = eyeTable->get_as<double>("y");
-        auto *const zNode = eyeTable->get_as<double>("z");
-        if (xNode == nullptr || yNode == nullptr || zNode == nullptr) {
-          LC_LOG(logging::LogLevel::ERROR,
-                 "camera.eye: 'x', 'y' or 'z' missing or not a float, "
-                 "keeping default eye position");
-        } else {
-          config.camera.eye = kwp::Point3{static_cast<float>(xNode->get()),
-                                          static_cast<float>(yNode->get()),
-                                          static_cast<float>(zNode->get())};
-        }
-      }
-      config.camera.focalLength =
-          (*camera)["focal_length"].value_or(config.camera.focalLength);
-      LC_LOG_VERBOSE(logging::LogLevel::INFO,
-                     "Camera config loaded successfully");
+      config.camera = CameraConfig::loadCameraConfig(*camera);
     }
     if (auto *const scene = table["scene"].as_table()) {
       config.scene = SceneConfig::loadSceneConfig(*scene);
@@ -150,50 +114,5 @@ ApplicationConfig ApplicationConfig::loadFromFile(const std::string &path) {
   LC_LOG_VERBOSE(logging::LogLevel::INFO,
                  "Application config loaded successfully");
   return config;
-}
-
-AspectRatio RenderConfig::stringToAspectRatio(const std::string &aspectRatio) {
-  if (aspectRatio == "16:9") {
-    return AspectRatio::WIDESCREEN;
-  }
-  if (aspectRatio == "4:3") {
-    return AspectRatio::STANDARD;
-  }
-  if (aspectRatio == "21:9") {
-    return AspectRatio::ULTRAWIDE;
-  }
-  LC_LOG(logging::LogLevel::WARNING, "aspect_ratio desconhecido: '" +
-                                         aspectRatio +
-                                         "', usando WIDESCREEN como padrao");
-  return AspectRatio::WIDESCREEN;
-}
-
-float RenderConfig::aspectRatioToScalar(const AspectRatio aspectRatio) {
-  switch (aspectRatio) {
-  case AspectRatio::WIDESCREEN:
-    return 16.0F / 9.0F;
-  case AspectRatio::STANDARD:
-    return 4.0F / 3.0F;
-  case AspectRatio::ULTRAWIDE:
-    return 21.0F / 9.0F;
-  default:
-    return 16.0F / 9.0F;
-  }
-}
-
-unsigned int RenderConfig::calculateResolutionHeight(
-    const AspectRatio aspectRatio,
-    const unsigned int resolutionWidth) noexcept {
-  const kwp::Scalar ratio = aspectRatioToScalar(aspectRatio);
-  const unsigned int height =
-      static_cast<unsigned int>(resolutionWidth / ratio);
-  return (height < 1) ? 1 : height;
-}
-
-float RenderConfig::calculateViewportWidth(
-    const unsigned int resolutionWidth, const unsigned int resolutionHeight,
-    const float viewportHeight) noexcept {
-  return viewportHeight *
-         (static_cast<float>(resolutionWidth) / resolutionHeight);
 }
 } // namespace temprenderer::core::config

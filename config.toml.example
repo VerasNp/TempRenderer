@@ -1,5 +1,5 @@
 [window]
-title = "TempRenderer"
+title = "TEste"
 width = 800
 height = 600
 
@@ -8,16 +8,23 @@ resolution_width = 800
 aspect_ratio = "4:3"
 viewport_height = 2
 
-[scene]
-
-[scene.camera]
+[camera]
 eye = { x = 0.0, y = 0.0, z = 0.0 }
 focal_length = 4
 
+[scene]
+
 [scene.light]
-position = { x = 0.0 , y = 5.0 , z = 0.0 }
+position = { x = 0.0, y = 5.0, z = 0.0 }
+intensity = 1000.0
+color = { r = 255, g = 0, b = 0 }
 
 [[scene.objects]]
 type = "sphere"
-props = { position = { x = 0.0 , y = 0.0 , z = -100.0 }, radius = 20.0 }
-color = { r = 255, g = 0, b = 0 }
+props = { center = { x = 0.0, y = 0.0, z = -100.0 }, radius = 20.0 }
+material = { type = "diffuse_specular", props = { kd = { r = 255, g = 0, b = 0 }, ks = { r = 255, g = 0, b = 0 }, alpha = 1000 } }
+
+[[scene.objects]]
+type = "sphere"
+props = { center = { x = 0.0, y = 0.0, z = -100.0 }, radius = 20.0 }
+material = { type = "diffuse_only", props = { kd = { r = 255, g = 0, b = 0 } } }

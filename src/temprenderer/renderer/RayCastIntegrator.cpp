@@ -1,5 +1,5 @@
 #include "temprenderer/renderer/RayCastIntegrator.hpp"
-#include "temprenderer/core/math/Color.hpp"
+#include "temprenderer/core/math/Materials.hpp"
 
 namespace temprenderer::renderer {
 
@@ -7,7 +7,7 @@ core::math::Color RayCastIntegrator::li(const core::math::Ray &ray,
                                         const scene::Scene &scene) const {
   scene::SurfaceInteraction isect{};
   if (scene.intersect(ray, &isect)) {
-    return isect.color;
+    return core::math::Color{255, 0, 0};
   }
   return backgroundColor_;
 }

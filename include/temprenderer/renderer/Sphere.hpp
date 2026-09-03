@@ -1,6 +1,8 @@
 #pragma once
-#include "core/math/Color.hpp"
+#include "core/math/Materials.hpp"
 #include "temprenderer/scene/Hittable.hpp"
+
+#include <memory>
 
 namespace temprenderer::scene {
 /**
@@ -9,7 +11,7 @@ namespace temprenderer::scene {
 class Sphere : public Hittable {
 public:
   Sphere(const kwp::Point3 &center, kwp::Scalar radius,
-         core::math::Color color) noexcept;
+         std::shared_ptr<core::math::Material> color) noexcept;
 
   /**
    * @brief Tests whether a ray intersects this sphere
@@ -25,7 +27,7 @@ public:
 private:
   kwp::Point3 center_;
   kwp::Scalar radius_;
-  core::math::Color color_;
+  std::shared_ptr<core::math::Material> material_;
 };
 
 } // namespace temprenderer::scene

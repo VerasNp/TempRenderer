@@ -1,5 +1,5 @@
 #pragma once
-#include "temprenderer/core/math/Color.hpp"
+#include "temprenderer/core/math/Materials.hpp"
 #include <vector>
 
 namespace temprenderer::renderer {

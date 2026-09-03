@@ -1,5 +1,5 @@
 #pragma once
-#include "temprenderer/core/math/Color.hpp"
+#include "core/math/Materials.hpp"
 #include "temprenderer/renderer/Camera.hpp"
 #include "temprenderer/renderer/Integrator.hpp"
 #include "temprenderer/scene/Scene.hpp"

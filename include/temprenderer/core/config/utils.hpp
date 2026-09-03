@@ -1,6 +1,6 @@
 #pragma once
 #include "core/logging/LoggerManager.hpp"
-#include "core/math/Color.hpp"
+#include "core/math/Materials.hpp"
 #include "kwp/Point3.hpp"
 #include "toml++/impl/table.hpp"
 

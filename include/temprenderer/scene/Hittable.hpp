@@ -1,12 +1,13 @@
 #pragma once
-#include "temprenderer/core/math/Color.hpp"
+#include "core/math/Materials.hpp"
 #include "temprenderer/core/math/Ray.hpp"
 
 namespace temprenderer::scene {
 
 struct SurfaceInteraction {
   kwp::Point3 point;
-  core::math::Color color;
+  kwp::Vec3 normal;
+  const core::math::Material *material = nullptr;
 };
 
 /**

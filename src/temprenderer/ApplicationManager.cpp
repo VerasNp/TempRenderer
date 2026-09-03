@@ -29,7 +29,7 @@ void ApplicationManager::startUp() {
   this->editorManager_.setWindowManager(this->windowManager_);
   this->editorManager_.startUp();
   this->renderManager_.startUp();
-  // this->scene_ = scene::SceneComposer::compose(this->config_.scene);
+  this->scene_ = scene::SceneComposer::compose(this->config_.scene);
   this->camera_ = renderer::Camera{
       this->config_.camera.eye,
       this->config_.render.resolutionWidth,
@@ -66,7 +66,7 @@ void ApplicationManager::setApplicationConfig(
 void ApplicationManager::renderScene() {
   renderer::RayCastIntegrator integrator(
       this->camera_.value(), this->config_.render.resolutionWidth,
-      this->config_.render.resolutionHeight, core::math::Color{100, 100, 100});
+      this->config_.render.resolutionHeight, core::math::Color(100, 100, 100));
   renderer::Canvas canvas = integrator.render(this->scene_);
   this->renderManager_.setCanvas(canvas);
 }

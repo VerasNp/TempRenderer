@@ -1,12 +1,14 @@
 #include "temprenderer/renderer/Sphere.hpp"
 #include "temprenderer/core/math/utils.hpp"
+
+#include <memory>
 namespace temprenderer::renderer {} // namespace temprenderer::renderer
-temprenderer::scene::Sphere::Sphere(const kwp::Point3 &center,
-                                    kwp::Scalar radius,
-                                    core::math::Color color) noexcept {
+temprenderer::scene::Sphere::Sphere(
+    const kwp::Point3 &center, kwp::Scalar radius,
+    std::shared_ptr<core::math::Material> material) noexcept {
   this->radius_ = radius;
   this->center_ = center;
-  this->color_ = color;
+  this->material_ = material;
 }
 bool temprenderer::scene::Sphere::intersect(
     const core::math::Ray &ray, SurfaceInteraction *isec) const noexcept {
@@ -27,6 +29,6 @@ bool temprenderer::scene::Sphere::intersect(
     }
   }
   isec->point = ray(t0);
-  isec->color = color_;
+  isec->material = material_.get();
   return true;
 }
