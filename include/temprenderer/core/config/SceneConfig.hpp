@@ -8,44 +8,31 @@
 #include <vector>
 
 namespace temprenderer::core::config {
+
+enum class LightType { POINT, AMBIENT };
+
 struct LightConfig {
+  LightType type = LightType::POINT;
   kwp::Point3 position;
-  math::Color color;
+  math::ColorF color;
   kwp::Scalar intensity;
 };
 
 enum class ObjectType { SPHERE, OBJECT };
-
-enum class MaterialType { DIFFUSE_ONLY, DIFFUSE_SPECULAR };
 
 struct SphereConfig {
   kwp::Point3 center{0, 0, 0};
   kwp::Scalar radius = 1.0F;
 };
 
-struct DiffuseOnlyMaterialConfig {
-  math::Color kd;
-};
-
-struct DiffuseSpecularMaterialConfig {
-  math::Color kd;
-  math::Color ks;
-  std::uint16_t alpha = 0;
-};
-
-struct MaterialConfig {
-  MaterialType type = MaterialType::DIFFUSE_ONLY;
-  std::variant<DiffuseOnlyMaterialConfig, DiffuseSpecularMaterialConfig> props;
-};
-
 struct ObjectConfig {
   ObjectType type = ObjectType::OBJECT;
   std::variant<SphereConfig> props;
-  MaterialConfig material;
+  math::Material material;
 };
 
 struct SceneConfig {
-  LightConfig light;
+  std::vector<LightConfig> lights;
   std::vector<ObjectConfig> objects;
 
   /**
@@ -63,13 +50,5 @@ struct SceneConfig {
    */
   [[nodiscard]] static std::string
   objectTypeToString(const ObjectType objectType) noexcept;
-  /**
-   * @brief TODO
-   *
-   * @param materialType
-   * @return
-   */
-  [[nodiscard]] static std::string
-  materialTypeToString(const MaterialType materialType) noexcept;
 };
 } // namespace temprenderer::core::config

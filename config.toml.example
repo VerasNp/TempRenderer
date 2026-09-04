@@ -1,11 +1,11 @@
 [window]
 title = "TEste"
-width = 800
-height = 600
+width = 1220
+height = 686
 
 [render]
-resolution_width = 800
-aspect_ratio = "4:3"
+resolution_width = 1220
+aspect_ratio = "16:9"
 viewport_height = 2
 
 [camera]
@@ -14,17 +14,25 @@ focal_length = 4
 
 [scene]
 
-[scene.light]
+[[scene.lights]]
+type = "point"
+position = { x = 50.0, y = 50.0, z = 50.0 }
+intensity = 300.0
+color = { r = 255, g = 255, b = 255 }
+
+[[scene.lights]]
+type = "ambient"
 position = { x = 0.0, y = 5.0, z = 0.0 }
-intensity = 1000.0
-color = { r = 255, g = 0, b = 0 }
+intensity = 20.0
+color = { r = 255, g = 255, b = 255 }
 
 [[scene.objects]]
 type = "sphere"
 props = { center = { x = 0.0, y = 0.0, z = -100.0 }, radius = 20.0 }
-material = { type = "diffuse_specular", props = { kd = { r = 255, g = 0, b = 0 }, ks = { r = 255, g = 0, b = 0 }, alpha = 1000 } }
+material = { props = { ka = { r = 40, g = 0, b = 0 }, kd = { r = 200, g = 20, b = 20 }, ks = { r = 255, g = 255, b = 255 }, alpha = 64 } }
+
 
 [[scene.objects]]
 type = "sphere"
-props = { center = { x = 0.0, y = 0.0, z = -100.0 }, radius = 20.0 }
-material = { type = "diffuse_only", props = { kd = { r = 255, g = 0, b = 0 } } }
+props = { center = { x = -20.0, y = -20.0, z = -140.0 }, radius = 20.0 }
+material = { props = { ka = { r = 40, g = 0, b = 0 }, kd = { r = 200, g = 20, b = 20 }, ks = { r = 255, g = 255, b = 255 }, alpha = 64 } }

@@ -36,6 +36,7 @@ file(
         "${source_dir}/temprenderer/platform/graphics/WindowManager.cpp"
         "${source_dir}/temprenderer/renderer/Camera.cpp"
         "${source_dir}/temprenderer/renderer/Canvas.cpp"
+        "${source_dir}/temprenderer/renderer/PhongIntegrator.cpp"
         "${source_dir}/temprenderer/renderer/RayCastIntegrator.cpp"
         "${source_dir}/temprenderer/renderer/RendererManager.cpp"
         "${source_dir}/temprenderer/renderer/Sphere.cpp"

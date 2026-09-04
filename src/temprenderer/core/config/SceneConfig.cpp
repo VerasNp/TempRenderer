@@ -5,26 +5,45 @@
 namespace temprenderer::core::config {
 
 namespace {
+
+/**
+ * @brief TODO
+ *
+ * @param lightType
+ * @return
+ */
+LightType stringToLightType(const std::string &lightType) noexcept {
+  if (lightType == "point") {
+    return LightType::POINT;
+  }
+  return LightType::AMBIENT;
+}
+
 /**
  * @brief TODO
  *
  * @param light
  * @return
  */
-LightConfig loadLightConfig(const toml::table &light) {
+std::vector<LightConfig> loadLightsConfig(const toml::array &nodes) {
   LC_LOG_VERBOSE(logging::LogLevel::INFO, "Loading light config");
-  LightConfig config;
-  if (auto *const positionTable = light["position"].as_table()) {
-    config.position = parsePoint3DDataFromConfig(*positionTable);
-  }
-  if (auto *const colorTable = light["color"].as_table()) {
-    config.color = parseColorDataFromConfig(*colorTable);
-  }
-  if (auto *const intensity = light["intensity"].as_floating_point()) {
-    config.intensity = intensity->get();
+  std::vector<LightConfig> lights;
+  lights.resize(nodes.size());
+  for (int i = 0; i < lights.size(); ++i) {
+    auto *const light = nodes[i].as_table();
+    lights[i].type = stringToLightType((*light)["type"].value_or("point"));
+    if (auto *const positionTable = (*light)["position"].as_table()) {
+      lights[i].position = parsePoint3DDataFromConfig(*positionTable);
+    }
+    if (auto *const colorTable = (*light)["color"].as_table()) {
+      lights[i].color = parseColorDataFromConfig(*colorTable);
+    }
+    if (auto *const intensity = (*light)["intensity"].as_floating_point()) {
+      lights[i].intensity = intensity->get();
+    }
   }
   LC_LOG_VERBOSE(logging::LogLevel::INFO, "Light config loaded successfully");
-  return config;
+  return lights;
 }
 
 /**
@@ -38,19 +57,6 @@ ObjectType stringToObjectType(const std::string &objectType) noexcept {
     return ObjectType::SPHERE;
   }
   return ObjectType::OBJECT;
-}
-
-/**
- * @brief TODO
- *
- * @param materialType
- * @return
- */
-MaterialType stringToMaterialType(const std::string &materialType) noexcept {
-  if (materialType == "diffuse_only") {
-    return MaterialType::DIFFUSE_ONLY;
-  }
-  return MaterialType::DIFFUSE_SPECULAR;
 }
 
 /**
@@ -76,26 +82,18 @@ void setObjectProps(ObjectConfig &object, const toml::table &props) noexcept {
  * @param material
  * @param props
  */
-void setMaterialProps(MaterialConfig &material,
+void setMaterialProps(math::Material &material,
                       const toml::table &props) noexcept {
-  if (material.type == MaterialType::DIFFUSE_ONLY) {
-    if (auto *const diffuse = props["kd"].as_table()) {
-      get<DiffuseOnlyMaterialConfig>(material.props).kd =
-          parseColorDataFromConfig(*diffuse);
-    }
-  } else if (material.type == MaterialType::DIFFUSE_SPECULAR) {
-    if (auto *const diffuse = props["kd"].as_table()) {
-      get<DiffuseSpecularMaterialConfig>(material.props).kd =
-          parseColorDataFromConfig(*diffuse);
-    }
-    if (auto *const diffuse = props["ks"].as_table()) {
-      get<DiffuseSpecularMaterialConfig>(material.props).kd =
-          parseColorDataFromConfig(*diffuse);
-    }
-    get<DiffuseSpecularMaterialConfig>(material.props).alpha =
-        props["alpha"].value_or(
-            get<DiffuseSpecularMaterialConfig>(material.props).alpha);
+  if (auto *const diffuse = props["kd"].as_table()) {
+    material.kd = parseColorDataFromConfig(*diffuse);
   }
+  if (auto *const specular = props["ks"].as_table()) {
+    material.ks = parseColorDataFromConfig(*specular);
+  }
+  if (auto *const ambient = props["ka"].as_table()) {
+    material.ka = parseColorDataFromConfig(*ambient);
+  }
+  material.alpha = props["alpha"].value_or(0);
 }
 
 /**
@@ -116,7 +114,6 @@ std::vector<ObjectConfig> loadObjectsConfig(const toml::array &nodes) {
     setObjectProps(objects[i], *objectProps);
     auto *material = (*object)["material"].as_table();
     auto materialType = (*material)["type"].value<std::string>();
-    objects[i].material.type = stringToMaterialType(*materialType);
     auto *materialProps = (*material)["props"].as_table();
     setMaterialProps(objects[i].material, *materialProps);
   }
@@ -132,19 +129,12 @@ SceneConfig::objectTypeToString(const ObjectType objectType) noexcept {
   }
   return "object";
 }
-std::string
-SceneConfig::materialTypeToString(const MaterialType materialType) noexcept {
-  if (materialType == MaterialType::DIFFUSE_ONLY) {
-    return "diffuse_only";
-  }
-  return "diffuse_specular";
-}
 
 SceneConfig SceneConfig::loadSceneConfig(const toml::table &table) {
   LC_LOG_VERBOSE(logging::LogLevel::INFO, "Loading scene config");
   SceneConfig config;
-  if (auto *const light = table["light"].as_table()) {
-    config.light = loadLightConfig(*light);
+  if (auto *const light = table["lights"].as_array()) {
+    config.lights = loadLightsConfig(*light);
   }
   if (auto *const objects = table["objects"].as_array()) {
     config.objects = loadObjectsConfig(*objects);

@@ -3,9 +3,9 @@
 
 #include <memory>
 namespace temprenderer::renderer {} // namespace temprenderer::renderer
-temprenderer::scene::Sphere::Sphere(
-    const kwp::Point3 &center, kwp::Scalar radius,
-    std::shared_ptr<core::math::Material> material) noexcept {
+temprenderer::scene::Sphere::Sphere(const kwp::Point3 &center,
+                                    kwp::Scalar radius,
+                                    core::math::Material material) noexcept {
   this->radius_ = radius;
   this->center_ = center;
   this->material_ = material;
@@ -29,6 +29,7 @@ bool temprenderer::scene::Sphere::intersect(
     }
   }
   isec->point = ray(t0);
-  isec->material = material_.get();
+  isec->normal = (-(this->center_ - isec->point)).normalize();
+  isec->material = material_;
   return true;
 }

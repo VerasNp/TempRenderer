@@ -3,14 +3,15 @@
 #include "renderer/Camera.hpp"
 #include "renderer/Light.hpp"
 
+#include <algorithm>
 #include <memory>
 #include <vector>
 
 namespace temprenderer::scene {
 class Scene : public Hittable {
 public:
-  void add(std::shared_ptr<Hittable> object) {
-    objects_.push_back(std::shared_ptr(object));
+  void addObject(std::shared_ptr<Hittable> object) {
+    this->objects_.push_back(std::shared_ptr(object));
   }
 
   [[nodiscard]] bool
@@ -33,16 +34,22 @@ public:
     return hitAnything;
   }
 
-  [[nodiscard]] std::shared_ptr<renderer::Light> getLight() const {
-    return this->light_;
-  }
-
-  void setLight(const std::shared_ptr<renderer::Light> &light) {
-    this->light_ = light;
+  void addLight(const std::shared_ptr<renderer::Light> &light) {
+    this->light_.push_back(light);
   };
 
+  [[nodiscard]] std::shared_ptr<renderer::Light> getSpecificLightByType(
+      const core::config::LightType &lightType) const noexcept {
+    auto it =
+        std::find_if(this->light_.begin(), this->light_.end(),
+                     [lightType](const std::shared_ptr<renderer::Light> &l) {
+                       return l.get()->getLightType() == lightType;
+                     });
+    return (it != this->light_.end()) ? *it : nullptr;
+  }
+
 private:
-  std::shared_ptr<renderer::Light> light_;
+  std::vector<std::shared_ptr<renderer::Light>> light_;
   std::vector<std::shared_ptr<Hittable>> objects_;
 };
 } // namespace temprenderer::scene

@@ -1,5 +1,6 @@
 #include "temprenderer/ApplicationManager.hpp"
 
+#include "renderer/PhongIntegrator.hpp"
 #include "scene/SceneComposer.hpp"
 #include "temprenderer/core/debug/ApplicationDebug.hpp"
 #include "temprenderer/core/logging/LoggerManager.hpp"
@@ -64,7 +65,7 @@ void ApplicationManager::setApplicationConfig(
   this->config_ = config;
 }
 void ApplicationManager::renderScene() {
-  renderer::RayCastIntegrator integrator(
+  renderer::PhongIntegrator integrator(
       this->camera_.value(), this->config_.render.resolutionWidth,
       this->config_.render.resolutionHeight, core::math::Color(100, 100, 100));
   renderer::Canvas canvas = integrator.render(this->scene_);

@@ -34,7 +34,7 @@ inline kwp::Point3 parsePoint3DDataFromConfig(const toml::table &table) {
  * @param table
  * @return
  */
-inline math::Color parseColorDataFromConfig(const toml::table &table) {
+inline math::ColorF parseColorDataFromConfig(const toml::table &table) {
   auto color = math::Color();
   auto *const rNode = table.get_as<std::int64_t>("r");
   auto *const gNode = table.get_as<std::int64_t>("g");
@@ -48,6 +48,6 @@ inline math::Color parseColorDataFromConfig(const toml::table &table) {
                         .g = static_cast<std::uint8_t>(gNode->get()),
                         .b = static_cast<std::uint8_t>(bNode->get())};
   }
-  return color;
+  return color.toFloat();
 }
 } // namespace temprenderer::core::config

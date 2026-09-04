@@ -11,7 +11,7 @@ namespace temprenderer::scene {
 class Sphere : public Hittable {
 public:
   Sphere(const kwp::Point3 &center, kwp::Scalar radius,
-         std::shared_ptr<core::math::Material> color) noexcept;
+         core::math::Material color) noexcept;
 
   /**
    * @brief Tests whether a ray intersects this sphere
@@ -27,7 +27,7 @@ public:
 private:
   kwp::Point3 center_;
   kwp::Scalar radius_;
-  std::shared_ptr<core::math::Material> material_;
+  core::math::Material material_;
 };
 
 } // namespace temprenderer::scene
