@@ -81,7 +81,11 @@ O projeto final da cadeira tem uma série de requisitos técnicos a ser alcança
 
 ## Documentação
 
-TODO
+Toda a documentação do projeto está disponível via Doxygen.
+
+## Uso
+
+O projeto conta com uma executável, use o executável da última release.
 
 ## Testes
 

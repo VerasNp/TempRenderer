@@ -17,7 +17,7 @@ if (NOT API_GRAPHIC)
   set(API_GRAPHIC "opengl" CACHE STRING "Choose the Graphic API" FORCE)
 endif ()
 
-include(cmake/APIGraphicsDetection.cmake)
+include("cmake/APIGraphicsDetection.cmake")
 set_api_graphics_detection_vars()
 
 set(source_dir "${PROJECT_SOURCE_DIR}/src/")
@@ -25,13 +25,26 @@ file(
         GLOB
         source_files
         "${source_dir}/temprenderer/main.cpp"
+        "${source_dir}/temprenderer/core/cli/CliOptions.cpp"
         "${source_dir}/temprenderer/core/logging/LoggerManager.cpp"
-        "${source_dir}/temprenderer/core/config/EngineConfig.cpp"
+        "${source_dir}/temprenderer/core/config/ApplicationConfig.cpp"
+        "${source_dir}/temprenderer/core/config/CameraConfig.cpp"
+        "${source_dir}/temprenderer/core/config/RenderConfig.cpp"
+        "${source_dir}/temprenderer/core/config/SceneConfig.cpp"
+        "${source_dir}/temprenderer/core/config/WindowConfig.cpp"
+        "${source_dir}/temprenderer/pd/editor/EditorManager.cpp"
         "${source_dir}/temprenderer/platform/graphics/WindowManager.cpp"
+        "${source_dir}/temprenderer/renderer/Camera.cpp"
+        "${source_dir}/temprenderer/renderer/Canvas.cpp"
+        "${source_dir}/temprenderer/renderer/PhongIntegrator.cpp"
+        "${source_dir}/temprenderer/renderer/RayCastIntegrator.cpp"
         "${source_dir}/temprenderer/renderer/RendererManager.cpp"
+        "${source_dir}/temprenderer/renderer/Sphere.cpp"
+        "${source_dir}/temprenderer/scene/SceneComposer.cpp"
+        "${source_dir}/temprenderer/ApplicationManager.cpp"
 )
 
-set(include_dir "${PROJECT_SOURCE_DIR}/include")
+set(include_dir "${PROJECT_SOURCE_DIR}/include/temprenderer")
 
 option(temprenderer_BUILD_TESTS "Compile with tests" ON)
 
@@ -39,33 +52,8 @@ if (NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "Escolha o tipo de build: Debug ou Release" FORCE)
 endif ()
 
-include(FetchContent)
-
-FetchContent_Declare(
-        kwp
-        GIT_REPOSITORY https://codeberg.org/VerasNp/KWP
-        GIT_TAG main
-)
-
-FetchContent_MakeAvailable(kwp)
-
-FetchContent_Declare(
-        tomlplusplus
-        GIT_REPOSITORY https://github.com/marzer/tomlplusplus.git
-        GIT_TAG v3.4.0
-)
-FetchContent_MakeAvailable(tomlplusplus)
-
-FetchContent_Declare(
-        glfw
-        GIT_REPOSITORY https://github.com/glfw/glfw
-        GIT_TAG 3.5.1
-)
-
-FetchContent_MakeAvailable(glfw)
-
-add_library(glad STATIC include/glad/src/glad.c)
-target_include_directories(glad PUBLIC include/glad/include)
+include("cmake/SetupExternalLibs.cmake")
+setup_external_libs()
 
 add_executable(${PROJECT_NAME} ${source_files})
 
@@ -81,13 +69,17 @@ target_link_libraries(${PROJECT_NAME}
         tomlplusplus::tomlplusplus
         glad
         glfw
+        imgui
 )
-
 
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy
-        ${CMAKE_SOURCE_DIR}/engine_config.toml
+        ${CMAKE_SOURCE_DIR}/config.toml
         $<TARGET_FILE_DIR:${PROJECT_NAME}>
+
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_SOURCE_DIR}/shaders
+        $<TARGET_FILE_DIR:${PROJECT_NAME}>/shaders
 )
 
 

@@ -70,4 +70,8 @@ Testing/
 .idea
 
 # Project specific
-engine_config.toml
+config.toml
+
+# Doxygen
+docs/html/
+docs/xml/

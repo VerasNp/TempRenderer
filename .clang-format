@@ -1,1 +1,3 @@
 BasedOnStyle: LLVM
+ReflowComments: false
+CommentPragmas: '^ IWYU pragma:|^ NOLINT'

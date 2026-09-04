@@ -1,6 +1,9 @@
 PRESET_DEBUG       := debug
+BUILD_DIR_DEBUG    := build/$(PRESET_DEBUG)
+TARGET             := build/$(PRESET_DEBUG)/temprenderer
 
-BUILD_DIR_DEBUG      := build/$(PRESET_DEBUG)
+RUN_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
+$(eval $(RUN_ARGS):;@:)
 
 rwildcard = $(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2) $(filter $(subst *,%,$2),$d))
 
@@ -8,7 +11,7 @@ SOURCES := $(call rwildcard,include/,*.hpp) \
            $(call rwildcard,tests/,*.cpp)
 
 .PHONY: help configure build test rebuild \
-        clean format format-check tidy compdb
+        clean format format-check tidy compdb run docs
 
 help:
 	@echo "Comandos disponiveis:"
@@ -20,6 +23,8 @@ help:
 	@echo "  make tidy             - Roda clang-tidy em todo o codigo"
 	@echo "  make compdb           - Recria o link compile_commands.json na raiz (para clangd)"
 	@echo "  make clean            - Remove todos os diretorios de build"
+	@echo "  make run              - Executa programa"
+	@echo "  make docs             - Gera e abre documentação da aplicação"
 
 # -----------------------------------------------------------------------------
 # Build Debug
@@ -39,7 +44,7 @@ test: build
 rebuild: clean build
 
 # -----------------------------------------------------------------------------
-# Formatacão e lint
+# Formatação e lint
 # -----------------------------------------------------------------------------
 
 format:
@@ -57,6 +62,19 @@ tidy: configure
 # -----------------------------------------------------------------------------
 compdb: configure
 	ln -sf $(BUILD_DIR_DEBUG)/compile_commands.json compile_commands.json
+
+# -----------------------------------------------------------------------------
+# Executa aplicação
+# -----------------------------------------------------------------------------
+run: build
+	 ./$(TARGET) $(RUN_ARGS)
+
+# -----------------------------------------------------------------------------
+# Documentação
+# -----------------------------------------------------------------------------
+docs:
+	cmake --build build/debug --target temprenderer_docs && \
+  xdg-open build/debug/docs/html/index.html
 
 # -----------------------------------------------------------------------------
 # Limpeza

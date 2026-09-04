@@ -1,44 +1,42 @@
 #include "temprenderer/platform/graphics/WindowManager.hpp"
 #include "temprenderer/core/logging/LoggerManager.hpp"
 
-#ifdef API_OPENGL
-#include <glad/glad.h>
-#endif
-
-#include <GLFW/glfw3.h>
 #include <iostream>
 
 namespace temprenderer::platform::graphics {
-static bool isGLFWInit = false;
 
 void WindowManager::startUp() {
-  if (!isGLFWInit) {
-    LC_LOG(core::logging::LogLevel::INFO, "Staring up Window");
-    if (glfwInit() == 0) {
-      LC_LOG(core::logging::LogLevel::ERROR, "Failed to initialize GLFW");
-      exit(1);
-    }
-#ifndef API_OPENGL
-    glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-    glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
-#else
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-#endif
-    isGLFWInit = true;
+  if (this->isWindowInit_) {
+    return;
   }
+  LC_LOG_VERBOSE(core::logging::LogLevel::INFO, "Staring up window manager");
+  if (glfwInit() == 0) {
+    LC_LOG(core::logging::LogLevel::ERROR, "Failed to initialize GLFW");
+    exit(1);
+  }
+#ifndef API_OPENGL
+  glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+  glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+#else
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+  glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+#endif
+  this->isWindowInit_ = true;
 }
 
 void WindowManager::shutDown() {
-  LC_LOG(core::logging::LogLevel::INFO, "Shutting down Window");
-  glfwDestroyWindow(static_cast<GLFWwindow *>(this->window_));
+  if (!this->isWindowInit_) {
+    return;
+  }
+  LC_LOG_VERBOSE(core::logging::LogLevel::INFO, "Shutting down window manager");
+  glfwDestroyWindow(this->window_);
   glfwTerminate();
-  isGLFWInit = false;
+  this->isWindowInit_ = false;
 }
 
 bool WindowManager::createWindow(const WindowProps &props) {
-  if (!isGLFWInit) {
+  if (!this->isWindowInit_) {
     LC_LOG(core::logging::LogLevel::ERROR, "GLFW not initialized");
     return false;
   }
@@ -55,30 +53,40 @@ bool WindowManager::createWindow(const WindowProps &props) {
   }
 
 #ifdef API_OPENGL
-  glfwMakeContextCurrent(static_cast<GLFWwindow *>(this->window_));
+  glfwMakeContextCurrent(this->window_);
   if (gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress)) ==
       0) {
     LC_LOG(core::logging::LogLevel::ERROR, "Failed to initialize GLAD");
     exit(1);
   }
   glfwSetFramebufferSizeCallback(
-      static_cast<GLFWwindow *>(this->window_),
-      [](GLFWwindow *window, const int width, const int height) {
+      this->window_, [](GLFWwindow *window, const int width, const int height) {
         glViewport(0, 0, width, height);
       });
 #endif
-  LC_LOG(core::logging::LogLevel::INFO, "Created GLFW window");
+  LC_LOG_VERBOSE(core::logging::LogLevel::INFO, "Created GLFW window");
   return true;
 }
 
+// NOLINTNEXTLINE(readability-convert-member-functions-to-static)
 void WindowManager::update() const {
-#ifdef API_OPENGL
-  glfwSwapBuffers(static_cast<GLFWwindow *>(this->window_));
-#endif
+  if (!this->isWindowInit_) {
+    return;
+  }
   glfwPollEvents();
 }
 
+void WindowManager::swapBuffers() const {
+  if (!this->isWindowInit_) {
+    return;
+  }
+  glfwSwapBuffers(this->window_);
+}
+
 bool WindowManager::shouldClose() const {
-  return glfwWindowShouldClose(static_cast<GLFWwindow *>(this->window_)) != 0;
+  if (!this->isWindowInit_) {
+    return false;
+  }
+  return glfwWindowShouldClose(this->window_) != 0;
 }
 } // namespace temprenderer::platform::graphics

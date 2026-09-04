@@ -14,6 +14,7 @@ e hooks de commit.
 		- [Ativando os hooks](#ativando-os-hooks)
 		- [O que roda em cada commit](#o-que-roda-em-cada-commit)
 	- [CI](#ci)
+  - [Configuração `config.toml`](#configuração-configtoml)
 	- [Setup Rápido](#setup-rápido)
 
 ---
@@ -82,7 +83,42 @@ pre-commit install --hook-type commit-msg   # hook de commit-msg (Conventional C
 
 TODO
 
----
+## Configuração `config.toml`
+
+O projeto conta com um arquivo de configuração geral na raiz `config.toml`. Dentro dele algumas configurações possíveis:
+
+```toml
+[window]
+title = "TempRenderer"
+width = 3440
+height = 1440
+
+[render]
+resolution_width = 3440
+aspect_ratio = "21:9"
+viewport_height = 2
+
+[camera]
+eye = { x = 0.0, y = 0.0, z = 0.0 }
+focal_length = 30
+```
+
+### Window
+
+- `title = "<string>"`: Título da janela da aplicação
+- `width = <integer>`: Largura inicial da janela da aplicação
+- `height = <integer>`: Altura inicial da janela da aplicação
+
+### Render
+
+- `resolution_width = <integer>`: Resolução inicial da renderização
+- `aspect_ratio = "16:9" | "4:3" | "21:9"`: Razão entre largura e altura da resolução
+- `viewport_height = <integer>`: Tamanho físico inicial da viewport
+
+### Camera
+
+- `eye = { x = <float>, y = c, z = <float> }`: Posição inicial da camera
+- `focal_length = <int>`: ...
 
 ## Setup Rápido
 
@@ -95,10 +131,21 @@ sudo apt install cmake ninja-build clang
 # Qualidade de código
 sudo apt install clang-format clang-tidy cppcheck
 
+# Clone o projeto
+git clone https://github.com/VerasNp/TempRenderer.git
+
+cd TempRenderer
+
 # Git hooks
 pip install pre-commit
 pre-commit install
 pre-commit install --hook-type commit-msg
+
+# Crie um arquivo de configuração
+mv config.toml.example config.toml
+
+# Execução do projeto
+make run
 ```
 
 Depois disso, o primeiro `git commit` vai instalar os ambientes isolados dos hooks (`clang-format`, `gitlint`, etc.)
