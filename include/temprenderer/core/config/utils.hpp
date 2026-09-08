@@ -167,6 +167,15 @@ stringToAspectRatio(const std::string &aspectRatio) {
   return std::nullopt;
 }
 
+/**
+ * @brief TODO
+ *
+ * @tparam T
+ * @param value
+ * @param fallback
+ * @param fieldName
+ * @return
+ */
 template <typename T>
 T parseOrDefault(std::optional<T> value, T fallback,
                  const std::string &fieldName) {
@@ -174,9 +183,7 @@ T parseOrDefault(std::optional<T> value, T fallback,
     return *value;
   }
   LC_LOG_VERBOSE(logging::LogLevel::WARNING,
-                 "Campo '{}' inválido, usando padrão");
-  LC_LOG(logging::LogLevel::WARNING, "Unknown aspect_ratio: '" + aspectRatio +
-                                         "', using WIDESCREEN as default");
+                 "Invalid '" + fieldName + "'field, using the default value");
   return fallback;
 }
 
