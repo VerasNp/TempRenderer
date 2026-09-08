@@ -1,6 +1,6 @@
 #include "core/config/WindowConfig.hpp"
-
 #include "core/logging/LoggerManager.hpp"
+
 namespace temprenderer::core::config {
 WindowConfig WindowConfig::loadWindowConfig(const toml::table &table) {
   LC_LOG_VERBOSE(logging::LogLevel::INFO, "Loading window config");

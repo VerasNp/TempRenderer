@@ -10,16 +10,24 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(doctest)
 
 add_executable(
-        TempRender_tests
+        temprenderer_tests
         test_main.cpp
-        factorial_test.cpp
+        "${CMAKE_CURRENT_SOURCE_DIR}/core/config/utils_test.cpp"
+#        "${CMAKE_CURRENT_SOURCE_DIR}/core/config/render_config_test.cpp"
+#        "${CMAKE_CURRENT_SOURCE_DIR}/renderer/camera_test.cpp"
 )
 
-target_link_libraries(TempRender_tests PRIVATE doctest::doctest)
+target_link_libraries(
+        temprenderer_tests
+        PRIVATE
+        doctest::doctest
+        kwp::kwp
+        temprenderer_core
+)
 
 list(APPEND CMAKE_MODULE_PATH ${doctest_SOURCE_DIR}/scripts/cmake)
 
 include(CTest)
 include(doctest)
 
-doctest_discover_tests(TempRender_tests)
+doctest_discover_tests(temprenderer_tests)

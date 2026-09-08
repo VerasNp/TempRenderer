@@ -6,7 +6,7 @@
 
 #include "GLFW/glfw3.h"
 #include "temprenderer/ISubsystem.hpp"
-
+#include <cstdint>
 #include <string>
 
 namespace temprenderer::platform::graphics {
@@ -15,11 +15,11 @@ namespace temprenderer::platform::graphics {
  */
 struct WindowProps {
   std::string title;
-  unsigned int width;
-  unsigned int height;
+  std::uint16_t width;
+  std::uint16_t height;
 
-  explicit WindowProps(std::string title_, const unsigned int width_,
-                       const unsigned int height_)
+  explicit WindowProps(std::string title_, const std::uint16_t width_,
+                       const std::uint16_t height_)
       : title(std::move(title_)), width(width_), height(height_) {}
 };
 
@@ -58,13 +58,13 @@ public:
    *
    * @return Return window width
    */
-  [[nodiscard]] unsigned int getWidth() const { return this->data_.width; };
+  [[nodiscard]] std::uint16_t getWidth() const { return this->data_.width; };
   /**
    * @brief Gets windows height
    *
    * @return Return window height
    */
-  [[nodiscard]] unsigned int getHeight() const { return this->data_.height; };
+  [[nodiscard]] std::uint16_t getHeight() const { return this->data_.height; };
   /**
    * @brief Gets window context
    *
@@ -78,8 +78,8 @@ public:
 private:
   struct WindowData {
     std::string title;
-    unsigned int width = 0;
-    unsigned int height = 0;
+    std::uint16_t width = 0;
+    std::uint16_t height = 0;
   };
 
   WindowData data_;

@@ -5,24 +5,10 @@
 namespace temprenderer::core::config {
 
 namespace {
-
 /**
  * @brief TODO
  *
- * @param lightType
- * @return
- */
-LightType stringToLightType(const std::string &lightType) noexcept {
-  if (lightType == "point") {
-    return LightType::POINT;
-  }
-  return LightType::AMBIENT;
-}
-
-/**
- * @brief TODO
- *
- * @param light
+ * @param nodes
  * @return
  */
 std::vector<LightConfig> loadLightsConfig(const toml::array &nodes) {
@@ -44,19 +30,6 @@ std::vector<LightConfig> loadLightsConfig(const toml::array &nodes) {
   }
   LC_LOG_VERBOSE(logging::LogLevel::INFO, "Light config loaded successfully");
   return lights;
-}
-
-/**
- * @brief TODO
- *
- * @param objectType
- * @return
- */
-ObjectType stringToObjectType(const std::string &objectType) noexcept {
-  if (objectType == "sphere") {
-    return ObjectType::SPHERE;
-  }
-  return ObjectType::OBJECT;
 }
 
 /**
@@ -121,15 +94,6 @@ std::vector<ObjectConfig> loadObjectsConfig(const toml::array &nodes) {
   return objects;
 }
 } // namespace
-
-[[nodiscard]] std::string
-SceneConfig::objectTypeToString(const ObjectType objectType) noexcept {
-  if (objectType == ObjectType::SPHERE) {
-    return "sphere";
-  }
-  return "object";
-}
-
 SceneConfig SceneConfig::loadSceneConfig(const toml::table &table) {
   LC_LOG_VERBOSE(logging::LogLevel::INFO, "Loading scene config");
   SceneConfig config;

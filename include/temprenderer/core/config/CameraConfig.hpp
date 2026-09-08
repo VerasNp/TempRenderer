@@ -12,10 +12,16 @@ struct CameraConfig {
    */
   kwp::Point3 eye{0, 0, 0};
   /**
-   * Distance from canvas
+   * Distance from viewport
    */
   kwp::Scalar focalLength = 1.0F;
 
+  /**
+   * @brief Loads camera config into struct
+   *
+   * @param table Camera config as TOML
+   * @return Camera config
+   */
   [[nodiscard]] static CameraConfig
   loadCameraConfig(const toml::table &table) noexcept;
 };

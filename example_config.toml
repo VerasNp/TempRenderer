@@ -1,17 +1,27 @@
+#
+# Example config.toml
+#
+# By Vitor Veras
+#
+
+# Application window configuration
 [window]
 title = "TEste"
-width = 1220
-height = 686
+width = 1280
+height = 720
 
+# Render window config
 [render]
-resolution_width = 1220
+resolution_width = 1280
 aspect_ratio = "16:9"
-viewport_height = 2
+viewport_height = 2.0
 
+# Camera config
 [camera]
 eye = { x = 0.0, y = 0.0, z = 0.0 }
-focal_length = 4
+focal_length = 4.0 # Distance from viewport
 
+# Scene config
 [scene]
 
 [[scene.lights]]
@@ -30,7 +40,6 @@ color = { r = 255, g = 255, b = 255 }
 type = "sphere"
 props = { center = { x = 0.0, y = 0.0, z = -100.0 }, radius = 20.0 }
 material = { props = { ka = { r = 40, g = 0, b = 0 }, kd = { r = 200, g = 20, b = 20 }, ks = { r = 255, g = 255, b = 255 }, alpha = 64 } }
-
 
 [[scene.objects]]
 type = "sphere"

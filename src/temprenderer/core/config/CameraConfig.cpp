@@ -1,7 +1,7 @@
 #include "core/config/CameraConfig.hpp"
-
 #include "core/config/utils.hpp"
 #include "core/logging/LoggerManager.hpp"
+
 namespace temprenderer::core::config {
 [[nodiscard]] CameraConfig
 CameraConfig::loadCameraConfig(const toml::table &table) noexcept {

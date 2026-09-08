@@ -9,8 +9,8 @@ namespace temprenderer::renderer {
  */
 class Camera {
 public:
-  Camera(const kwp::Point3 &eye, unsigned int resolutionWidth,
-         unsigned int resolutionHeight, float viewportWidth,
+  Camera(const kwp::Point3 &eye, std::uint16_t resolutionWidth,
+         std::uint16_t resolutionHeight, float viewportWidth,
          float viewportHeight);
   /**
    * @brief Generates a ray passing through a pixel.
@@ -21,6 +21,21 @@ public:
    */
   core::math::Ray generateRay(unsigned int col,
                               unsigned int row) const noexcept;
+
+  /**
+   * @brief Set new value to camera eye
+   *
+   * @param eye New Position
+   */
+  void setEye(const kwp::Point3 &eye) { this->eye_ = eye; }
+
+  /**
+   * @brief Get camera position
+   *
+   *
+   * @return Camera Position
+   */
+  [[nodiscard]] kwp::Point3 getEye() const noexcept { return this->eye_; }
 
 private:
   kwp::Point3 eye_;
