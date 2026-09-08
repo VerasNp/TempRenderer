@@ -18,11 +18,17 @@ struct LightConfig {
   kwp::Scalar intensity;
 };
 
-enum class ObjectType { SPHERE, OBJECT };
+enum class ObjectType { SPHERE, OBJECT, CONE };
 
 struct SphereConfig {
   kwp::Point3 center{0, 0, 0};
   kwp::Scalar radius = 1.0F;
+};
+
+struct ConeConfig {
+  kwp::Point3 baseCenter{0, 0, 0};
+  float baseRadius = 1.0F;
+  kwp::Point3 vertex{0, 0, 0};
 };
 
 struct ObjectConfig {
