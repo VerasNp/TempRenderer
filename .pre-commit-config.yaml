@@ -1,4 +1,4 @@
-exclude: ^(include/glad|include/cli11)/
+exclude: ^(include/glad|include/cli11|include/nlohmann.json)/
 
 repos:
   # Formatação C++ com clang-format (usa seu .clang-format existente)

@@ -2,6 +2,7 @@
 
 #include "core/config/RenderConfig.hpp"
 #include "core/config/WindowConfig.hpp"
+#include "core/parsers/ParserPort.hpp"
 #include "temprenderer/core/logging/LoggerManager.hpp"
 
 #include <format>
@@ -81,38 +82,33 @@ namespace {
 } // namespace
 
 ApplicationConfig ApplicationConfig::loadFromFile(const std::string &path) {
-  toml::table table;
-  try {
-    LC_LOG_VERBOSE(logging::LogLevel::INFO, "Loading config from " + path);
-    table = toml::parse_file(path);
-  } catch (const toml::parse_error &err) {
-    LC_LOG(logging::LogLevel::ERROR, "Failed to parse config file: " + path);
-    throw std::runtime_error(std::string("Erro no arquivo de config: ") +
-                             err.description().data());
-  }
+
+  std::unique_ptr<parsers::ParserPort> parser =
+      std::make_unique<parsers::TOMLPlusPlusParserAdapter>();
+  parser->parserFile(path);
   ApplicationConfig config;
-  try {
-    if (auto *const window = table["window"].as_table()) {
-      config.window = WindowConfig::loadWindowConfig(*window);
-    }
-    if (auto *const render = table["render"].as_table()) {
-      config.render = RenderConfig::loadRenderConfig(*render);
-    }
-    if (auto *const camera = table["camera"].as_table()) {
-      config.camera = CameraConfig::loadCameraConfig(*camera);
-    }
-    if (auto *const scene = table["scene"].as_table()) {
-      config.scene = SceneConfig::loadSceneConfig(*scene);
-    }
-  } catch (const std::exception &err) {
-    LC_LOG(logging::LogLevel::ERROR,
-           std::string("Unexpected error while loading config '") + path +
-               "': " + err.what());
-    throw;
-  }
-  // logConfigVerbose(config);
-  LC_LOG_VERBOSE(logging::LogLevel::INFO,
-                 "Application config loaded successfully");
+  // try {
+  //   if (auto *const window = table["window"].as_table()) {
+  //     config.window = WindowConfig::loadWindowConfig(*window);
+  //   }
+  //   if (auto *const render = table["render"].as_table()) {
+  //     config.render = RenderConfig::loadRenderConfig(*render);
+  //   }
+  //   if (auto *const camera = table["camera"].as_table()) {
+  //     config.camera = CameraConfig::loadCameraConfig(*camera);
+  //   }
+  //   if (auto *const scene = table["scene"].as_table()) {
+  //     config.scene = SceneConfig::loadSceneConfig(*scene);
+  //   }
+  // } catch (const std::exception &err) {
+  //   LC_LOG(logging::LogLevel::ERROR,
+  //          std::string("Unexpected error while loading config '") + path +
+  //              "': " + err.what());
+  //   throw;
+  // }
+  // // logConfigVerbose(config);
+  // LC_LOG_VERBOSE(logging::LogLevel::INFO,
+  //                "Application config loaded successfully");
   return config;
 }
 } // namespace temprenderer::core::config

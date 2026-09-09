@@ -62,6 +62,9 @@ macro(setup_external_libs)
   add_library(cl11 INTERFACE)
   target_include_directories(cl11 INTERFACE include/cli11)
 
+  add_library(nlohmann.json INTERFACE)
+  target_include_directories(nlohmann.json INTERFACE include/nlohmann.json)
+
   find_package(Doxygen)
 
   if (DOXYGEN_FOUND)
