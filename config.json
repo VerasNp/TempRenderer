@@ -1,4 +1,7 @@
 {
-  "pi": 3.141,
-  "happy": true
+  "window": {
+		"title": "Teste",
+		"width": 1220,
+		"height": 686
+	}
 }

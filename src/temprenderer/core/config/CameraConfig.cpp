@@ -3,14 +3,15 @@
 #include "core/logging/LoggerManager.hpp"
 
 namespace temprenderer::core::config {
-[[nodiscard]] CameraConfig
-CameraConfig::loadCameraConfig(const toml::table &table) noexcept {
+[[nodiscard]] CameraConfig CameraConfig::loadCameraConfig(
+    const parsers::ConfigValue &cameraConfig) noexcept {
   LC_LOG_VERBOSE(logging::LogLevel::INFO, "Loading camera config");
   CameraConfig config;
-  if (auto *const eyeTable = table["eye"].as_table()) {
-    config.eye = parsePoint3DDataFromConfig(*eyeTable);
+  if (const auto eyeConfig = cameraConfig.get("eye")) {
+    config.eye = parsePoint3DDataFromConfig(*eyeConfig);
   }
-  config.focalLength = table["focal_length"].value_or(config.focalLength);
+  config.focalLength =
+      cameraConfig.get("focal_length")->asFloat(config.focalLength);
   LC_LOG_VERBOSE(logging::LogLevel::INFO, "Camera config loaded successfully");
   return config;
 }

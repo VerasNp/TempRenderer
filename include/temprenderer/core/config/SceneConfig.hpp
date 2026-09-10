@@ -1,8 +1,8 @@
 #pragma once
 #include "core/math/Materials.hpp"
+#include "core/parsers/ParserPort.hpp"
 #include "kwp/Point3.hpp"
 #include <string>
-#include <toml++/toml.hpp>
 #include <variant>
 #include <vector>
 
@@ -55,17 +55,9 @@ struct SceneConfig {
   /**
    * @brief TODO
    *
-   * @param table
+   * @param sceneConfig
    * @return
    */
-  static SceneConfig loadSceneConfig(const toml::table &table);
-  /**
-   * @brief TODO
-   *
-   * @param objectType
-   * @return
-   */
-  [[nodiscard]] static std::string
-  objectTypeToString(const ObjectType objectType) noexcept;
+  static SceneConfig loadSceneConfig(const parsers::ConfigValue &sceneConfig);
 };
 } // namespace temprenderer::core::config

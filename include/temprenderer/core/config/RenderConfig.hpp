@@ -1,7 +1,8 @@
 #pragma once
 
+#include "core/parsers/ParserPort.hpp"
+
 #include <cstdint>
-#include <toml++/toml.hpp>
 
 namespace temprenderer::core::config {
 /**
@@ -37,9 +38,10 @@ struct RenderConfig {
   /**
    * @brief Loads render config into struct data structure
    *
-   * @param table Render TOML table
+   * @param renderConfig TODO
    * @return Render config struct
    */
-  [[nodiscard]] static RenderConfig loadRenderConfig(const toml::table &table);
+  [[nodiscard]] static RenderConfig
+  loadRenderConfig(const parsers::ConfigValue &renderConfig);
 };
 } // namespace temprenderer::core::config

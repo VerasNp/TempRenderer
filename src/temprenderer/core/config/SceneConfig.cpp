@@ -8,25 +8,24 @@ namespace {
 /**
  * @brief TODO
  *
- * @param nodes
+ * @param lightsConfig
  * @return
  */
-std::vector<LightConfig> loadLightsConfig(const toml::array &nodes) {
+std::vector<LightConfig>
+loadLightsConfig(const parsers::ConfigValue &lightsConfig) {
   LC_LOG_VERBOSE(logging::LogLevel::INFO, "Loading light config");
   std::vector<LightConfig> lights;
-  lights.resize(nodes.size());
-  for (int i = 0; i < lights.size(); ++i) {
-    auto *const light = nodes[i].as_table();
-    lights[i].type = stringToLightType((*light)["type"].value_or("point"));
-    if (auto *const positionTable = (*light)["position"].as_table()) {
-      lights[i].position = parsePoint3DDataFromConfig(*positionTable);
+  for (const auto &lightConfig : lightsConfig.asArray()) {
+    LightConfig light;
+    light.type = stringToLightType(lightConfig.get("type")->asString());
+    if (const auto positionConfig = lightConfig.get("position")) {
+      light.position = parsePoint3DDataFromConfig(*positionConfig);
     }
-    if (auto *const colorTable = (*light)["color"].as_table()) {
-      lights[i].color = parseColorDataFromConfig(*colorTable);
+    if (const auto colorConfig = lightConfig.get("color")) {
+      light.color = parseColorDataFromConfig(*colorConfig);
     }
-    if (auto *const intensity = (*light)["intensity"].as_floating_point()) {
-      lights[i].intensity = intensity->get();
-    }
+    light.intensity = lightConfig.get("intensity")->asFloat(light.intensity);
+    lights.push_back(light);
   }
   LC_LOG_VERBOSE(logging::LogLevel::INFO, "Light config loaded successfully");
   return lights;
@@ -36,16 +35,17 @@ std::vector<LightConfig> loadLightsConfig(const toml::array &nodes) {
  * @brief TODO
  *
  * @param object
- * @param props
+ * @param propsConfig
  */
-void setObjectProps(ObjectConfig &object, const toml::table &props) noexcept {
+void setObjectProps(ObjectConfig &object,
+                    const parsers::ConfigValue &propsConfig) noexcept {
   if (object.type == ObjectType::SPHERE) {
-    if (auto *const position = props["center"].as_table()) {
+    if (const auto position = propsConfig.get("center")) {
       get<SphereConfig>(object.props).center =
           parsePoint3DDataFromConfig(*position);
     }
-    get<SphereConfig>(object.props).radius =
-        props["radius"].value_or(get<SphereConfig>(object.props).radius);
+    get<SphereConfig>(object.props).radius = propsConfig.get("radius")->asFloat(
+        get<SphereConfig>(object.props).radius);
   }
 }
 
@@ -53,54 +53,53 @@ void setObjectProps(ObjectConfig &object, const toml::table &props) noexcept {
  * @brief TODO
  *
  * @param material
- * @param props
+ * @param materialConfig
  */
 void setMaterialProps(math::Material &material,
-                      const toml::table &props) noexcept {
-  if (auto *const diffuse = props["kd"].as_table()) {
-    material.kd = parseColorDataFromConfig(*diffuse);
+                      const parsers::ConfigValue &materialConfig) noexcept {
+  if (const auto diffuseConfig = materialConfig.get("kd")) {
+    material.kd = parseColorDataFromConfig(*diffuseConfig);
   }
-  if (auto *const specular = props["ks"].as_table()) {
-    material.ks = parseColorDataFromConfig(*specular);
+  if (const auto specularConfig = materialConfig.get("ks")) {
+    material.ks = parseColorDataFromConfig(*specularConfig);
   }
-  if (auto *const ambient = props["ka"].as_table()) {
-    material.ka = parseColorDataFromConfig(*ambient);
+  if (const auto ambientConfig = materialConfig.get("ka")) {
+    material.ka = parseColorDataFromConfig(*ambientConfig);
   }
-  material.alpha = props["alpha"].value_or(0);
+  material.alpha = materialConfig.get("alpha")->asInt<std::int16_t>();
 }
 
 /**
  * @brief TODO
  *
- * @param nodes
+ * @param objectsConfig
  * @return
  */
-std::vector<ObjectConfig> loadObjectsConfig(const toml::array &nodes) {
+std::vector<ObjectConfig>
+loadObjectsConfig(const parsers::ConfigValue &objectsConfig) {
   LC_LOG_VERBOSE(logging::LogLevel::INFO, "Loading objects config");
   std::vector<ObjectConfig> objects;
-  objects.resize(nodes.size());
-  for (int i = 0; i < objects.size(); ++i) {
-    auto *const object = nodes[i].as_table();
-    auto objectType = (*object)["type"].value<std::string>();
-    objects[i].type = stringToObjectType(objectType.value());
-    auto *objectProps = (*object)["props"].as_table();
-    setObjectProps(objects[i], *objectProps);
-    auto *material = (*object)["material"].as_table();
-    auto materialType = (*material)["type"].value<std::string>();
-    auto *materialProps = (*material)["props"].as_table();
-    setMaterialProps(objects[i].material, *materialProps);
+  for (const auto &objectConfig : objectsConfig.asArray()) {
+    ObjectConfig object;
+    object.type = stringToObjectType(objectConfig.get("type")->asString());
+    setObjectProps(object, *objectConfig.get("props"));
+    setMaterialProps(object.material,
+                     *objectConfig.get("material")->get("props"));
+    objects.push_back(object);
   }
   LC_LOG_VERBOSE(logging::LogLevel::INFO, "Objects config loaded successfully");
   return objects;
 }
 } // namespace
-SceneConfig SceneConfig::loadSceneConfig(const toml::table &table) {
+SceneConfig
+SceneConfig::loadSceneConfig(const parsers::ConfigValue &sceneConfig) {
   LC_LOG_VERBOSE(logging::LogLevel::INFO, "Loading scene config");
   SceneConfig config;
-  if (auto *const light = table["lights"].as_array()) {
-    config.lights = loadLightsConfig(*light);
+  if (const auto lightsConfig = sceneConfig.get("lights");
+      lightsConfig->isArray()) {
+    config.lights = loadLightsConfig(*lightsConfig);
   }
-  if (auto *const objects = table["objects"].as_array()) {
+  if (auto *const objects = sceneConfig.get("objects")) {
     config.objects = loadObjectsConfig(*objects);
   }
   return config;

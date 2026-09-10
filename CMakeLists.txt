@@ -36,7 +36,7 @@ set(temprenderer_core_source_files
         "${temprenderer_core_source_dir}/temprenderer/core/config/ApplicationConfig.cpp"
         "${temprenderer_core_source_dir}/temprenderer/core/config/CameraConfig.cpp"
         "${temprenderer_core_source_dir}/temprenderer/core/config/RenderConfig.cpp"
-#        "${temprenderer_core_source_dir}/temprenderer/core/config/SceneConfig.cpp"
+        "${temprenderer_core_source_dir}/temprenderer/core/config/SceneConfig.cpp"
         "${temprenderer_core_source_dir}/temprenderer/core/config/WindowConfig.cpp"
         "${temprenderer_core_source_dir}/temprenderer/pd/editor/EditorManager.cpp"
         "${temprenderer_core_source_dir}/temprenderer/platform/graphics/WindowManager.cpp"

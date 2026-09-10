@@ -4,19 +4,18 @@
 #include <string>
 
 namespace temprenderer::core::config {
-RenderConfig RenderConfig::loadRenderConfig(const toml::table &table) {
+RenderConfig
+RenderConfig::loadRenderConfig(const parsers::ConfigValue &renderConfig) {
   LC_LOG_VERBOSE(logging::LogLevel::INFO, "Loading render config");
   RenderConfig config;
   config.resolutionWidth =
-      table["resolution_width"].value_or(config.resolutionWidth);
-  if (const auto aspectStr = table["aspect_ratio"].value<std::string>();
-      !aspectStr) {
-    config.aspectRatio = stringToAspectRatio(*aspectStr);
-  }
+      renderConfig.get("resolution_width")->asFloat(config.resolutionWidth);
+  config.aspectRatio =
+      stringToAspectRatio(renderConfig.get("aspect_ratio")->asString());
   config.resolutionHeight =
       calculateResolutionHeight(config.aspectRatio, config.resolutionWidth);
   config.viewportHeight =
-      table["viewport_height"].value_or(config.viewportHeight);
+      renderConfig.get("viewport_height")->asFloat(config.viewportHeight);
   config.viewportWidth = calculateViewportWidth(
       config.resolutionWidth, config.resolutionHeight, config.viewportHeight);
   LC_LOG_VERBOSE(logging::LogLevel::INFO, "Render config loaded successfully");
