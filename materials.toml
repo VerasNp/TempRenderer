@@ -1,0 +1,170 @@
+# materials.toml, preset de materiais clássicos (devernay/OpenGL teapot materials)
+#
+
+[[materials]]
+name = "emerald"
+ka = { r = 5, g = 45, b = 5 }
+kd = { r = 19, g = 157, b = 19 }
+ks = { r = 161, g = 186, b = 161 }
+alpha = 0.6
+
+[[materials]]
+name = "jade"
+ka = { r = 34, g = 57, b = 40 }
+kd = { r = 138, g = 227, b = 161 }
+ks = { r = 81, g = 81, b = 81 }
+alpha = 0.1
+
+[[materials]]
+name = "obsidian"
+ka = { r = 14, g = 13, b = 17 }
+kd = { r = 47, g = 43, b = 57 }
+ks = { r = 85, g = 84, b = 88 }
+alpha = 0.3
+
+[[materials]]
+name = "pearl"
+ka = { r = 64, g = 53, b = 53 }
+kd = { r = 255, g = 211, b = 211 }
+ks = { r = 76, g = 76, b = 76 }
+alpha = 0.088
+
+[[materials]]
+name = "ruby"
+ka = { r = 45, g = 3, b = 3 }
+kd = { r = 157, g = 11, b = 11 }
+ks = { r = 186, g = 160, b = 160 }
+alpha = 0.6
+
+[[materials]]
+name = "turquoise"
+ka = { r = 26, g = 48, b = 45 }
+kd = { r = 101, g = 189, b = 176 }
+ks = { r = 76, g = 79, b = 78 }
+alpha = 0.1
+
+[[materials]]
+name = "brass"
+ka = { r = 84, g = 57, b = 7 }
+kd = { r = 199, g = 145, b = 29 }
+ks = { r = 253, g = 240, b = 206 }
+alpha = 0.21794872
+
+[[materials]]
+name = "bronze"
+ka = { r = 54, g = 33, b = 14 }
+kd = { r = 182, g = 109, b = 46 }
+ks = { r = 100, g = 69, b = 43 }
+alpha = 0.2
+
+[[materials]]
+name = "chrome"
+ka = { r = 64, g = 64, b = 64 }
+kd = { r = 102, g = 102, b = 102 }
+ks = { r = 198, g = 198, b = 198 }
+alpha = 0.6
+
+[[materials]]
+name = "copper"
+ka = { r = 49, g = 19, b = 6 }
+kd = { r = 179, g = 69, b = 21 }
+ks = { r = 65, g = 35, b = 22 }
+alpha = 0.1
+
+[[materials]]
+name = "gold"
+ka = { r = 63, g = 51, b = 19 }
+kd = { r = 192, g = 155, b = 58 }
+ks = { r = 160, g = 142, b = 93 }
+alpha = 0.4
+
+[[materials]]
+name = "silver"
+ka = { r = 49, g = 49, b = 49 }
+kd = { r = 129, g = 129, b = 129 }
+ks = { r = 130, g = 130, b = 130 }
+alpha = 0.4
+
+[[materials]]
+name = "black_plastic"
+ka = { r = 0, g = 0, b = 0 }
+kd = { r = 3, g = 3, b = 3 }
+ks = { r = 128, g = 128, b = 128 }
+alpha = 0.25
+
+[[materials]]
+name = "cyan_plastic"
+ka = { r = 0, g = 26, b = 15 }
+kd = { r = 0, g = 130, b = 130 }
+ks = { r = 128, g = 128, b = 128 }
+alpha = 0.25
+
+[[materials]]
+name = "green_plastic"
+ka = { r = 0, g = 0, b = 0 }
+kd = { r = 26, g = 89, b = 26 }
+ks = { r = 115, g = 140, b = 115 }
+alpha = 0.25
+
+[[materials]]
+name = "red_plastic"
+ka = { r = 0, g = 0, b = 0 }
+kd = { r = 128, g = 0, b = 0 }
+ks = { r = 179, g = 153, b = 153 }
+alpha = 0.25
+
+[[materials]]
+name = "white_plastic"
+ka = { r = 0, g = 0, b = 0 }
+kd = { r = 140, g = 140, b = 140 }
+ks = { r = 179, g = 179, b = 179 }
+alpha = 0.25
+
+[[materials]]
+name = "yellow_plastic"
+ka = { r = 0, g = 0, b = 0 }
+kd = { r = 128, g = 128, b = 0 }
+ks = { r = 153, g = 153, b = 128 }
+alpha = 0.25
+
+[[materials]]
+name = "black_rubber"
+ka = { r = 5, g = 5, b = 5 }
+kd = { r = 3, g = 3, b = 3 }
+ks = { r = 102, g = 102, b = 102 }
+alpha = 0.078125
+
+[[materials]]
+name = "cyan_rubber"
+ka = { r = 0, g = 13, b = 13 }
+kd = { r = 102, g = 128, b = 128 }
+ks = { r = 10, g = 179, b = 179 }
+alpha = 0.078125
+
+[[materials]]
+name = "green_rubber"
+ka = { r = 0, g = 13, b = 0 }
+kd = { r = 102, g = 128, b = 102 }
+ks = { r = 10, g = 179, b = 10 }
+alpha = 0.078125
+
+[[materials]]
+name = "red_rubber"
+ka = { r = 13, g = 0, b = 0 }
+kd = { r = 128, g = 102, b = 102 }
+ks = { r = 179, g = 10, b = 10 }
+alpha = 0.078125
+
+[[materials]]
+name = "white_rubber"
+ka = { r = 13, g = 13, b = 13 }
+kd = { r = 128, g = 128, b = 128 }
+ks = { r = 179, g = 179, b = 179 }
+alpha = 0.078125
+
+[[materials]]
+name = "yellow_rubber"
+ka = { r = 13, g = 13, b = 0 }
+kd = { r = 128, g = 128, b = 102 }
+ks = { r = 179, g = 179, b = 10 }
+alpha = 0.078125

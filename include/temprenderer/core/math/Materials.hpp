@@ -49,6 +49,6 @@ struct Material {
   ColorF kd = ColorF{0, 0, 0};
   std::optional<ColorF> ks;
   std::optional<ColorF> ka;
-  std::optional<std::uint16_t> alpha;
+  std::optional<float> alpha;
 };
 } // namespace temprenderer::core::math

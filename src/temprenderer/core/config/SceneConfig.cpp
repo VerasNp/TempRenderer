@@ -66,7 +66,7 @@ void setMaterialProps(math::Material &material,
   if (const auto ambientConfig = materialConfig.get("ka")) {
     material.ka = parseColorDataFromConfig(*ambientConfig);
   }
-  material.alpha = materialConfig.get("alpha")->asInt<std::int16_t>();
+  material.alpha = materialConfig.get("alpha")->asFloat();
 }
 
 /**
