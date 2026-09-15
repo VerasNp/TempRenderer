@@ -1,0 +1,111 @@
+//
+// Example proj1.json
+//
+// By Vitor Veras
+//
+
+// Scene config
+{
+	"scene": {
+		"collection": [
+			{
+				"type_object": "camera",
+				"properties": {
+					"eye": {
+						"x": 0.0,
+						"y": 0.0,
+						"z": 0.0
+					},
+					"focal_length": 4.0
+				}
+			},
+			{
+				"type_object": "light",
+				"properties": {
+					"name": "point",
+					"type": "point",
+					"position": {
+						"x": 0.0,
+						"y": 50.0,
+						"z": -100.0
+					},
+					"intensity": 300.0,
+					"color": {
+						"r": 255,
+						"g": 255,
+						"b": 255
+					}
+				}
+			},
+			{
+				"type_object": "light",
+				"properties": {
+					"name": "ambient",
+					"type": "ambient",
+					"position": {
+						"x": 0.0,
+						"y": 5.0,
+						"z": 0.0
+					},
+					"intensity": 20.0,
+					"color": {
+						"r": 255,
+						"g": 255,
+						"b": 255
+					}
+				}
+			},
+			{
+				"type_object": "mesh",
+				"properties": {
+					"name": "sphere",
+					"type": "sphere",
+					"properties": {
+						"center": {
+							"x": 0.0,
+							"y": 0.0,
+							"z": -140.0
+						},
+						"radius": 20.0,
+						"material": "jade"
+					}
+				}
+			},
+			{
+				"type_object": "mesh",
+				"properties": {
+					"name": "sphere",
+					"type": "sphere",
+					"properties": {
+						"center": {
+							"x": 0.0,
+							"y": 0.0,
+							"z": -300.0
+						},
+						"radius": 100.0,
+						"material": {
+							"properties": {
+								"ka": {
+									"r": 5,
+									"g": 44,
+									"b": 5
+								},
+								"kd": {
+									"r": 19,
+									"g": 157,
+									"b": 19
+								},
+								"ks": {
+									"r": 161,
+									"g": 186,
+									"b": 161
+								},
+								"alpha": 0.6
+							}
+						}
+					}
+				}
+			}
+		]
+	}
+}

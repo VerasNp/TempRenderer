@@ -1,8 +1,8 @@
 #include "temprenderer/renderer/Camera.hpp"
 
 namespace temprenderer::renderer {
-Camera::Camera(const kwp::Point3 &eye, unsigned int resolutionWidth,
-               unsigned int resolutionHeight, float viewportWidth,
+Camera::Camera(const kwp::Point3 &eye, std::uint16_t resolutionWidth,
+               std::uint16_t resolutionHeight, float viewportWidth,
                float viewportHeight) {
   this->eye_ = eye;
   this->resolutionWidth_ = resolutionWidth;

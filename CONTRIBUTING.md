@@ -142,7 +142,7 @@ pre-commit install
 pre-commit install --hook-type commit-msg
 
 # Crie um arquivo de configuração
-mv config.toml.example config.toml
+mv example_config.toml config.toml
 
 # Execução do projeto
 make run

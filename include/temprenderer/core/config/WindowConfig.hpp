@@ -1,7 +1,7 @@
 #pragma once
-#include "toml++/impl/std_optional.hpp"
-#include "toml++/impl/table.hpp"
+#include "core/parsers/ParserPort.hpp"
 
+#include <cstdint>
 #include <string>
 
 namespace temprenderer::core::config {
@@ -16,12 +16,19 @@ struct WindowConfig {
   /**
    * Window width
    */
-  unsigned int width = 800;
+  std::uint16_t width = 1280;
   /**
    * Window height
    */
-  unsigned int height = 600;
+  std::uint16_t height = 720;
 
-  static WindowConfig loadWindowConfig(const toml::table &table);
+  /**
+   * @brief Loads window config into struct data structure
+   *
+   * @param windowConfig TODO
+   * @return Window config struct
+   */
+  [[nodiscard]] static WindowConfig
+  loadWindowConfig(const parsers::ConfigValue &windowConfig);
 };
 } // namespace temprenderer::core::config

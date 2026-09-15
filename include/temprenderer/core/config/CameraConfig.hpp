@@ -1,6 +1,6 @@
 #pragma once
+#include "core/parsers/ParserPort.hpp"
 #include "kwp/Point3.hpp"
-#include "toml++/toml.hpp"
 
 namespace temprenderer::core::config {
 /**
@@ -12,11 +12,17 @@ struct CameraConfig {
    */
   kwp::Point3 eye{0, 0, 0};
   /**
-   * Distance from canvas
+   * Distance from viewport
    */
-  kwp::Scalar focalLength = 1.0F;
+  float focalLength = 1.0F;
 
+  /**
+   * @brief Loads camera config into struct
+   *
+   * @param cameraConfig TODO
+   * @return Camera config
+   */
   [[nodiscard]] static CameraConfig
-  loadCameraConfig(const toml::table &table) noexcept;
+  loadCameraConfig(const parsers::ConfigValue &cameraConfig) noexcept;
 };
 } // namespace temprenderer::core::config

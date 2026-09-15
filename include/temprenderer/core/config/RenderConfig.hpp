@@ -1,9 +1,13 @@
 #pragma once
 
-#include <toml++/toml.hpp>
+#include "core/parsers/ParserPort.hpp"
+
+#include <cstdint>
 
 namespace temprenderer::core::config {
-
+/**
+ * Possible aspect ratio values
+ */
 enum class AspectRatio { WIDESCREEN, STANDARD, ULTRAWIDE };
 
 /**
@@ -13,11 +17,11 @@ struct RenderConfig {
   /**
    * Number of columns of pixels on canvas
    */
-  unsigned int resolutionWidth = 800;
+  std::uint16_t resolutionWidth = 1280;
   /**
    * Number of lines of pixels on canvas
    */
-  unsigned int resolutionHeight = 600;
+  std::uint16_t resolutionHeight = 720;
   /**
    * Ratio between width and height
    */
@@ -29,10 +33,15 @@ struct RenderConfig {
   /**
    * Physical width size of viewport
    */
-  float viewportWidth = 2.0F;
+  float viewportWidth = 3.55555558F;
 
-  [[nodiscard]] static RenderConfig loadRenderConfig(const toml::table &table);
-  [[nodiscard]] static float
-  aspectRatioToScalar(const AspectRatio &aspectRatio);
+  /**
+   * @brief Loads render config into struct data structure
+   *
+   * @param renderConfig TODO
+   * @return Render config struct
+   */
+  [[nodiscard]] static RenderConfig
+  loadRenderConfig(const parsers::ConfigValue &renderConfig);
 };
 } // namespace temprenderer::core::config
