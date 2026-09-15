@@ -41,12 +41,14 @@ struct ConeConfig {
   kwp::Point3 vertex{0, 0, 0};
 };
 
+using ObjectProps = std::variant<SphereConfig, ConeConfig>;
+
 /**
  * @brief Object configs
  */
 struct ObjectConfig {
   ObjectType type = ObjectType::SPHERE;
-  std::variant<SphereConfig> props;
+  ObjectProps props;
   math::Material material;
 };
 

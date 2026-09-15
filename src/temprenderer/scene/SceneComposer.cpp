@@ -1,5 +1,6 @@
 #include "scene/SceneComposer.hpp"
 #include "core/logging/LoggerManager.hpp"
+#include "renderer/Cone.hpp"
 #include "renderer/Light.hpp"
 #include "renderer/Sphere.hpp"
 
@@ -12,6 +13,12 @@ buildObject(const core::config::ObjectConfig &objectConfig) {
     const auto [position, radius] =
         std::get<core::config::SphereConfig>(objectConfig.props);
     return std::make_shared<Sphere>(position, radius, objectConfig.material);
+  }
+  if (objectConfig.type == core::config::ObjectType::CONE) {
+    const auto [baseCenter, baseRadius, vertex] =
+        std::get<core::config::ConeConfig>(objectConfig.props);
+    return std::make_shared<renderer::Cone>(baseCenter, baseRadius, vertex,
+                                            objectConfig.material);
   }
   LC_LOG(core::logging::LogLevel::WARNING, "Object type not recognized");
   return nullptr;

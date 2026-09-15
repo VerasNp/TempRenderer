@@ -2,11 +2,11 @@
 #include "core/math/Materials.hpp"
 #include "temprenderer/scene/Hittable.hpp"
 
-namespace temprenderer::scene {
+namespace temprenderer::renderer {
 /**
 * @brief A cone primitive, defined by a center of base, radius of base and vertex in world space.
  */
-class Cone : public Hittable {
+class Cone : public scene::Hittable {
 public:
   Cone(const kwp::Point3 &baseCenter, kwp::Scalar baseRadius,
        const kwp::Point3 &vertex, core::math::Material material) noexcept;
@@ -20,7 +20,9 @@ public:
    */
   [[nodiscard]] bool
   intersect(const core::math::Ray &ray,
-            SurfaceInteraction *isec) const noexcept override;
+            scene::SurfaceInteraction *isec) const noexcept override;
+
+  kwp::Vec3 computeLateralNormal(const kwp::Point3 &point) const noexcept;
 
 private:
   kwp::Point3 baseCenter_;
@@ -31,4 +33,4 @@ private:
   core::math::Material material_;
 };
 
-} // namespace temprenderer::scene
+} // namespace temprenderer::renderer
