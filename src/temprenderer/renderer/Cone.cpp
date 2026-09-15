@@ -1,5 +1,4 @@
 #include "renderer/Cone.hpp"
-
 #include "kwp/Matrix33.hpp"
 #include "temprenderer/core/math/utils.hpp"
 
