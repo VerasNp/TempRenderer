@@ -13,13 +13,14 @@ bool Plane::intersect(const core::math::Ray &ray,
   if (std::abs(w) < kwp::epsilon) {
     return false;
   }
+
   const kwp::Vec3 v = ray.getOrigin() - this->point_;
   const kwp::Scalar tIntersection = -kwp::dot(this->normal_, v) / w;
   if (tIntersection <= kwp::epsilon) {
     return false;
   }
   isec->point = ray(tIntersection);
-  isec->normal = this->normal_;
+  isec->normal = (w < 0) ? this->normal_ : -this->normal_;
   isec->material = material_;
   return true;
 }
