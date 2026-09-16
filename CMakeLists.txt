@@ -47,6 +47,7 @@ set(temprenderer_core_source_files
         "${temprenderer_core_source_dir}/temprenderer/renderer/RendererManager.cpp"
         "${temprenderer_core_source_dir}/temprenderer/renderer/Sphere.cpp"
         "${temprenderer_core_source_dir}/temprenderer/renderer/Cone.cpp"
+        "${temprenderer_core_source_dir}/temprenderer/renderer/Plane.cpp"
         "${temprenderer_core_source_dir}/temprenderer/scene/SceneComposer.cpp"
         "${temprenderer_core_source_dir}/temprenderer/ApplicationManager.cpp"
 )

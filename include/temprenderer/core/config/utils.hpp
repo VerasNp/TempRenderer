@@ -23,6 +23,20 @@ parsePoint3DDataFromConfig(const parsers::ConfigValue &point3DData) {
 /**
  * @brief TODO
  *
+ * @param vector3DData
+ * @return
+ */
+inline kwp::Vec3
+parseVector3DDataFromConfig(const parsers::ConfigValue &vector3DData) {
+  const float xNode = vector3DData.get("x")->asFloat();
+  const float yNode = vector3DData.get("y")->asFloat();
+  const float zNode = vector3DData.get("z")->asFloat();
+  return kwp::Vec3{xNode, yNode, zNode};
+}
+
+/**
+ * @brief TODO
+ *
  * @param colorData
  * @return
  */
@@ -114,6 +128,12 @@ stringToAspectRatio(const std::string &aspectRatio) {
   if (objectType == ObjectType::SPHERE) {
     return "sphere";
   }
+  if (objectType == ObjectType::CONE) {
+    return "cone";
+  }
+  if (objectType == ObjectType::PLANE) {
+    return "plane";
+  }
   return "unknown";
 }
 
@@ -142,6 +162,9 @@ stringToAspectRatio(const std::string &aspectRatio) {
   if (objectType == "cone") {
     return ObjectType::CONE;
   }
+  if (objectType == "plane") {
+    return ObjectType::PLANE;
+  }
   return ObjectType::SPHERE;
 }
 
@@ -152,6 +175,8 @@ createDefaultProps(const ObjectType type) noexcept {
     return SphereConfig{};
   case ObjectType::CONE:
     return ConeConfig{};
+  case ObjectType::PLANE:
+    return PlaneConfig{};
   default:;
     return SphereConfig{};
   }

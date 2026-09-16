@@ -58,6 +58,14 @@ void setObjectProps(ObjectConfig &object,
     if (const auto radiusOpt = propsConfig.get("base_radius")) {
       cone.baseRadius = radiusOpt->asFloat(cone.baseRadius);
     }
+  } else if (object.type == ObjectType::PLANE) {
+    auto &plane = std::get<PlaneConfig>(object.props);
+    if (const auto position = propsConfig.get("point")) {
+      plane.point = parsePoint3DDataFromConfig(*position);
+    }
+    if (const auto vector = propsConfig.get("normal")) {
+      plane.normal = parseVector3DDataFromConfig(*vector);
+    }
   }
 }
 
