@@ -100,16 +100,13 @@ bool Cone::intersect(const core::math::Ray &ray,
       isBaseHit ? -this->coneDirection_ : computeLateralNormal(isec->point);
   isec->material = material_;
   return true;
-  return true;
 }
 
-kwp::Vec3 Cone::computeLateralNormal(const kwp::Point3 &point) const noexcept {
-  kwp::Vec3 pc = point - this->baseCenter_;
-  kwp::Scalar projLength = kwp::dot(pc, this->coneDirection_);
-  kwp::Point3 pointOnAxis =
-      this->baseCenter_ + this->coneDirection_ * projLength;
-  kwp::Vec3 radial = (point - pointOnAxis).normalize();
-  kwp::Scalar k = this->baseRadius_ / this->height_;
-  return (radial - this->coneDirection_ * k).normalize();
+kwp::Vec3 Cone::computeLateralNormal(
+    const kwp::Point3 &intersectionPoint) const noexcept {
+  const kwp::Vec3 k = this->vertex_ - intersectionPoint;
+  const kwp::Vec3 w = kwp::cross(k, this->coneDirection_);
+  const kwp::Vec3 n = kwp::cross(w, k);
+  return n.normalize();
 }
 } // namespace temprenderer::renderer
