@@ -139,7 +139,22 @@ stringToAspectRatio(const std::string &aspectRatio) {
   if (objectType == "sphere") {
     return ObjectType::SPHERE;
   }
+  if (objectType == "cone") {
+    return ObjectType::CONE;
+  }
   return ObjectType::SPHERE;
+}
+
+[[nodiscard]] inline ObjectProps
+createDefaultProps(const ObjectType type) noexcept {
+  switch (type) {
+  case ObjectType::SPHERE:
+    return SphereConfig{};
+  case ObjectType::CONE:
+    return ConeConfig{};
+  default:;
+    return SphereConfig{};
+  }
 }
 
 /**

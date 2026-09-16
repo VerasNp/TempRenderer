@@ -40,12 +40,24 @@ loadLightsConfig(const parsers::ConfigValue &lightsConfig) {
 void setObjectProps(ObjectConfig &object,
                     const parsers::ConfigValue &propsConfig) noexcept {
   if (object.type == ObjectType::SPHERE) {
+    auto &sphere = std::get<SphereConfig>(object.props);
     if (const auto position = propsConfig.get("center")) {
-      get<SphereConfig>(object.props).center =
-          parsePoint3DDataFromConfig(*position);
+      sphere.center = parsePoint3DDataFromConfig(*position);
     }
-    get<SphereConfig>(object.props).radius = propsConfig.get("radius")->asFloat(
-        get<SphereConfig>(object.props).radius);
+    if (const auto radiusOpt = propsConfig.get("radius")) {
+      sphere.radius = radiusOpt->asFloat(sphere.radius);
+    }
+  } else if (object.type == ObjectType::CONE) {
+    auto &cone = std::get<ConeConfig>(object.props);
+    if (const auto position = propsConfig.get("base_center")) {
+      cone.baseCenter = parsePoint3DDataFromConfig(*position);
+    }
+    if (const auto position = propsConfig.get("vertex")) {
+      cone.vertex = parsePoint3DDataFromConfig(*position);
+    }
+    if (const auto radiusOpt = propsConfig.get("base_radius")) {
+      cone.baseRadius = radiusOpt->asFloat(cone.baseRadius);
+    }
   }
 }
 
@@ -82,6 +94,7 @@ loadObjectsConfig(const parsers::ConfigValue &objectsConfig) {
   for (const auto &objectConfig : objectsConfig.asArray()) {
     ObjectConfig object;
     object.type = stringToObjectType(objectConfig.get("type")->asString());
+    object.props = createDefaultProps(object.type);
     setObjectProps(object, *objectConfig.get("props"));
     setMaterialProps(object.material,
                      *objectConfig.get("material")->get("props"));

@@ -2,7 +2,6 @@
 #include "core/math/Materials.hpp"
 #include "core/parsers/ParserPort.hpp"
 #include "kwp/Point3.hpp"
-#include <string>
 #include <variant>
 #include <vector>
 
@@ -26,7 +25,7 @@ struct LightConfig {
 /**
  * Possible types of objects
  */
-enum class ObjectType { SPHERE };
+enum class ObjectType { SPHERE, OBJECT, CONE };
 
 /**
  * @brief Sphere configs
@@ -36,12 +35,20 @@ struct SphereConfig {
   kwp::Scalar radius = 1.0F;
 };
 
+struct ConeConfig {
+  kwp::Point3 baseCenter{0, 0, 0};
+  float baseRadius = 1.0F;
+  kwp::Point3 vertex{0, 0, 0};
+};
+
+using ObjectProps = std::variant<SphereConfig, ConeConfig>;
+
 /**
  * @brief Object configs
  */
 struct ObjectConfig {
   ObjectType type = ObjectType::SPHERE;
-  std::variant<SphereConfig> props;
+  ObjectProps props;
   math::Material material;
 };
 
