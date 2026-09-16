@@ -16,13 +16,13 @@ Cone::Cone(const kwp::Point3 &baseCenter, kwp::Scalar baseRadius,
 
 bool Cone::intersect(const core::math::Ray &ray,
                      scene::SurfaceInteraction *isec) const noexcept {
+  kwp::Vec3 v = ray.getOrigin() - this->baseCenter_;
   kwp::Scalar tLateral = -1;
   bool hitLateral = false;
   {
     kwp::Matrix33 M =
         kwp::identity33() -
         kwp::outerProduct(this->coneDirection_, this->coneDirection_);
-    kwp::Vec3 v = ray.getOrigin() - this->baseCenter_;
     kwp::Scalar a =
         kwp::dot(kwp::multiplyRowVector(ray.getDirection(), M),
                  ray.getDirection()) -
@@ -41,35 +41,37 @@ bool Cone::intersect(const core::math::Ray &ray,
           (2 * this->height_ * kwp::dot(v, this->coneDirection_))));
     kwp::Scalar t0;
     kwp::Scalar t1;
-    if (core::math::quadratic(a, b, c, &t0, &t1)) {
-      for (kwp::Scalar t : {t0, t1}) {
-        if (t < 0)
-          continue;
-        kwp::Point3 p = ray(t);
-        kwp::Vec3 wi = this->baseCenter_ - p; // era: baseCenter_ - p
-        kwp::Scalar projectedHeight = kwp::dot(wi, this->coneDirection_);
-        if (projectedHeight >= 0 && projectedHeight <= this->height_) {
-          tLateral = t;
-          hitLateral = true;
-          break;
-        }
+    if (!core::math::quadratic(a, b, c, &t0, &t1)) {
+      return false;
+    }
+    if (t0 < 0) {
+      t0 = t1;
+      if (t0 < 0) {
+        return false;
       }
+    }
+    kwp::Point3 pi = ray(t0);
+    kwp::Vec3 wi = pi - this->baseCenter_;
+    kwp::Scalar projectedHeight = kwp::dot(wi, this->coneDirection_);
+    if (projectedHeight >= 0 && projectedHeight <= this->height_) {
+      tLateral = t0;
+      hitLateral = true;
     }
   }
 
   kwp::Scalar tBase = -1;
   bool hitBase = false;
   {
-    kwp::Vec3 planeNormal = -this->coneDirection_;
-    kwp::Scalar denom = kwp::dot(planeNormal, ray.getDirection());
+    kwp::Vec3 coneBaseNormal = -this->coneDirection_;
+    kwp::Scalar denom = kwp::dot(coneBaseNormal, ray.getDirection());
     if (std::abs(denom) > 1e-6F) {
-      kwp::Scalar t =
-          kwp::dot(this->baseCenter_ - ray.getOrigin(), planeNormal) / denom;
-      if (t >= 0) {
-        kwp::Point3 p = ray(t);
+      kwp::Scalar tb =
+          kwp::dot(this->baseCenter_ - ray.getOrigin(), coneBaseNormal) / denom;
+      if (tb >= 0) {
+        kwp::Point3 p = ray(tb);
         kwp::Scalar distFromCenter = (p - this->baseCenter_).length();
         if (distFromCenter <= this->baseRadius_) {
-          tBase = t;
+          tBase = tb;
           hitBase = true;
         }
       }
