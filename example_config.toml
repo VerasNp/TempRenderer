@@ -42,6 +42,6 @@ props = { center = { x = 0.0, y = 0.0, z = -100.0 }, radius = 20.0 }
 material = { props = { ka = { r = 40, g = 0, b = 0 }, kd = { r = 200, g = 20, b = 20 }, ks = { r = 255, g = 255, b = 255 }, alpha = 64 } }
 
 [[scene.objects]]
-type = "sphere"
-props = { center = { x = -20.0, y = -20.0, z = -140.0 }, radius = 20.0 }
+type = "cone"
+props = { base_center = { x = 0.0, y = 0.0, z = -90.0 }, base_radius = 20.0, vertex = { x = -28.284, y = 28.284, z = -110.0 } }
 material = { props = { ka = { r = 40, g = 0, b = 0 }, kd = { r = 200, g = 20, b = 20 }, ks = { r = 255, g = 255, b = 255 }, alpha = 64 } }

@@ -25,7 +25,7 @@ struct LightConfig {
 /**
  * Possible types of objects
  */
-enum class ObjectType { SPHERE, OBJECT, CONE };
+enum class ObjectType { SPHERE, OBJECT, CONE, PLANE };
 
 /**
  * @brief Sphere configs
@@ -41,7 +41,12 @@ struct ConeConfig {
   kwp::Point3 vertex{0, 0, 0};
 };
 
-using ObjectProps = std::variant<SphereConfig, ConeConfig>;
+struct PlaneConfig {
+  kwp::Point3 point{0, 0, 0};
+  kwp::Vec3 normal{0, 1, 0};
+};
+
+using ObjectProps = std::variant<SphereConfig, ConeConfig, PlaneConfig>;
 
 /**
  * @brief Object configs

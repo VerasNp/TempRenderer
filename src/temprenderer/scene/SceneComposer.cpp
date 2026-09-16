@@ -2,6 +2,7 @@
 #include "core/logging/LoggerManager.hpp"
 #include "renderer/Cone.hpp"
 #include "renderer/Light.hpp"
+#include "renderer/Plane.hpp"
 #include "renderer/Sphere.hpp"
 
 namespace temprenderer::scene {
@@ -19,6 +20,12 @@ buildObject(const core::config::ObjectConfig &objectConfig) {
         std::get<core::config::ConeConfig>(objectConfig.props);
     return std::make_shared<renderer::Cone>(baseCenter, baseRadius, vertex,
                                             objectConfig.material);
+  }
+  if (objectConfig.type == core::config::ObjectType::PLANE) {
+    const auto [point, normal] =
+        std::get<core::config::PlaneConfig>(objectConfig.props);
+    return std::make_shared<renderer::Plane>(point, normal,
+                                             objectConfig.material);
   }
   LC_LOG(core::logging::LogLevel::WARNING, "Object type not recognized");
   return nullptr;
