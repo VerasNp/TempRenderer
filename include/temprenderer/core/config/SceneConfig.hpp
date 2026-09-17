@@ -25,7 +25,7 @@ struct LightConfig {
 /**
  * Possible types of objects
  */
-enum class ObjectType { SPHERE, OBJECT, CONE, PLANE };
+enum class ObjectType { SPHERE, OBJECT, CONE, PLANE, CYLINDER };
 
 /**
  * @brief Sphere configs
@@ -46,7 +46,14 @@ struct PlaneConfig {
   kwp::Vec3 normal{0, 1, 0};
 };
 
-using ObjectProps = std::variant<SphereConfig, ConeConfig, PlaneConfig>;
+struct CylinderConfig {
+  kwp::Point3 baseCenter{0, 0, 0};
+  float baseRadius = 1.0F;
+  kwp::Point3 topCenter{0, 0, 0};
+};
+
+using ObjectProps =
+    std::variant<SphereConfig, ConeConfig, PlaneConfig, CylinderConfig>;
 
 /**
  * @brief Object configs

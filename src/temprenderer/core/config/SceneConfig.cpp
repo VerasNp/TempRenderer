@@ -66,6 +66,17 @@ void setObjectProps(ObjectConfig &object,
     if (const auto vector = propsConfig.get("normal")) {
       plane.normal = parseVector3DDataFromConfig(*vector);
     }
+  } else if (object.type == ObjectType::CYLINDER) {
+    auto &cylinder = std::get<CylinderConfig>(object.props);
+    if (const auto position = propsConfig.get("base_center")) {
+      cylinder.baseCenter = parsePoint3DDataFromConfig(*position);
+    }
+    if (const auto radiusOpt = propsConfig.get("base_radius")) {
+      cylinder.baseRadius = radiusOpt->asFloat(cylinder.baseRadius);
+    }
+    if (const auto position = propsConfig.get("top_center")) {
+      cylinder.topCenter = parsePoint3DDataFromConfig(*position);
+    }
   }
 }
 
