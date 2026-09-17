@@ -1,6 +1,7 @@
 #include "scene/SceneComposer.hpp"
 #include "core/logging/LoggerManager.hpp"
 #include "renderer/Cone.hpp"
+#include "renderer/Cylinder.hpp"
 #include "renderer/Light.hpp"
 #include "renderer/Plane.hpp"
 #include "renderer/Sphere.hpp"
@@ -26,6 +27,12 @@ buildObject(const core::config::ObjectConfig &objectConfig) {
         std::get<core::config::PlaneConfig>(objectConfig.props);
     return std::make_shared<renderer::Plane>(point, normal,
                                              objectConfig.material);
+  }
+  if (objectConfig.type == core::config::ObjectType::CYLINDER) {
+    const auto [baseCenter, baseRadius, height] =
+        std::get<core::config::CylinderConfig>(objectConfig.props);
+    return std::make_shared<renderer::Cylinder>(baseCenter, baseRadius, height,
+                                                objectConfig.material);
   }
   LC_LOG(core::logging::LogLevel::WARNING, "Object type not recognized");
   return nullptr;

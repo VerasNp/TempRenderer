@@ -37,16 +37,21 @@ intensity = 20.0
 color = { r = 255, g = 255, b = 255 }
 
 [[scene.objects]]
-type = "sphere"
-props = { center = { x = 0.0, y = 0.0, z = -100.0 }, radius = 20.0 }
-material = { props = { ka = { r = 40, g = 0, b = 0 }, kd = { r = 200, g = 20, b = 20 }, ks = { r = 255, g = 255, b = 255 }, alpha = 64 } }
+type = "plane"
+props = { point = { x = 0.0, y = -90.0, z = 0.0 }, normal = { x = 0.0, y = 1.0, z = 0.0 } }
+material = { props = { ka = { r = 20, g = 15, b = 10 }, kd = { r = 120, g = 90, b = 60 }, ks = { r = 40, g = 40, b = 40 }, alpha = 8 } }
+
+[[scene.objects]]
+type = "cylinder"
+props = { base_center = { x = 0.0, y = -90.0, z = -90.0 }, base_radius = 12.0, top_center = { x = 0.0, y = 15.0, z = -90.0 } }
+material = { props = { ka = { r = 40, g = 40, b = 40 }, kd = { r = 210, g = 210, b = 215 }, ks = { r = 255, g = 255, b = 255 }, alpha = 96 } }
 
 [[scene.objects]]
 type = "cone"
-props = { base_center = { x = 0.0, y = 0.0, z = -90.0 }, base_radius = 20.0, vertex = { x = -28.284, y = 28.284, z = -110.0 } }
+props = { base_center = { x = 0.0, y = 15.0, z = -90.0 }, base_radius = 12.0, vertex = { x = 0.0, y = 50.0, z = -90.0 } }
 material = { props = { ka = { r = 40, g = 0, b = 0 }, kd = { r = 200, g = 20, b = 20 }, ks = { r = 255, g = 255, b = 255 }, alpha = 64 } }
 
 [[scene.objects]]
-type = "plane"
-props = { point = { x = 0.0, y = -90.0, z = 0.0 }, normal = { x = 0.0, y = 1.0, z = 0.0 } }
-material = { props = { ka = { r = 40, g = 0, b = 0 }, kd = { r = 200, g = 20, b = 20 }, ks = { r = 255, g = 255, b = 255 }, alpha = 64 } }
+type = "sphere"
+props = { center = { x = 50.0, y = -70.0, z = -90.0 }, radius = 20.0 }
+material = { props = { ka = { r = 0, g = 15, b = 40 }, kd = { r = 30, g = 90, b = 200 }, ks = { r = 255, g = 255, b = 255 }, alpha = 32 } }

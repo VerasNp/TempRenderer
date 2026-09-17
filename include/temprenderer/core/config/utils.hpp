@@ -134,6 +134,9 @@ stringToAspectRatio(const std::string &aspectRatio) {
   if (objectType == ObjectType::PLANE) {
     return "plane";
   }
+  if (objectType == ObjectType::CYLINDER) {
+    return "cylinder";
+  }
   return "unknown";
 }
 
@@ -165,7 +168,10 @@ stringToAspectRatio(const std::string &aspectRatio) {
   if (objectType == "plane") {
     return ObjectType::PLANE;
   }
-  return ObjectType::SPHERE;
+  if (objectType == "cylinder") {
+    return ObjectType::CYLINDER;
+  }
+  return ObjectType::OBJECT;
 }
 
 [[nodiscard]] inline ObjectProps
@@ -177,6 +183,8 @@ createDefaultProps(const ObjectType type) noexcept {
     return ConeConfig{};
   case ObjectType::PLANE:
     return PlaneConfig{};
+  case ObjectType::CYLINDER:
+    return CylinderConfig{};
   default:;
     return SphereConfig{};
   }
