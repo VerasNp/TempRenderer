@@ -42,16 +42,16 @@ buildObject(const core::config::ObjectConfig &objectConfig) {
 Scene SceneComposer::compose(const core::config::SceneConfig &sceneConfig) {
   LC_LOG_VERBOSE(core::logging::LogLevel::INFO, "Scene being composed");
   Scene scene;
-  for (const auto &light : sceneConfig.lights) {
-    scene.addLight(std::make_shared<renderer::Light>(
-        light.type, light.position, light.color, light.intensity));
-  }
-  for (const auto &object : sceneConfig.objects) {
-    if (const auto obj = buildObject(object)) {
-      scene.addObject(obj);
-    }
-  }
-  LC_LOG_VERBOSE(core::logging::LogLevel::INFO, "Scene composed successfully");
+  // for (const auto &light : sceneConfig.lights) {
+  //   scene.addLight(std::make_shared<renderer::Light>(
+  //       light.type, light.position, light.color, light.intensity));
+  // }
+  // for (const auto &object : sceneConfig.objects) {
+  //   if (const auto obj = buildObject(object)) {
+  //     scene.addObject(obj);
+  //   }
+  // }
+  // LC_LOG_VERBOSE(core::logging::LogLevel::INFO, "Scene composed successfully");
   return scene;
 }
 } // namespace temprenderer::scene

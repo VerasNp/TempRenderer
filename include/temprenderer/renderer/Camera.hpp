@@ -1,5 +1,6 @@
 #pragma once
 #include "core/config/ApplicationConfig.hpp"
+#include "core/config/CameraConfig.hpp"
 #include "kwp/Point3.hpp"
 #include "temprenderer/core/math/Ray.hpp"
 

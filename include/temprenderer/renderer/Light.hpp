@@ -1,4 +1,5 @@
 #pragma once
+#include "core/config/SceneConfig.hpp"
 #include "core/math/Materials.hpp"
 #include "kwp/Point3.hpp"
 

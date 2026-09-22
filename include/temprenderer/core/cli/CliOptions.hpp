@@ -8,9 +8,13 @@ namespace temprenderer::core::cli {
  */
 struct CliOptions {
   /**
-   * @brief Config file path
+   * @brief Application config file path
    */
-  std::string configPath = "config.toml";
+  std::string applicationConfigFilePath = "config.toml";
+  /**
+   * @brief Application config file path
+   */
+  std::string sceneConfigFilePath = "";
   /**
    * @brief Application verbose
    */

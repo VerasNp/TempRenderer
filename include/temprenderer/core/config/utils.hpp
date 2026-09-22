@@ -175,7 +175,7 @@ stringToAspectRatio(const std::string &aspectRatio) {
 }
 
 [[nodiscard]] inline ObjectProps
-createDefaultProps(const ObjectType type) noexcept {
+createDefaultObjectProps(const ObjectType type) noexcept {
   switch (type) {
   case ObjectType::SPHERE:
     return SphereConfig{};
@@ -187,6 +187,16 @@ createDefaultProps(const ObjectType type) noexcept {
     return CylinderConfig{};
   default:;
     return SphereConfig{};
+  }
+}
+
+[[nodiscard]] inline SceneComponentProps
+createDefaultSceneComponentProps(const SceneComponentType type) noexcept {
+  switch (type) {
+  case SceneComponentType::CAMERA:
+    return CameraConfig{};
+  default:;
+    return std::monostate{};
   }
 }
 

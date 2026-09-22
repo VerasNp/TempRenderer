@@ -18,9 +18,9 @@ void ApplicationManager::startUp() {
          "Starting up application manager, workers working...");
   this->windowManager_.startUp();
   const platform::graphics::WindowProps windowsProps{
-      this->config_.window.title,
-      this->config_.window.width,
-      this->config_.window.height,
+      this->applicationConfig_.window.title,
+      this->applicationConfig_.window.width,
+      this->applicationConfig_.window.height,
   };
   if (!this->windowManager_.createWindow(windowsProps)) {
     LC_LOG(core::logging::LogLevel::ERROR, "Failed to create window");
@@ -30,20 +30,20 @@ void ApplicationManager::startUp() {
   this->editorManager_.setWindowManager(this->windowManager_);
   this->editorManager_.startUp();
   this->renderManager_.startUp();
-  this->scene_ = scene::SceneComposer::compose(this->config_.scene);
-  this->camera_ = renderer::Camera{
-      this->config_.camera.eye,
-      this->config_.render.resolutionWidth,
-      this->config_.render.resolutionHeight,
-      this->config_.render.viewportWidth,
-      this->config_.render.viewportHeight,
-  };
+  this->scene_ = scene::SceneComposer::compose(this->sceneConfig_);
+  // this->camera_ = renderer::Camera{
+  //     this->sceneConfig_.camera,
+  //     this->applicationConfig_.render.resolutionWidth,
+  //     this->applicationConfig_.render.resolutionHeight,
+  //     this->applicationConfig_.render.viewportWidth,
+  //     this->applicationConfig_.render.viewportHeight,
+  // };
   this->editorManager_.mainLayout().setOnRenderRequested([this]() {
     this->renderScene();
     this->editorManager_.renderResult().setTexture(
         this->renderManager_.getTextureId(),
-        this->config_.render.resolutionWidth,
-        this->config_.render.resolutionHeight);
+        this->applicationConfig_.render.resolutionWidth,
+        this->applicationConfig_.render.resolutionHeight);
     this->editorManager_.renderResult().open();
   });
   this->isApplicationInit_ = true;
@@ -62,12 +62,17 @@ void ApplicationManager::shutDown() {
 }
 void ApplicationManager::setApplicationConfig(
     const core::config::ApplicationConfig &config) {
-  this->config_ = config;
+  this->applicationConfig_ = config;
+}
+void ApplicationManager::setSceneConfig(
+    const core::config::SceneConfig &config) {
+  this->sceneConfig_ = config;
 }
 void ApplicationManager::renderScene() {
   renderer::PhongIntegrator integrator(
-      this->camera_.value(), this->config_.render.resolutionWidth,
-      this->config_.render.resolutionHeight, core::math::Color(100, 100, 100));
+      this->camera_.value(), this->applicationConfig_.render.resolutionWidth,
+      this->applicationConfig_.render.resolutionHeight,
+      core::math::Color(100, 100, 100));
   renderer::Canvas canvas = integrator.render(this->scene_);
   this->renderManager_.setCanvas(canvas);
 }

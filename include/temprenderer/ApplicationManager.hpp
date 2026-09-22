@@ -40,13 +40,21 @@ public:
    */
   void setApplicationConfig(const core::config::ApplicationConfig &config);
 
+  /**
+  * @brief Defines the application config
+  *
+  * @param config Loaded configs
+  */
+  void setSceneConfig(const core::config::SceneConfig &config);
+
 private:
   void renderScene();
 
   bool isApplicationInit_ = false;
   platform::graphics::WindowManager windowManager_;
   pd::editor::EditorManager editorManager_;
-  core::config::ApplicationConfig config_;
+  core::config::ApplicationConfig applicationConfig_;
+  core::config::SceneConfig sceneConfig_;
   renderer::RendererManager renderManager_;
   scene::Scene scene_;
   std::optional<renderer::Camera> camera_;

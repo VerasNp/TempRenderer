@@ -1,4 +1,5 @@
 #pragma once
+#include "CameraConfig.hpp"
 #include "core/math/Materials.hpp"
 #include "core/parsers/ParserPort.hpp"
 #include "kwp/Point3.hpp"
@@ -64,12 +65,22 @@ struct ObjectConfig {
   math::Material material;
 };
 
+enum class SceneComponentType { CAMERA, LIGHT, OBJECT, UNKNOWN };
+
+using SceneComponentProps =
+    std::variant<CameraConfig, LightConfig, ObjectConfig, std::monostate>;
+
+struct SceneComponent {
+  SceneComponentType type = SceneComponentType::UNKNOWN;
+  std::string name;
+  SceneComponentProps props;
+};
+
 /**
  * @brief Scene configs
  */
 struct SceneConfig {
-  std::vector<LightConfig> lights;
-  std::vector<ObjectConfig> objects;
+  std::vector<SceneComponent> collection;
 
   /**
    * @brief TODO
@@ -78,5 +89,23 @@ struct SceneConfig {
    * @return
    */
   static SceneConfig loadSceneConfig(const parsers::ConfigValue &sceneConfig);
+
+  /**
+ * @brief Loads scene config from file
+ *
+ * @param sceneConfigFilePath Path to scene config file
+ * @return Scene config
+ */
+  [[nodiscard]] static SceneConfig
+  loadFromFile(const std::string &sceneConfigFilePath = "");
+
+  /**
+   * @brief TODO
+   *
+   * @param sceneComponentType
+   * @return
+   */
+  static SceneComponentType
+  stringToSceneComponentType(const std::string &sceneComponentType);
 };
 } // namespace temprenderer::core::config

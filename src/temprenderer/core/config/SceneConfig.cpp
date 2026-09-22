@@ -83,6 +83,30 @@ void setObjectProps(ObjectConfig &object,
 /**
  * @brief TODO
  *
+ * @param object
+ * @param propsConfig
+ */
+void setSceneComponentProps(SceneComponent &object,
+                            const parsers::ConfigValue &propsConfig) noexcept {
+  switch (object.type) {
+  case SceneComponentType::CAMERA: {
+    auto &camera = std::get<CameraConfig>(object.props);
+    if (const auto position = propsConfig.get("eye")) {
+      camera.eye = parsePoint3DDataFromConfig(*position);
+    }
+  }
+  case SceneComponentType::LIGHT:
+    break;
+  case SceneComponentType::OBJECT:
+    break;
+  case SceneComponentType::UNKNOWN:
+    break;
+  }
+}
+
+/**
+ * @brief TODO
+ *
  * @param material
  * @param materialConfig
  */
@@ -113,7 +137,7 @@ loadObjectsConfig(const parsers::ConfigValue &objectsConfig) {
   for (const auto &objectConfig : objectsConfig.asArray()) {
     ObjectConfig object;
     object.type = stringToObjectType(objectConfig.get("type")->asString());
-    object.props = createDefaultProps(object.type);
+    object.props = createDefaultObjectProps(object.type);
     setObjectProps(object, *objectConfig.get("props"));
     setMaterialProps(object.material,
                      *objectConfig.get("material")->get("props"));
@@ -127,13 +151,58 @@ SceneConfig
 SceneConfig::loadSceneConfig(const parsers::ConfigValue &sceneConfig) {
   LC_LOG_VERBOSE(logging::LogLevel::INFO, "Loading scene config");
   SceneConfig config;
-  if (const auto lightsConfig = sceneConfig.get("lights");
-      lightsConfig->isArray()) {
-    config.lights = loadLightsConfig(*lightsConfig);
-  }
-  if (auto *const objects = sceneConfig.get("objects")) {
-    config.objects = loadObjectsConfig(*objects);
-  }
+  // if (const auto lightsConfig = sceneConfig.get("lights");
+  //     lightsConfig->isArray()) {
+  //   config.lights = loadLightsConfig(*lightsConfig);
+  // }
+  // if (auto *const objects = sceneConfig.get("objects")) {
+  //   config.objects = loadObjectsConfig(*objects);
+  // }
   return config;
+}
+
+SceneComponentType
+SceneConfig::stringToSceneComponentType(const std::string &sceneComponentType) {
+  if (sceneComponentType == "camera") {
+    return SceneComponentType::CAMERA;
+  }
+  if (sceneComponentType == "light") {
+    return SceneComponentType::LIGHT;
+  }
+  if (sceneComponentType == "object") {
+    return SceneComponentType::OBJECT;
+  }
+  return SceneComponentType::UNKNOWN;
+}
+
+SceneConfig SceneConfig::loadFromFile(const std::string &sceneConfigFilePath) {
+  const std::unique_ptr<parsers::ParserPort> sceneParser =
+      std::make_unique<parsers::NlohmannJSONParserAdapter>();
+  const parsers::ConfigValue rootScene =
+      sceneParser->parserFile(sceneConfigFilePath);
+  SceneConfig sceneConfig{};
+  if (!sceneConfigFilePath.empty()) {
+    try {
+      const auto sceneCollection = rootScene.get("scene")->asArray();
+      for (const auto &sceneComponent : sceneCollection) {
+        SceneComponent component;
+        component.name = sceneComponent.get("name")->asString("unknown");
+        component.type =
+            stringToSceneComponentType(sceneComponent.get("type")->asString());
+        component.props = createDefaultSceneComponentProps(component.type);
+        setSceneComponentProps(component, *sceneComponent.get("properties"));
+      }
+      // LC_DUMP_DIE();
+      // if (const auto scene = rootApplication.get("scene")) {
+      //   config.scene = SceneConfig::loadSceneConfig(*scene);
+      // }
+    } catch (const std::exception &err) {
+      LC_LOG(logging::LogLevel::ERROR,
+             std::string("Unexpected error while loading scene configs '") +
+                 sceneConfigFilePath + "': " + err.what());
+      throw;
+    }
+  }
+  return sceneConfig;
 };
 } // namespace temprenderer::core::config
