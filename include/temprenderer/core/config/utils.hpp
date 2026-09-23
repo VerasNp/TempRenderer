@@ -203,20 +203,6 @@ createDefaultSceneComponentProps(const SceneComponentType type) noexcept {
 /**
  * @brief TODO
  *
- * @param lightType
- * @return
- */
-[[nodiscard]] LightType inline stringToLightType(
-    const std::string &lightType) noexcept {
-  if (lightType == "point") {
-    return LightType::POINT;
-  }
-  return LightType::AMBIENT;
-}
-
-/**
- * @brief TODO
- *
  * @tparam T
  * @param value
  * @param fallback

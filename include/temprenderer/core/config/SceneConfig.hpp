@@ -9,21 +9,6 @@
 namespace temprenderer::core::config {
 
 /**
- * Possible types of light
- */
-enum class LightType { POINT, AMBIENT };
-
-/**
- * @brief Light configs
- */
-struct LightConfig {
-  LightType type = LightType::POINT;
-  kwp::Point3 position = kwp::Point3(0, 0, 0);
-  math::ColorF color = math::ColorF(1.0F, 1.0F, 1.0F);
-  float intensity = 10.0F;
-};
-
-/**
  * Possible types of objects
  */
 enum class ObjectType { SPHERE, OBJECT, CONE, PLANE, CYLINDER };

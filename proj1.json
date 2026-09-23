@@ -1,16 +1,52 @@
 {
   "scene": [
-      {
-        "type": "camera",
-        "name": "camera",
-        "properties": {
-          "eye": {
-            "x": 0.0,
-            "y": 0.0,
-            "z": -80.0
-          },
-          "focal_length": 4.0
+    {
+      "type": "camera",
+      "name": "camera",
+      "properties": {
+        "eye": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": -80.0
+        },
+        "focal_length": 4.0
+      }
+    },
+    {
+      "type": "light",
+      "name": "point light",
+      "properties": {
+        "type": "point",
+        "position": {
+          "x": 50.0,
+          "y": 50.0,
+          "z": 50.0
+        },
+        "intensity": 300.0,
+        "color": {
+          "r": 255,
+          "g": 255,
+          "b": 255
         }
       }
-    ]
+    },
+    {
+      "type": "light",
+      "name": "ambient light",
+      "properties": {
+        "type": "ambient",
+        "position": {
+          "x": 0.0,
+          "y": 5.0,
+          "z": 0.0
+        },
+        "intensity": 20.0,
+        "color": {
+          "r": 255,
+          "g": 255,
+          "b": 255
+        }
+      }
+    }
+  ]
 }

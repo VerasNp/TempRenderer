@@ -90,16 +90,16 @@ void setSceneComponentProps(SceneComponent &object,
                             const parsers::ConfigValue &propsConfig) noexcept {
   switch (object.type) {
   case SceneComponentType::CAMERA: {
-    auto &camera = std::get<CameraConfig>(object.props);
-    if (const auto position = propsConfig.get("eye")) {
-      camera.eye = parsePoint3DDataFromConfig(*position);
-    }
+    auto &cameraConfig = std::get<CameraConfig>(object.props);
+    cameraConfig = CameraConfig::loadCameraConfig(propsConfig);
   }
   case SceneComponentType::LIGHT:
-    break;
+    auto &lightConfig = std::get<LightConfig>(object.props);
+    lightConfig = LightConfig::loadLightConfig(propsConfig) break;
   case SceneComponentType::OBJECT:
     break;
-  case SceneComponentType::UNKNOWN:
+  default:
+
     break;
   }
 }
