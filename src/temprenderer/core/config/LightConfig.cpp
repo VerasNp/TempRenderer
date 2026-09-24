@@ -2,7 +2,7 @@
 
 #include "core/config/utils.hpp"
 namespace temprenderer::core::config {
-[[nodiscard]] LightConfig LightConfig::loadLightConfig(
+[[nodiscard]] LightConfig LightConfig::loadConfig(
     const parsers::ConfigValue &parsedLightConfig) noexcept {
   LC_LOG_VERBOSE(logging::LogLevel::INFO, "Loading light config");
   LightConfig lightConfig;

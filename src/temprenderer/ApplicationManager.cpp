@@ -30,14 +30,8 @@ void ApplicationManager::startUp() {
   this->editorManager_.setWindowManager(this->windowManager_);
   this->editorManager_.startUp();
   this->renderManager_.startUp();
-  this->scene_ = scene::SceneComposer::compose(this->sceneConfig_);
-  // this->camera_ = renderer::Camera{
-  //     this->sceneConfig_.camera,
-  //     this->applicationConfig_.render.resolutionWidth,
-  //     this->applicationConfig_.render.resolutionHeight,
-  //     this->applicationConfig_.render.viewportWidth,
-  //     this->applicationConfig_.render.viewportHeight,
-  // };
+  this->scene_ = scene::SceneComposer::compose(this->sceneConfig_,
+                                               this->applicationConfig_.render);
   this->editorManager_.mainLayout().setOnRenderRequested([this]() {
     this->renderScene();
     this->editorManager_.renderResult().setTexture(
@@ -64,13 +58,11 @@ void ApplicationManager::setApplicationConfig(
     const core::config::ApplicationConfig &config) {
   this->applicationConfig_ = config;
 }
-void ApplicationManager::setSceneConfig(
-    const core::config::SceneConfig &config) {
-  this->sceneConfig_ = config;
-}
+
 void ApplicationManager::renderScene() {
   renderer::PhongIntegrator integrator(
-      this->camera_.value(), this->applicationConfig_.render.resolutionWidth,
+      *this->scene_.getCamera().get(),
+      this->applicationConfig_.render.resolutionWidth,
       this->applicationConfig_.render.resolutionHeight,
       core::math::Color(100, 100, 100));
   renderer::Canvas canvas = integrator.render(this->scene_);

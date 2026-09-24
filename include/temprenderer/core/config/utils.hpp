@@ -154,55 +154,6 @@ stringToAspectRatio(const std::string &aspectRatio) {
 /**
  * @brief TODO
  *
- * @param objectType
- * @return
- */
-[[nodiscard]] ObjectType inline stringToObjectType(
-    const std::string &objectType) noexcept {
-  if (objectType == "sphere") {
-    return ObjectType::SPHERE;
-  }
-  if (objectType == "cone") {
-    return ObjectType::CONE;
-  }
-  if (objectType == "plane") {
-    return ObjectType::PLANE;
-  }
-  if (objectType == "cylinder") {
-    return ObjectType::CYLINDER;
-  }
-  return ObjectType::OBJECT;
-}
-
-[[nodiscard]] inline ObjectProps
-createDefaultObjectProps(const ObjectType type) noexcept {
-  switch (type) {
-  case ObjectType::SPHERE:
-    return SphereConfig{};
-  case ObjectType::CONE:
-    return ConeConfig{};
-  case ObjectType::PLANE:
-    return PlaneConfig{};
-  case ObjectType::CYLINDER:
-    return CylinderConfig{};
-  default:;
-    return SphereConfig{};
-  }
-}
-
-[[nodiscard]] inline SceneComponentProps
-createDefaultSceneComponentProps(const SceneComponentType type) noexcept {
-  switch (type) {
-  case SceneComponentType::CAMERA:
-    return CameraConfig{};
-  default:;
-    return std::monostate{};
-  }
-}
-
-/**
- * @brief TODO
- *
  * @tparam T
  * @param value
  * @param fallback

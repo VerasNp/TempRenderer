@@ -2,9 +2,9 @@
 
 #include "ISubsystem.hpp"
 #include "core/config/ApplicationConfig.hpp"
+#include "core/config/ProjectConfig.hpp"
 #include "pd/editor/EditorManager.hpp"
 #include "platform/graphics/WindowManager.hpp"
-#include "renderer/Camera.hpp"
 #include "renderer/RendererManager.hpp"
 #include "scene/Scene.hpp"
 
@@ -45,7 +45,9 @@ public:
   *
   * @param config Loaded configs
   */
-  void setSceneConfig(const core::config::SceneConfig &config);
+  void setProjectConfig(const core::config::ProjectConfig &config) {
+    this->projectConfig_ = config;
+  }
 
 private:
   void renderScene();
@@ -54,9 +56,8 @@ private:
   platform::graphics::WindowManager windowManager_;
   pd::editor::EditorManager editorManager_;
   core::config::ApplicationConfig applicationConfig_;
-  core::config::SceneConfig sceneConfig_;
+  core::config::ProjectConfig projectConfig_;
   renderer::RendererManager renderManager_;
   scene::Scene scene_;
-  std::optional<renderer::Camera> camera_;
 };
 } // namespace temprenderer

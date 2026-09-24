@@ -36,7 +36,21 @@ public:
 
   void addLight(const std::shared_ptr<renderer::Light> &light) {
     this->light_.push_back(light);
+  }
+
+  void addCamera(const std::shared_ptr<renderer::Camera> &camera) {
+    this->camera_ = camera;
   };
+
+  void setBackgroundColor(const core::math::ColorF &color) {
+    this->backgroundColor_ = color;
+  }
+
+  core::math::ColorF getBackgroundColor() const {
+    return this->backgroundColor_;
+  }
+
+  std::shared_ptr<renderer::Camera> getCamera() { return this->camera_; }
 
   [[nodiscard]] std::shared_ptr<renderer::Light> getSpecificLightByType(
       const core::config::LightType &lightType) const noexcept {
@@ -49,7 +63,9 @@ public:
   }
 
 private:
+  std::shared_ptr<renderer::Camera> camera_;
   std::vector<std::shared_ptr<renderer::Light>> light_;
   std::vector<std::shared_ptr<Hittable>> objects_;
+  core::math::ColorF backgroundColor_;
 };
 } // namespace temprenderer::scene

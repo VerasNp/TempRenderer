@@ -10,9 +10,9 @@ namespace temprenderer::renderer {
  */
 class Camera {
 public:
-  Camera(const kwp::Point3 &eye, std::uint16_t resolutionWidth,
-         std::uint16_t resolutionHeight, float viewportWidth,
-         float viewportHeight);
+  Camera(const kwp::Point3 &eye, float focalLength,
+         std::uint16_t resolutionWidth, std::uint16_t resolutionHeight,
+         float viewportWidth, float viewportHeight);
   /**
    * @brief Generates a ray passing through a pixel.
    *
@@ -43,7 +43,7 @@ private:
   float viewPortPixelDx_;
   float viewPortPixelDy_;
   kwp::Point3 viewPortUpperLeft_;
-  core::config::CameraConfig cameraConfig_;
+  float focalLength_;
   float resolutionWidth_;
   float resolutionHeight_;
 };

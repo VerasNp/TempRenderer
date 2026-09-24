@@ -8,6 +8,10 @@ namespace temprenderer::core::config {
 */
 struct CameraConfig {
   /**
+   * Component name
+   */
+  std::string name;
+  /**
    * Position on camera
    */
   kwp::Point3 eye{0, 0, 0};
@@ -23,6 +27,6 @@ struct CameraConfig {
    * @return Camera config
    */
   [[nodiscard]] static CameraConfig
-  loadCameraConfig(const parsers::ConfigValue &cameraConfig) noexcept;
+  loadConfig(const parsers::ConfigValue &cameraConfig) noexcept;
 };
 } // namespace temprenderer::core::config

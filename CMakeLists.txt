@@ -35,6 +35,8 @@ set(temprenderer_core_source_files
         "${temprenderer_core_source_dir}/temprenderer/core/logging/LoggerManager.cpp"
         "${temprenderer_core_source_dir}/temprenderer/core/config/ApplicationConfig.cpp"
         "${temprenderer_core_source_dir}/temprenderer/core/config/CameraConfig.cpp"
+        "${temprenderer_core_source_dir}/temprenderer/core/config/LightConfig.cpp"
+        "${temprenderer_core_source_dir}/temprenderer/core/config/ObjectConfig.cpp"
         "${temprenderer_core_source_dir}/temprenderer/core/config/RenderConfig.cpp"
         "${temprenderer_core_source_dir}/temprenderer/core/config/SceneConfig.cpp"
         "${temprenderer_core_source_dir}/temprenderer/core/config/WindowConfig.cpp"

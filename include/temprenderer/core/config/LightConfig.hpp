@@ -19,7 +19,7 @@ struct LightConfig {
   float intensity = 10.0F;
 
   [[nodiscard]] static LightConfig
-  loadLightConfig(const parsers::ConfigValue &lightConfig) noexcept;
+  loadConfig(const parsers::ConfigValue &lightConfig) noexcept;
 
   /**
  * @brief TODO

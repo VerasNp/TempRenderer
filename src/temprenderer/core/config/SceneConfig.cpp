@@ -1,186 +1,30 @@
 #include "core/config/SceneConfig.hpp"
-
-#include "core/config/LightConfig.hpp"
-#include "core/config/utils.hpp"
 #include "core/logging/LoggerManager.hpp"
 
 namespace temprenderer::core::config {
 
-namespace {
-/**
- * @brief TODO
- *
- * @param object
- * @param propsConfig
- */
-void setObjectProps(ObjectConfig &object,
-                    const parsers::ConfigValue &propsConfig) noexcept {
-  if (object.type == ObjectType::SPHERE) {
-    auto &sphere = std::get<SphereConfig>(object.props);
-    if (const auto position = propsConfig.get("center")) {
-      sphere.center = parsePoint3DDataFromConfig(*position);
-    }
-    if (const auto radiusOpt = propsConfig.get("radius")) {
-      sphere.radius = radiusOpt->asFloat(sphere.radius);
-    }
-  } else if (object.type == ObjectType::CONE) {
-    auto &cone = std::get<ConeConfig>(object.props);
-    if (const auto position = propsConfig.get("base_center")) {
-      cone.baseCenter = parsePoint3DDataFromConfig(*position);
-    }
-    if (const auto position = propsConfig.get("vertex")) {
-      cone.vertex = parsePoint3DDataFromConfig(*position);
-    }
-    if (const auto radiusOpt = propsConfig.get("base_radius")) {
-      cone.baseRadius = radiusOpt->asFloat(cone.baseRadius);
-    }
-  } else if (object.type == ObjectType::PLANE) {
-    auto &plane = std::get<PlaneConfig>(object.props);
-    if (const auto position = propsConfig.get("point")) {
-      plane.point = parsePoint3DDataFromConfig(*position);
-    }
-    if (const auto vector = propsConfig.get("normal")) {
-      plane.normal = parseVector3DDataFromConfig(*vector);
-    }
-  } else if (object.type == ObjectType::CYLINDER) {
-    auto &cylinder = std::get<CylinderConfig>(object.props);
-    if (const auto position = propsConfig.get("base_center")) {
-      cylinder.baseCenter = parsePoint3DDataFromConfig(*position);
-    }
-    if (const auto radiusOpt = propsConfig.get("base_radius")) {
-      cylinder.baseRadius = radiusOpt->asFloat(cylinder.baseRadius);
-    }
-    if (const auto position = propsConfig.get("top_center")) {
-      cylinder.topCenter = parsePoint3DDataFromConfig(*position);
-    }
-  }
-}
-
-/**
- * @brief TODO
- *
- * @param object
- * @param propsConfig
- */
-void setSceneComponentProps(SceneComponent &object,
-                            const parsers::ConfigValue &propsConfig) noexcept {
-  switch (object.type) {
-  case SceneComponentType::CAMERA: {
-    auto &cameraConfig = std::get<CameraConfig>(object.props);
-    cameraConfig = CameraConfig::loadCameraConfig(propsConfig);
-    break;
-  }
-  case SceneComponentType::LIGHT:
-    auto &lightConfig = std::get<LightConfig>(object.props);
-    lightConfig = LightConfig::loadLightConfig(propsConfig);
-    break;
-  case SceneComponentType::OBJECT:
-    break;
-  default:
-
-    break;
-  }
-}
-
-/**
- * @brief TODO
- *
- * @param material
- * @param materialConfig
- */
-void setMaterialProps(math::Material &material,
-                      const parsers::ConfigValue &materialConfig) noexcept {
-  if (const auto diffuseConfig = materialConfig.get("kd")) {
-    material.kd = parseColorDataFromConfig(*diffuseConfig);
-  }
-  if (const auto specularConfig = materialConfig.get("ks")) {
-    material.ks = parseColorDataFromConfig(*specularConfig);
-  }
-  if (const auto ambientConfig = materialConfig.get("ka")) {
-    material.ka = parseColorDataFromConfig(*ambientConfig);
-  }
-  material.alpha = materialConfig.get("alpha")->asFloat();
-}
-
-/**
- * @brief TODO
- *
- * @param objectsConfig
- * @return
- */
-std::vector<ObjectConfig>
-loadObjectsConfig(const parsers::ConfigValue &objectsConfig) {
-  LC_LOG_VERBOSE(logging::LogLevel::INFO, "Loading objects config");
-  std::vector<ObjectConfig> objects;
-  for (const auto &objectConfig : objectsConfig.asArray()) {
-    ObjectConfig object;
-    object.type = stringToObjectType(objectConfig.get("type")->asString());
-    object.props = createDefaultObjectProps(object.type);
-    setObjectProps(object, *objectConfig.get("props"));
-    setMaterialProps(object.material,
-                     *objectConfig.get("material")->get("props"));
-    objects.push_back(object);
-  }
-  LC_LOG_VERBOSE(logging::LogLevel::INFO, "Objects config loaded successfully");
-  return objects;
-}
-} // namespace
-SceneConfig
-SceneConfig::loadSceneConfig(const parsers::ConfigValue &sceneConfig) {
+SceneConfig SceneConfig::loadConfig(const parsers::ConfigValue &config) {
   LC_LOG_VERBOSE(logging::LogLevel::INFO, "Loading scene config");
-  SceneConfig config;
-  // if (const auto lightsConfig = sceneConfig.get("lights");
-  //     lightsConfig->isArray()) {
-  //   config.lights = loadLightsConfig(*lightsConfig);
-  // }
-  // if (auto *const objects = sceneConfig.get("objects")) {
-  //   config.objects = loadObjectsConfig(*objects);
-  // }
-  return config;
-}
-
-SceneComponentType
-SceneConfig::stringToSceneComponentType(const std::string &sceneComponentType) {
-  if (sceneComponentType == "camera") {
-    return SceneComponentType::CAMERA;
+  SceneConfig scene;
+  if (const auto *worldConfig = config.get("world")) {
+    scene.world = WorldConfig::loadConfig(*worldConfig);
   }
-  if (sceneComponentType == "light") {
-    return SceneComponentType::LIGHT;
+  if (const auto *cameraConfig = config.get("camera")) {
+    scene.camera = CameraConfig::loadConfig(*cameraConfig);
   }
-  if (sceneComponentType == "object") {
-    return SceneComponentType::OBJECT;
-  }
-  return SceneComponentType::UNKNOWN;
-}
-
-SceneConfig SceneConfig::loadFromFile(const std::string &sceneConfigFilePath) {
-  const std::unique_ptr<parsers::ParserPort> sceneParser =
-      std::make_unique<parsers::NlohmannJSONParserAdapter>();
-  const parsers::ConfigValue rootScene =
-      sceneParser->parserFile(sceneConfigFilePath);
-  SceneConfig sceneConfig{};
-  if (!sceneConfigFilePath.empty()) {
-    try {
-      const auto sceneCollection = rootScene.get("scene")->asArray();
-      for (const auto &sceneComponent : sceneCollection) {
-        SceneComponent component;
-        component.name = sceneComponent.get("name")->asString("unknown");
-        component.type =
-            stringToSceneComponentType(sceneComponent.get("type")->asString());
-        component.props = createDefaultSceneComponentProps(component.type);
-        setSceneComponentProps(component, *sceneComponent.get("properties"));
-      }
-      // LC_DUMP_DIE();
-      // if (const auto scene = rootApplication.get("scene")) {
-      //   config.scene = SceneConfig::loadSceneConfig(*scene);
-      // }
-    } catch (const std::exception &err) {
-      LC_LOG(logging::LogLevel::ERROR,
-             std::string("Unexpected error while loading scene configs '") +
-                 sceneConfigFilePath + "': " + err.what());
-      throw;
+  if (const auto lightsConfig = config.get("lights")->asArray();
+      !lightsConfig.empty()) {
+    for (auto lightConfig : lightsConfig) {
+      scene.lights.push_back(LightConfig::loadConfig(lightConfig));
     }
   }
-  return sceneConfig;
-};
+  if (const auto objectsConfig = config.get("objects")->asArray();
+      !objectsConfig.empty()) {
+    for (auto objectConfig : objectsConfig) {
+      scene.objects.push_back(ObjectConfig::loadConfig(objectConfig));
+    }
+  }
+  LC_LOG_VERBOSE(logging::LogLevel::INFO, "Scene config loaded successfully");
+  return scene;
+}
 } // namespace temprenderer::core::config

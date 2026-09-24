@@ -39,19 +39,31 @@ buildObject(const core::config::ObjectConfig &objectConfig) {
 }
 } // namespace
 
-Scene SceneComposer::compose(const core::config::SceneConfig &sceneConfig) {
+Scene SceneComposer::compose(const core::config::SceneConfig &sceneConfig,
+                             const core::config::RenderConfig &renderConfig) {
   LC_LOG_VERBOSE(core::logging::LogLevel::INFO, "Scene being composed");
   Scene scene;
-  // for (const auto &light : sceneConfig.lights) {
-  //   scene.addLight(std::make_shared<renderer::Light>(
-  //       light.type, light.position, light.color, light.intensity));
-  // }
-  // for (const auto &object : sceneConfig.objects) {
-  //   if (const auto obj = buildObject(object)) {
-  //     scene.addObject(obj);
-  //   }
-  // }
-  // LC_LOG_VERBOSE(core::logging::LogLevel::INFO, "Scene composed successfully");
+  for (const auto &component : sceneConfig.collection) {
+    if (component.type == core::config::SceneComponentType::LIGHT) {
+      const auto [type, position, color, intensity] =
+          std::get<core::config::LightConfig>(component.props);
+      scene.addLight(
+          std::make_shared<renderer::Light>(type, position, color, intensity));
+    } else if (component.type == core::config::SceneComponentType::OBJECT) {
+      const auto objectConfig =
+          std::get<core::config::ObjectConfig>(component.props);
+      const auto object = buildObject(objectConfig);
+      scene.addObject(object);
+    } else if (component.type == core::config::SceneComponentType::CAMERA) {
+      const auto [eye, focalLength] =
+          std::get<core::config::CameraConfig>(component.props);
+      scene.addCamera(std::make_shared<renderer::Camera>(
+          eye, focalLength, renderConfig.resolutionHeight,
+          renderConfig.resolutionWidth, renderConfig.viewportWidth,
+          renderConfig.viewportHeight));
+    }
+  }
+  LC_LOG_VERBOSE(core::logging::LogLevel::INFO, "Scene composed successfully");
   return scene;
 }
 } // namespace temprenderer::scene

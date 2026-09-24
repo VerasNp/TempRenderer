@@ -1,17 +1,18 @@
 #include "temprenderer/renderer/Camera.hpp"
 
 namespace temprenderer::renderer {
-Camera::Camera(const kwp::Point3 &eye, std::uint16_t resolutionWidth,
-               std::uint16_t resolutionHeight, float viewportWidth,
-               float viewportHeight) {
+Camera::Camera(const kwp::Point3 &eye, float focalLength,
+               std::uint16_t resolutionWidth, std::uint16_t resolutionHeight,
+               float viewportWidth, float viewportHeight) {
   this->eye_ = eye;
   this->resolutionWidth_ = resolutionWidth;
   this->resolutionHeight_ = resolutionHeight;
+  this->focalLength_ = focalLength;
   this->viewPortPixelDx_ = viewportWidth / resolutionWidth;
   this->viewPortPixelDy_ = viewportHeight / resolutionHeight;
-  this->viewPortUpperLeft_ =
-      this->eye_ - kwp::Vec3(0, 0, this->cameraConfig_.focalLength) -
-      kwp::Vec3(viewportWidth / 2, 0, 0) + kwp::Vec3(0, viewportHeight / 2, 0);
+  this->viewPortUpperLeft_ = this->eye_ - kwp::Vec3(0, 0, this->focalLength_) -
+                             kwp::Vec3(viewportWidth / 2, 0, 0) +
+                             kwp::Vec3(0, viewportHeight / 2, 0);
 }
 
 core::math::Ray Camera::generateRay(unsigned int col,
@@ -22,7 +23,7 @@ core::math::Ray Camera::generateRay(unsigned int col,
   const kwp::Scalar pixelYCenter = this->viewPortUpperLeft_.y -
                                    (this->viewPortPixelDy_ / 2) -
                                    (row * this->viewPortPixelDy_);
-  const kwp::Scalar pixelZCenter = -this->cameraConfig_.focalLength;
+  const kwp::Scalar pixelZCenter = -this->focalLength_;
   const kwp::Point3 target{pixelXCenter, pixelYCenter, pixelZCenter};
   return core::math::Ray(this->eye_, (target - this->eye_).normalize());
 }

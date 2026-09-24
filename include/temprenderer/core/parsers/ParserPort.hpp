@@ -115,6 +115,8 @@ public:
         return &it->second;
       }
     }
+    LC_LOG_VERBOSE(logging::LogLevel::WARNING,
+                   "Key " + key + " does not exist");
     return nullptr;
   }
 
