@@ -18,7 +18,7 @@ struct LightConfig {
   math::ColorF color = math::ColorF(1.0F, 1.0F, 1.0F);
   float intensity = 10.0F;
 
-  [[nodiscard]] LightConfig
+  [[nodiscard]] static LightConfig
   loadLightConfig(const parsers::ConfigValue &lightConfig) noexcept;
 
   /**

@@ -1,36 +1,12 @@
 #include "core/config/SceneConfig.hpp"
+
+#include "core/config/LightConfig.hpp"
 #include "core/config/utils.hpp"
 #include "core/logging/LoggerManager.hpp"
 
 namespace temprenderer::core::config {
 
 namespace {
-/**
- * @brief TODO
- *
- * @param lightsConfig
- * @return
- */
-std::vector<LightConfig>
-loadLightsConfig(const parsers::ConfigValue &lightsConfig) {
-  LC_LOG_VERBOSE(logging::LogLevel::INFO, "Loading light config");
-  std::vector<LightConfig> lights;
-  for (const auto &lightConfig : lightsConfig.asArray()) {
-    LightConfig light;
-    light.type = stringToLightType(lightConfig.get("type")->asString());
-    if (const auto positionConfig = lightConfig.get("position")) {
-      light.position = parsePoint3DDataFromConfig(*positionConfig);
-    }
-    if (const auto colorConfig = lightConfig.get("color")) {
-      light.color = parseColorDataFromConfig(*colorConfig);
-    }
-    light.intensity = lightConfig.get("intensity")->asFloat(light.intensity);
-    lights.push_back(light);
-  }
-  LC_LOG_VERBOSE(logging::LogLevel::INFO, "Light config loaded successfully");
-  return lights;
-}
-
 /**
  * @brief TODO
  *
@@ -92,10 +68,12 @@ void setSceneComponentProps(SceneComponent &object,
   case SceneComponentType::CAMERA: {
     auto &cameraConfig = std::get<CameraConfig>(object.props);
     cameraConfig = CameraConfig::loadCameraConfig(propsConfig);
+    break;
   }
   case SceneComponentType::LIGHT:
     auto &lightConfig = std::get<LightConfig>(object.props);
-    lightConfig = LightConfig::loadLightConfig(propsConfig) break;
+    lightConfig = LightConfig::loadLightConfig(propsConfig);
+    break;
   case SceneComponentType::OBJECT:
     break;
   default:

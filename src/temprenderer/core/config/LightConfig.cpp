@@ -8,7 +8,15 @@ namespace temprenderer::core::config {
   LightConfig lightConfig;
   lightConfig.type =
       stringToLightType(parsedLightConfig.get("type")->asString());
+  if (const auto positionConfigValue = parsedLightConfig.get("position")) {
+    lightConfig.position = parsePoint3DDataFromConfig(*positionConfigValue);
+  }
+  if (const auto colorConfigValue = parsedLightConfig.get("color")) {
+    lightConfig.color = parseColorDataFromConfig(*colorConfigValue);
+  }
+  lightConfig.intensity = parsedLightConfig.get("intensity")->asFloat();
   LC_LOG_VERBOSE(logging::LogLevel::INFO, "Light config loaded successfully");
+  return lightConfig;
 }
 
 LightType
@@ -19,6 +27,7 @@ LightConfig::stringToLightType(const std::string &lightType) noexcept {
   if (lightType == "ambient") {
     return LightType::AMBIENT;
   }
-  LC_LOG_VERBOSE(logging::LogLevel::WARNING, "Unknown light type");
+  LC_LOG(logging::LogLevel::WARNING, "Unknown light type: '" + lightType + "'");
+  return LightType::UNKNOWN;
 }
 } // namespace temprenderer::core::config
