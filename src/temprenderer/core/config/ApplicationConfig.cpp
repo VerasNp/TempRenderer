@@ -102,7 +102,7 @@ ApplicationConfig::loadFromFile(const std::string &applicationConfigFilePath) {
       config.window = WindowConfig::loadWindowConfig(*windowConfig);
     }
     if (const auto renderConfig = rootApplication.get("render")) {
-      config.render = RenderConfig::loadRenderConfig(*renderConfig);
+      config.render = RenderConfig::loadConfig(*renderConfig);
     }
   } catch (const std::exception &err) {
     LC_LOG(logging::LogLevel::ERROR,

@@ -98,6 +98,7 @@ bool Cone::intersect(const core::math::Ray &ray,
   isec->point = ray(tHit);
   isec->normal =
       isBaseHit ? -this->coneDirection_ : computeLateralNormal(isec->point);
+  isec->point = isec->point + (isec->normal * 1e-2);
   isec->material = material_;
   return true;
 }

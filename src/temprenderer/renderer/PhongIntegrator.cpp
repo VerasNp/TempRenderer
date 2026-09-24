@@ -13,6 +13,17 @@ core::math::Color PhongIntegrator::li(const core::math::Ray &ray,
                        ->getPosition() -
                    isect.point)
                       .normalize();
+    core::math::ColorF ambientLightColor =
+        scene.getSpecificLightByType(core::config::LightType::AMBIENT)
+            ->getColor();
+    core::math::ColorF ambientCoefficient = isect.material.ka.value();
+    if (this->shadows_) {
+      core::math::Ray shadowRay{isect.point, w};
+      if (scene.intersect(shadowRay, &isect)) {
+        return core::math::Color::fromFloat(
+            (ambientLightColor * ambientCoefficient));
+      }
+    }
     kwp::Vec3 v = (ray.getOrigin() - isect.point).normalize();
     kwp::Vec3 r = (2 * dot(w, isect.normal)) * isect.normal - w;
     core::math::ColorF pointLightColor =
@@ -22,10 +33,6 @@ core::math::Color PhongIntegrator::li(const core::math::Ray &ray,
     kwp::Scalar cosPhi = std::pow(kwp::dot(v, r), isect.material.alpha.value());
     core::math::ColorF diffuseTerm = isect.material.kd;
     core::math::ColorF specularTerm = isect.material.ks.value();
-    core::math::ColorF ambientLightColor =
-        scene.getSpecificLightByType(core::config::LightType::AMBIENT)
-            ->getColor();
-    core::math::ColorF ambientCoefficient = isect.material.ka.value();
     return core::math::Color::fromFloat(
         pointLightColor * cosTheta * (diffuseTerm + (specularTerm * cosPhi)) +
         (ambientLightColor * ambientCoefficient));

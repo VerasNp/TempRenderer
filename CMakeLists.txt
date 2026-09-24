@@ -80,6 +80,20 @@ add_executable(${PROJECT_NAME} "src/temprenderer/main.cpp")
 
 target_link_libraries(${PROJECT_NAME} PRIVATE temprenderer_core)
 
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy
+        ${CMAKE_SOURCE_DIR}/config.toml
+        $<TARGET_FILE_DIR:${PROJECT_NAME}>
+
+        COMMAND ${CMAKE_COMMAND} -E copy
+        ${CMAKE_SOURCE_DIR}/tarefa03.json
+        $<TARGET_FILE_DIR:${PROJECT_NAME}>
+
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_SOURCE_DIR}/shaders
+        $<TARGET_FILE_DIR:${PROJECT_NAME}>/shaders
+)
+
 if (temprenderer_BUILD_TESTS)
   enable_testing()
   add_subdirectory(tests)

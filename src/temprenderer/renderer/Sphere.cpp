@@ -30,6 +30,7 @@ bool temprenderer::scene::Sphere::intersect(
   }
   isec->point = ray(t0);
   isec->normal = (-(this->center_ - isec->point)).normalize();
+  isec->point = isec->point + (isec->normal * 1e-2);
   isec->material = material_;
   return true;
 }

@@ -9,9 +9,9 @@ namespace temprenderer::renderer {
 class PhongIntegrator : public SamplerIntegrator {
 public:
   PhongIntegrator(const Camera &camera, unsigned int width, unsigned int height,
-                  core::math::Color backgroundColor) noexcept
+                  core::math::Color backgroundColor, bool shadows) noexcept
       : SamplerIntegrator(camera, width, height),
-        backgroundColor_(backgroundColor) {}
+        backgroundColor_(backgroundColor), shadows_(shadows) {}
 
 protected:
   /**
@@ -25,6 +25,7 @@ protected:
                                      const scene::Scene &scene) const override;
 
 private:
+  bool shadows_;
   core::math::Color backgroundColor_;
 };
 

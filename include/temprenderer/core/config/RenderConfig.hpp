@@ -34,6 +34,10 @@ struct RenderConfig {
    * Physical width size of viewport
    */
   float viewportWidth = 3.55555558F;
+  /**
+   * Set if render will calculate the shadows on scene
+   */
+  bool shadows = false;
 
   /**
    * @brief Loads render config into struct data structure
@@ -42,6 +46,6 @@ struct RenderConfig {
    * @return Render config struct
    */
   [[nodiscard]] static RenderConfig
-  loadRenderConfig(const parsers::ConfigValue &renderConfig);
+  loadConfig(const parsers::ConfigValue &renderConfig);
 };
 } // namespace temprenderer::core::config

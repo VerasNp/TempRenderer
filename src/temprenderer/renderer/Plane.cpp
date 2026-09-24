@@ -21,6 +21,7 @@ bool Plane::intersect(const core::math::Ray &ray,
   }
   isec->point = ray(tIntersection);
   isec->normal = (w < 0) ? this->normal_ : -this->normal_;
+  isec->point = isec->point + (isec->normal * 1e-2);
   isec->material = material_;
   return true;
 }

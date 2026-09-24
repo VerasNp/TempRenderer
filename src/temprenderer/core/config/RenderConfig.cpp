@@ -5,7 +5,7 @@
 
 namespace temprenderer::core::config {
 RenderConfig
-RenderConfig::loadRenderConfig(const parsers::ConfigValue &renderConfig) {
+RenderConfig::loadConfig(const parsers::ConfigValue &renderConfig) {
   LC_LOG_VERBOSE(logging::LogLevel::INFO, "Loading render config");
   RenderConfig config;
   config.resolutionWidth =
@@ -18,6 +18,7 @@ RenderConfig::loadRenderConfig(const parsers::ConfigValue &renderConfig) {
       renderConfig.get("viewport_height")->asFloat(config.viewportHeight);
   config.viewportWidth = calculateViewportWidth(
       config.resolutionWidth, config.resolutionHeight, config.viewportHeight);
+  config.shadows = renderConfig.get("shadows")->asBool(config.shadows);
   LC_LOG_VERBOSE(logging::LogLevel::INFO, "Render config loaded successfully");
   return config;
 }

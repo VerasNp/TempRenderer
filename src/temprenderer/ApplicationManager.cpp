@@ -64,7 +64,8 @@ void ApplicationManager::renderScene() {
       *this->scene_.getCamera(),
       this->applicationConfig_.render.resolutionWidth,
       this->applicationConfig_.render.resolutionHeight,
-      core::math::Color::fromFloat(this->scene_.getBackgroundColor()));
+      core::math::Color::fromFloat(this->scene_.getBackgroundColor()),
+      this->applicationConfig_.render.shadows);
   renderer::Canvas canvas = integrator.render(this->scene_);
   this->renderManager_.setCanvas(canvas);
 }

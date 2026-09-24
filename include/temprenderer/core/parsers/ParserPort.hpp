@@ -198,17 +198,17 @@ private:
       }
       return ConfigValue{arr};
     }
-    if (auto v = node.value<std::string>()) {
-      return ConfigValue{*v};
+    if (const auto *b = node.as_boolean()) {
+      return ConfigValue{b->get()};
     }
-    if (auto v = node.value<int64_t>()) {
-      return ConfigValue{*v};
+    if (const auto *i = node.as_integer()) {
+      return ConfigValue{i->get()};
     }
-    if (auto v = node.value<float>()) {
-      return ConfigValue{*v};
+    if (const auto *f = node.as_floating_point()) {
+      return ConfigValue{static_cast<float>(f->get())};
     }
-    if (auto v = node.value<bool>()) {
-      return ConfigValue{*v};
+    if (const auto *s = node.as_string()) {
+      return ConfigValue{s->get()};
     }
     return ConfigValue{};
   }

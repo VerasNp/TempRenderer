@@ -119,6 +119,7 @@ bool Cylinder::intersect(const core::math::Ray &ray,
     isec->normal = this->cylinderDirection_;
     break;
   }
+  isec->point = isec->point + (isec->normal * 1e-2);
   isec->material = material_;
   return true;
 }
