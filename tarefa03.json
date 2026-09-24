@@ -1,0 +1,144 @@
+{
+  "name": "tarefa03",
+  "scene": {
+    "world": {
+      "background": {
+        "color": {
+          "r": 100,
+          "g": 100,
+          "b": 100
+        }
+      }
+    },
+    "camera": {
+      "name": "camera",
+      "eye": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "focal_length": 1.0
+    },
+    "lights": [
+      {
+        "name": "point light",
+        "type": "point",
+        "position": {
+          "x": 0.0,
+          "y": 60.0,
+          "z": -30.0
+        },
+        "intensity": 1.0,
+        "color": {
+          "r": 178,
+          "g": 178,
+          "b": 178
+        }
+      },
+      {
+        "name": "ambient light",
+        "type": "ambient",
+        "intensity": 1.0,
+        "color": {
+          "r": 51,
+          "g": 51,
+          "b": 51
+        }
+      }
+    ],
+    "objects": [
+      {
+        "name": "esfera bolada",
+        "type": "sphere",
+        "center": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": -100.0
+        },
+        "radius": 40.0,
+        "material": {
+          "ka": {
+            "r": 178,
+            "g": 51,
+            "b": 51
+          },
+          "kd": {
+            "r": 178,
+            "g": 51,
+            "b": 51
+          },
+          "ks": {
+            "r": 178,
+            "g": 51,
+            "b": 51
+          },
+          "alpha": 10.0
+        }
+      },
+      {
+        "name": "chão",
+        "type": "plane",
+        "point": {
+          "x": 0.0,
+          "y": -40.0,
+          "z": 0.0
+        },
+        "normal": {
+          "x": 0.0,
+          "y": 1.0,
+          "z": 0.0
+        },
+        "material": {
+          "ka": {
+            "r": 51,
+            "g": 178,
+            "b": 51
+          },
+          "kd": {
+            "r": 51,
+            "g": 178,
+            "b": 51
+          },
+          "ks": {
+            "r": 0,
+            "g": 0,
+            "b": 0
+          },
+          "alpha": 1.0
+        }
+      },
+      {
+        "name": "plano fundo",
+        "type": "plane",
+        "point": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": -200.0
+        },
+        "normal": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 1.0
+        },
+        "material": {
+          "ka": {
+            "r": 51,
+            "g": 51,
+            "b": 178
+          },
+          "kd": {
+            "r": 51,
+            "g": 51,
+            "b": 178
+          },
+          "ks": {
+            "r": 0,
+            "g": 0,
+            "b": 0
+          },
+          "alpha": 1.0
+        }
+      }
+    ]
+  }
+}
