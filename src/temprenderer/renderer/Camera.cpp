@@ -1,9 +1,10 @@
 #include "temprenderer/renderer/Camera.hpp"
 
 namespace temprenderer::renderer {
-Camera::Camera(const kwp::Point3 &eye, float focalLength,
+Camera::Camera(std::string name, const kwp::Point3 &eye, float focalLength,
                std::uint16_t resolutionWidth, std::uint16_t resolutionHeight,
                float viewportWidth, float viewportHeight) {
+  this->name_ = name;
   this->eye_ = eye;
   this->resolutionWidth_ = resolutionWidth;
   this->resolutionHeight_ = resolutionHeight;

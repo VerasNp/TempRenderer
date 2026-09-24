@@ -6,9 +6,9 @@
 namespace temprenderer::renderer {
 class Light {
 public:
-  Light(core::config::LightType lightType, kwp::Point3 position,
-        core::math::ColorF color, kwp::Scalar intensity)
-      : lightType_(lightType), position_(position), color_(color),
+  Light(std::string name, core::config::LightType lightType,
+        kwp::Point3 position, core::math::ColorF color, kwp::Scalar intensity)
+      : name_(name), lightType_(lightType), position_(position), color_(color),
         intensity_(intensity) {}
   ~Light() = default;
   /**
@@ -43,6 +43,7 @@ public:
   }
 
 private:
+  std::string name_;
   core::config::LightType lightType_;
   kwp::Point3 position_;
   core::math::ColorF color_;

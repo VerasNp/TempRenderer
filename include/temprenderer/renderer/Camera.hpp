@@ -10,7 +10,7 @@ namespace temprenderer::renderer {
  */
 class Camera {
 public:
-  Camera(const kwp::Point3 &eye, float focalLength,
+  Camera(std::string name, const kwp::Point3 &eye, float focalLength,
          std::uint16_t resolutionWidth, std::uint16_t resolutionHeight,
          float viewportWidth, float viewportHeight);
   /**
@@ -39,6 +39,7 @@ public:
   [[nodiscard]] kwp::Point3 getEye() const noexcept { return this->eye_; }
 
 private:
+  std::string name_;
   kwp::Point3 eye_;
   float viewPortPixelDx_;
   float viewPortPixelDy_;

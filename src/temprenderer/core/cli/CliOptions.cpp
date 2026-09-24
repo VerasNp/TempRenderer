@@ -12,9 +12,9 @@ CliOptions parse(int argc, char **argv) {
                  "Path to TOML application config file")
       ->default_val(options.applicationConfigFilePath);
 
-  app.add_option("-s,--scene", options.sceneConfigFilePath,
-                 "Path to JSON scene config file")
-      ->default_val(options.sceneConfigFilePath);
+  app.add_option("-p,--project", options.projectConfigFilePath,
+                 "Path to JSON project config file")
+      ->default_val(options.projectConfigFilePath);
 
   app.add_flag("-v,--verbose", options.verbose, "Roda com logs detalhados");
   try {

@@ -12,9 +12,9 @@ struct CliOptions {
    */
   std::string applicationConfigFilePath = "config.toml";
   /**
-   * @brief Application config file path
+   * @brief Project config file path
    */
-  std::string sceneConfigFilePath = "";
+  std::string projectConfigFilePath;
   /**
    * @brief Application verbose
    */

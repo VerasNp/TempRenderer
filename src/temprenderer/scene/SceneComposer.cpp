@@ -43,25 +43,18 @@ Scene SceneComposer::compose(const core::config::SceneConfig &sceneConfig,
                              const core::config::RenderConfig &renderConfig) {
   LC_LOG_VERBOSE(core::logging::LogLevel::INFO, "Scene being composed");
   Scene scene;
-  for (const auto &component : sceneConfig.collection) {
-    if (component.type == core::config::SceneComponentType::LIGHT) {
-      const auto [type, position, color, intensity] =
-          std::get<core::config::LightConfig>(component.props);
-      scene.addLight(
-          std::make_shared<renderer::Light>(type, position, color, intensity));
-    } else if (component.type == core::config::SceneComponentType::OBJECT) {
-      const auto objectConfig =
-          std::get<core::config::ObjectConfig>(component.props);
-      const auto object = buildObject(objectConfig);
-      scene.addObject(object);
-    } else if (component.type == core::config::SceneComponentType::CAMERA) {
-      const auto [eye, focalLength] =
-          std::get<core::config::CameraConfig>(component.props);
-      scene.addCamera(std::make_shared<renderer::Camera>(
-          eye, focalLength, renderConfig.resolutionHeight,
-          renderConfig.resolutionWidth, renderConfig.viewportWidth,
-          renderConfig.viewportHeight));
-    }
+  scene.setBackgroundColor(sceneConfig.world.background.color);
+  scene.addCamera(std::make_shared<renderer::Camera>(
+      sceneConfig.camera.name, sceneConfig.camera.eye,
+      sceneConfig.camera.focalLength, renderConfig.resolutionWidth,
+      renderConfig.resolutionHeight, renderConfig.viewportWidth,
+      renderConfig.viewportHeight));
+  for (auto [name, type, position, color, intensity] : sceneConfig.lights) {
+    scene.addLight(std::make_shared<renderer::Light>(name, type, position,
+                                                     color, intensity));
+  }
+  for (auto objectConfig : sceneConfig.objects) {
+    scene.addObject(buildObject(objectConfig));
   }
   LC_LOG_VERBOSE(core::logging::LogLevel::INFO, "Scene composed successfully");
   return scene;

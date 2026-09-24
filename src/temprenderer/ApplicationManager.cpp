@@ -30,7 +30,7 @@ void ApplicationManager::startUp() {
   this->editorManager_.setWindowManager(this->windowManager_);
   this->editorManager_.startUp();
   this->renderManager_.startUp();
-  this->scene_ = scene::SceneComposer::compose(this->sceneConfig_,
+  this->scene_ = scene::SceneComposer::compose(this->projectConfig_.scene,
                                                this->applicationConfig_.render);
   this->editorManager_.mainLayout().setOnRenderRequested([this]() {
     this->renderScene();
@@ -61,10 +61,10 @@ void ApplicationManager::setApplicationConfig(
 
 void ApplicationManager::renderScene() {
   renderer::PhongIntegrator integrator(
-      *this->scene_.getCamera().get(),
+      *this->scene_.getCamera(),
       this->applicationConfig_.render.resolutionWidth,
       this->applicationConfig_.render.resolutionHeight,
-      core::math::Color(100, 100, 100));
+      core::math::Color::fromFloat(this->scene_.getBackgroundColor()));
   renderer::Canvas canvas = integrator.render(this->scene_);
   this->renderManager_.setCanvas(canvas);
 }

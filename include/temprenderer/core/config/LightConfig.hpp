@@ -13,6 +13,7 @@ enum class LightType { POINT, AMBIENT, UNKNOWN };
  * @brief Light configs
  */
 struct LightConfig {
+  std::string name;
   LightType type = LightType::UNKNOWN;
   kwp::Point3 position = kwp::Point3(0, 0, 0);
   math::ColorF color = math::ColorF(1.0F, 1.0F, 1.0F);
