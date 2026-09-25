@@ -1,0 +1,7 @@
+blank_issues_enabled: false
+issue_templates:
+  - name: "Request de feature"
+    description: "Sugere uma nova feature ou melhoria"
+    title: "feat: "
+    labels: ["enhancement"]
+    body: "./ISSUE_TEMPLATE/feature_request.md"

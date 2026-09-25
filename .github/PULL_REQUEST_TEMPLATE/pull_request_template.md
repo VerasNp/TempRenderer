@@ -1,15 +1,15 @@
-# Descrição
+### Descrição
 
 Maiores detalhes aqui
 
-## Tipo de mudança
+### Tipo de mudança
 
 - [ ] Bug fix
 - [ ] Nova feature
 - [ ] Estilo/UI update
 - [ ] Documentação
 
-## Checklist
+### Checklist
 
 - [ ] **Eu lí o [Contributing Guidelines](https://github.com/VerasNp/TempRenderer/blob/main/CONTRIBUTING.md).**
 - [ ] **Eu entendo cada linha de código que estou enviando.**
