@@ -18,10 +18,20 @@ core::math::Color PhongIntegrator::li(const core::math::Ray &ray,
             ->getColor();
     core::math::ColorF ambientCoefficient = isect.material.ka.value();
     if (this->shadows_) {
-      core::math::Ray shadowRay{isect.point, w};
-      if (scene.intersect(shadowRay, &isect)) {
-        return core::math::Color::fromFloat(
-            (ambientLightColor * ambientCoefficient));
+      kwp::Point3 shadowOrigin = isect.point + isect.normal * 5e-3;
+      kwp::Scalar distanceToLight =
+          length(scene.getSpecificLightByType(core::config::LightType::POINT)
+                     ->getPosition() -
+                 isect.point);
+      core::math::Ray shadowRay{shadowOrigin, w};
+      scene::SurfaceInteraction shadowIsect{};
+      if (scene.intersect(shadowRay, &shadowIsect)) {
+        kwp::Scalar distanceToObstacle =
+            length(shadowIsect.point - shadowOrigin);
+        if (distanceToObstacle < distanceToLight) {
+          return core::math::Color::fromFloat(ambientLightColor *
+                                              ambientCoefficient);
+        }
       }
     }
     kwp::Vec3 v = (ray.getOrigin() - isect.point).normalize();
