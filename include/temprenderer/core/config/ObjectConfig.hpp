@@ -10,7 +10,7 @@ namespace temprenderer::core::config {
 /**
  * Possible types of objects
  */
-enum class ObjectType { SPHERE, OBJECT, CONE, PLANE, CYLINDER, UNKNOWN };
+enum class ObjectType { SPHERE, CONE, PLANE, CYLINDER, TRIANGLE, UNKNOWN };
 
 /**
  * @brief Sphere configs
@@ -47,10 +47,20 @@ struct CylinderConfig {
 };
 
 /**
+ * @brief Triangle config
+ */
+struct TriangleConfig {
+  kwp::Point3 p1{0, 0, 0};
+  kwp::Point3 p2{0, 0, 0};
+  kwp::Point3 p3{0, 0, 0};
+};
+
+/**
  * @brief Possible types of object's props
  */
-using ObjectProps = std::variant<SphereConfig, ConeConfig, PlaneConfig,
-                                 CylinderConfig, std::monostate>;
+using ObjectProps =
+    std::variant<SphereConfig, ConeConfig, PlaneConfig, CylinderConfig,
+                 TriangleConfig, std::monostate>;
 
 /**
  * @brief Object configs

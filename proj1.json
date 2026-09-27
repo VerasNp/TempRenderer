@@ -56,42 +56,22 @@
 		],
 		"objects": [
 			{
-				"name": "esfera bolada",
-				"type": "sphere",
-				"center": {
+				"type": "triangle",
+				"p1": {
 					"x": 0.0,
 					"y": 0.0,
-					"z": -90.0
+					"z": 0.0
 				},
-				"radius": 20.0,
-				"material": {
-					"ka": {
-						"r": 255,
-						"g": 255,
-						"b": 255
-					},
-					"kd": {
-						"r": 255,
-						"g": 255,
-						"b": 255
-					},
-					"ks": {
-						"r": 255,
-						"g": 255,
-						"b": 255
-					},
-					"alpha": 32.0
-				}
-			},
-			{
-				"name": "esfera bolada",
-				"type": "sphere",
-				"center": {
-					"x": 0.0,
+				"p2": {
+					"x": 50.0,
 					"y": 0.0,
-					"z": -40.0
+					"z": 0.0
 				},
-				"radius": 5.0,
+				"p3": {
+					"x": 25.0,
+					"y": 50.0,
+					"z": 0.0
+				},
 				"material": {
 					"ka": {
 						"r": 255,

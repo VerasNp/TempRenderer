@@ -1,5 +1,4 @@
 #include "core/config/ProjectConfig.hpp"
-#include "core/config/SceneConfig.hpp"
 #include "temprenderer/ApplicationManager.hpp"
 #include "temprenderer/core/cli/CliOptions.hpp"
 #include "temprenderer/core/logging/LoggerManager.hpp"

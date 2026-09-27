@@ -28,6 +28,9 @@ ObjectConfig::stringToObjectType(const std::string &objectType) noexcept {
   if (objectType == "cylinder") {
     return ObjectType::CYLINDER;
   }
+  if (objectType == "triangle") {
+    return ObjectType::TRIANGLE;
+  }
   LC_LOG(logging::LogLevel::WARNING,
          "Unknown object type '" + objectType + "'");
   return ObjectType::UNKNOWN;
@@ -44,6 +47,8 @@ ObjectConfig::createDefaultObjectProps(const ObjectType type) noexcept {
     return PlaneConfig{};
   case ObjectType::CYLINDER:
     return CylinderConfig{};
+  case ObjectType::TRIANGLE:
+    return TriangleConfig{};
   default:;
     return std::monostate{};
   }
@@ -97,6 +102,17 @@ void ObjectConfig::setObjectProps(
     }
     if (const auto position = propsConfig.get("top_center")) {
       cylinder.topCenter = parsePoint3DDataFromConfig(*position);
+    }
+  } else if (object.type == ObjectType::TRIANGLE) {
+    auto &triangle = std::get<TriangleConfig>(object.props);
+    if (const auto position = propsConfig.get("p1")) {
+      triangle.p1 = parsePoint3DDataFromConfig(*position);
+    }
+    if (const auto position = propsConfig.get("p2")) {
+      triangle.p2 = parsePoint3DDataFromConfig(*position);
+    }
+    if (const auto position = propsConfig.get("p3")) {
+      triangle.p3 = parsePoint3DDataFromConfig(*position);
     }
   }
   if (const auto materialConfig = propsConfig.get("material")) {
