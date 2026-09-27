@@ -5,6 +5,7 @@
 #include "renderer/Light.hpp"
 #include "renderer/Plane.hpp"
 #include "renderer/Sphere.hpp"
+#include "renderer/Triangle.hpp"
 
 namespace temprenderer::scene {
 
@@ -32,6 +33,12 @@ buildObject(const core::config::ObjectConfig &objectConfig) {
     const auto [baseCenter, baseRadius, height] =
         std::get<core::config::CylinderConfig>(objectConfig.props);
     return std::make_shared<renderer::Cylinder>(baseCenter, baseRadius, height,
+                                                objectConfig.material);
+  }
+  if (objectConfig.type == core::config::ObjectType::TRIANGLE) {
+    const auto [p1, p2, p3] =
+        std::get<core::config::TriangleConfig>(objectConfig.props);
+    return std::make_shared<renderer::Triangle>(p1, p2, p3,
                                                 objectConfig.material);
   }
   LC_LOG(core::logging::LogLevel::WARNING, "Object type not recognized");
