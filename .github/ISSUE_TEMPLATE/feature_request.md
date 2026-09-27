@@ -1,9 +1,10 @@
 ---
 name: Request de feature
 about: Sugere uma nova feature ou melhoria
-title: "feat: "
+title: 'feat: '
 labels: enhancement
 assignees: ''
+
 ---
 
 ### Descrição da feature *
