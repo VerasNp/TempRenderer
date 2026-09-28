@@ -11,6 +11,10 @@ public:
   intersect(const core::math::Ray &ray,
             scene::SurfaceInteraction *isect) const noexcept override;
 
+  void setCullBackfaces(const bool cullBackfaces) noexcept {
+    this->cullBackfaces_ = cullBackfaces;
+  };
+
 private:
   kwp::Point3 p1_;
   kwp::Point3 p2_;
@@ -19,5 +23,6 @@ private:
   kwp::Vec3 e2_;
   kwp::Vec3 normal_;
   core::math::Material material_;
+  bool cullBackfaces_ = false;
 };
 } // namespace temprenderer::renderer

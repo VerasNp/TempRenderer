@@ -42,6 +42,7 @@ set(temprenderer_core_source_files
         "${temprenderer_core_source_dir}/temprenderer/core/config/SceneConfig.cpp"
         "${temprenderer_core_source_dir}/temprenderer/core/config/WindowConfig.cpp"
         "${temprenderer_core_source_dir}/temprenderer/core/config/WorldConfig.cpp"
+        "${temprenderer_core_source_dir}/temprenderer/core/io/ObjLoader.cpp"
         "${temprenderer_core_source_dir}/temprenderer/pd/editor/EditorManager.cpp"
         "${temprenderer_core_source_dir}/temprenderer/platform/graphics/WindowManager.cpp"
         "${temprenderer_core_source_dir}/temprenderer/renderer/Camera.cpp"
@@ -54,6 +55,7 @@ set(temprenderer_core_source_files
         "${temprenderer_core_source_dir}/temprenderer/renderer/Plane.cpp"
         "${temprenderer_core_source_dir}/temprenderer/renderer/Cylinder.cpp"
         "${temprenderer_core_source_dir}/temprenderer/renderer/Triangle.cpp"
+        "${temprenderer_core_source_dir}/temprenderer/scene/Mesh.cpp"
         "${temprenderer_core_source_dir}/temprenderer/scene/SceneComposer.cpp"
         "${temprenderer_core_source_dir}/temprenderer/ApplicationManager.cpp"
 )
@@ -88,6 +90,9 @@ add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
 
         COMMAND ${CMAKE_COMMAND} -E copy
         ${CMAKE_SOURCE_DIR}/proj1.json
+        $<TARGET_FILE_DIR:${PROJECT_NAME}>
+        COMMAND ${CMAKE_COMMAND} -E copy
+        ${CMAKE_SOURCE_DIR}/mashes/baseLow.obj
         $<TARGET_FILE_DIR:${PROJECT_NAME}>
 
         COMMAND ${CMAKE_COMMAND} -E copy_directory

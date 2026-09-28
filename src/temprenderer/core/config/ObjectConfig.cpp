@@ -31,6 +31,9 @@ ObjectConfig::stringToObjectType(const std::string &objectType) noexcept {
   if (objectType == "triangle") {
     return ObjectType::TRIANGLE;
   }
+  if (objectType == "mesh") {
+    return ObjectType::MESH;
+  }
   LC_LOG(logging::LogLevel::WARNING,
          "Unknown object type '" + objectType + "'");
   return ObjectType::UNKNOWN;
@@ -49,6 +52,8 @@ ObjectConfig::createDefaultObjectProps(const ObjectType type) noexcept {
     return CylinderConfig{};
   case ObjectType::TRIANGLE:
     return TriangleConfig{};
+  case ObjectType::MESH:
+    return MeshConfig{};
   default:;
     return std::monostate{};
   }
@@ -113,6 +118,32 @@ void ObjectConfig::setObjectProps(
     }
     if (const auto position = propsConfig.get("p3")) {
       triangle.p3 = parsePoint3DDataFromConfig(*position);
+    }
+  } else if (object.type == ObjectType::MESH) {
+    auto &mesh = std::get<MeshConfig>(object.props);
+    if (const auto objFilePath = propsConfig.get("objFilePath")) {
+      mesh.objFilePath = objFilePath->asString();
+    } else {
+      if (const auto verticesConfig = propsConfig.get("vertices")->asArray();
+          !verticesConfig.empty()) {
+        mesh.vertices.reserve(verticesConfig.size());
+        for (auto vertexConfig : verticesConfig) {
+          mesh.vertices.push_back(parsePoint3DDataFromConfig(vertexConfig));
+        }
+      }
+      if (const auto facesConfig = propsConfig.get("faces")->asArray();
+          !facesConfig.empty()) {
+        mesh.faces.reserve(facesConfig.size());
+        for (const auto &faceConfig : facesConfig) {
+          const auto &faceVerticesConfig = faceConfig.asArray();
+          std::vector<int> face;
+          face.reserve(faceVerticesConfig.size());
+          for (const auto &faceVertexConfig : faceVerticesConfig) {
+            face.push_back(faceVertexConfig.asInt<std::int32_t>(-1));
+          }
+          mesh.faces.push_back(std::move(face));
+        }
+      }
     }
   }
   if (const auto materialConfig = propsConfig.get("material")) {

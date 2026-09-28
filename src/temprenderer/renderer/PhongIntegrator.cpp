@@ -1,8 +1,6 @@
 #include "renderer/PhongIntegrator.hpp"
 #include "temprenderer/core/math/Materials.hpp"
 
-#include <algorithm>
-
 namespace temprenderer::renderer {
 
 core::math::Color PhongIntegrator::li(const core::math::Ray &ray,

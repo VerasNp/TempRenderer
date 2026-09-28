@@ -15,6 +15,10 @@ Triangle::Triangle(const kwp::Point3 p1, const kwp::Point3 p2,
 }
 bool Triangle::intersect(const core::math::Ray &ray,
                          scene::SurfaceInteraction *isect) const noexcept {
+  if (this->cullBackfaces_ &&
+      kwp::dot(this->normal_, ray.getDirection()) >= 0) {
+    return false;
+  }
   kwp::Scalar denom = kwp::dot(this->normal_, ray.getDirection());
   if (std::abs(denom) < kwp::epsilon) {
     return false;
