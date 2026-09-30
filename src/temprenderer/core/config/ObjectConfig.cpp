@@ -1,6 +1,7 @@
 #include "core/config/ObjectConfig.hpp"
 
 #include "core/config/utils.hpp"
+#include "core/io/MeshLoaderPort.hpp"
 #include "core/parsers/ParserPort.hpp"
 namespace temprenderer::core::config {
 [[nodiscard]] ObjectConfig
@@ -122,28 +123,9 @@ void ObjectConfig::setObjectProps(
   } else if (object.type == ObjectType::MESH) {
     auto &mesh = std::get<MeshConfig>(object.props);
     if (const auto objFilePath = propsConfig.get("objFilePath")) {
-      mesh.objFilePath = objFilePath->asString();
-    } else {
-      if (const auto verticesConfig = propsConfig.get("vertices")->asArray();
-          !verticesConfig.empty()) {
-        mesh.vertices.reserve(verticesConfig.size());
-        for (auto vertexConfig : verticesConfig) {
-          mesh.vertices.push_back(parsePoint3DDataFromConfig(vertexConfig));
-        }
-      }
-      if (const auto facesConfig = propsConfig.get("faces")->asArray();
-          !facesConfig.empty()) {
-        mesh.faces.reserve(facesConfig.size());
-        for (const auto &faceConfig : facesConfig) {
-          const auto &faceVerticesConfig = faceConfig.asArray();
-          std::vector<int> face;
-          face.reserve(faceVerticesConfig.size());
-          for (const auto &faceVertexConfig : faceVerticesConfig) {
-            face.push_back(faceVertexConfig.asInt<std::int32_t>(-1));
-          }
-          mesh.faces.push_back(std::move(face));
-        }
-      }
+      const std::unique_ptr<io::MeshLoaderPort> objParser =
+          std::make_unique<io::TinyobjloaderMeshAdapter>();
+      mesh = objParser->loadFile(objFilePath->asString());
     }
   }
   if (const auto materialConfig = propsConfig.get("material")) {

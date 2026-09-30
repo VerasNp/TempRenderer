@@ -42,7 +42,6 @@ set(temprenderer_core_source_files
         "${temprenderer_core_source_dir}/temprenderer/core/config/SceneConfig.cpp"
         "${temprenderer_core_source_dir}/temprenderer/core/config/WindowConfig.cpp"
         "${temprenderer_core_source_dir}/temprenderer/core/config/WorldConfig.cpp"
-        "${temprenderer_core_source_dir}/temprenderer/core/io/ObjLoader.cpp"
         "${temprenderer_core_source_dir}/temprenderer/pd/editor/EditorManager.cpp"
         "${temprenderer_core_source_dir}/temprenderer/platform/graphics/WindowManager.cpp"
         "${temprenderer_core_source_dir}/temprenderer/renderer/Camera.cpp"
@@ -77,6 +76,7 @@ target_link_libraries(temprenderer_core
         glad
         glfw
         nlohmann.json
+        tinyobjloader
 )
 
 add_executable(${PROJECT_NAME} "src/temprenderer/main.cpp")
@@ -92,7 +92,10 @@ add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
         ${CMAKE_SOURCE_DIR}/proj1.json
         $<TARGET_FILE_DIR:${PROJECT_NAME}>
         COMMAND ${CMAKE_COMMAND} -E copy
-        ${CMAKE_SOURCE_DIR}/mashes/baseLow.obj
+        ${CMAKE_SOURCE_DIR}/mashes/bladeLow.obj
+        $<TARGET_FILE_DIR:${PROJECT_NAME}>
+        COMMAND ${CMAKE_COMMAND} -E copy
+        ${CMAKE_SOURCE_DIR}/mashes/Untitled.mtl
         $<TARGET_FILE_DIR:${PROJECT_NAME}>
 
         COMMAND ${CMAKE_COMMAND} -E copy_directory

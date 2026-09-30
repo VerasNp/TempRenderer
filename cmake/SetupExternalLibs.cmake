@@ -83,4 +83,12 @@ macro(setup_external_libs)
   else ()
     message(STATUS "Doxygen nao encontrado — target 'docs' nao sera criado")
   endif ()
+
+  FetchContent_Declare(
+          tinyobjloader
+          GIT_REPOSITORY https://github.com/tinyobjloader/tinyobjloader
+          GIT_TAG release
+          GIT_SHALLOW TRUE
+  )
+  FetchContent_MakeAvailable(tinyobjloader)
 endmacro()

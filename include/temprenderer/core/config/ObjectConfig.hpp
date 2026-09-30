@@ -66,10 +66,15 @@ struct TriangleConfig {
 /**
  * @brief Mesh config
  */
-struct MeshConfig {
+struct ShapeMeshConfig {
+  std::string name;
   std::vector<kwp::Point3> vertices;
-  std::vector<std::vector<int>> faces;
-  std::string objFilePath;
+  std::vector<std::vector<std::size_t>> faces;
+};
+
+struct MeshConfig {
+  std::string path;
+  std::vector<ShapeMeshConfig> meshes;
 };
 
 /**

@@ -1,6 +1,5 @@
 #include "scene/SceneComposer.hpp"
 
-#include "core/io/ObjLoader.hpp"
 #include "core/logging/LoggerManager.hpp"
 #include "renderer/Cone.hpp"
 #include "renderer/Cylinder.hpp"
@@ -13,7 +12,7 @@
 namespace temprenderer::scene {
 
 namespace {
-std::shared_ptr<Hittable>
+std::variant<std::shared_ptr<Hittable>, std::vector<std::shared_ptr<Mesh>>>
 buildObject(const core::config::ObjectConfig &objectConfig) {
   if (objectConfig.type == core::config::ObjectType::SPHERE) {
     const auto [position, radius] =
@@ -47,30 +46,12 @@ buildObject(const core::config::ObjectConfig &objectConfig) {
   if (objectConfig.type == core::config::ObjectType::MESH) {
     const auto &meshConfig =
         std::get<core::config::MeshConfig>(objectConfig.props);
-    if (!meshConfig.objFilePath.empty()) {
-      core::config::MeshConfig meshConfigFromFile =
-          io::loadObjMeshConfig(meshConfig.objFilePath);
-      std::vector<std::size_t> indices;
-      for (const auto &face : meshConfigFromFile.faces) {
-        for (std::size_t i = 1; i + 1 < face.size(); ++i) {
-          indices.push_back(static_cast<std::size_t>(face[0]));
-          indices.push_back(static_cast<std::size_t>(face[i]));
-          indices.push_back(static_cast<std::size_t>(face[i + 1]));
-        }
-      }
-      return std::make_shared<Mesh>(meshConfigFromFile.vertices,
-                                    std::move(indices), objectConfig.material);
+    std::vector<std::shared_ptr<Mesh>> meshes;
+    for (auto mash : meshConfig.meshes) {
+      meshes.push_back(std::make_shared<Mesh>(mash.vertices, mash.faces,
+                                              objectConfig.material));
     }
-    std::vector<std::size_t> indices;
-    for (const auto &face : meshConfig.faces) {
-      for (std::size_t i = 1; i + 1 < face.size(); ++i) {
-        indices.push_back(static_cast<std::size_t>(face[0]));
-        indices.push_back(static_cast<std::size_t>(face[i]));
-        indices.push_back(static_cast<std::size_t>(face[i + 1]));
-      }
-    }
-    return std::make_shared<Mesh>(meshConfig.vertices, std::move(indices),
-                                  objectConfig.material);
+    return meshes;
   }
   LC_LOG(core::logging::LogLevel::WARNING, "Object type not recognized");
   return nullptr;

@@ -1,14 +1,19 @@
 #include "scene/Mesh.hpp"
 
+#include "core/logging/LoggerManager.hpp"
+
+#include <limits>
 #include <stdexcept>
+#include <unordered_map>
 
 namespace temprenderer::scene {
 
 Mesh::Mesh(const std::vector<kwp::Point3> &rawVertices,
-           const std::vector<std::size_t> &indices,
+           const std::vector<std::vector<std::size_t>> &faces,
            const core::math::Material &material) {
-  const std::size_t triangleCount = indices.size() / 3;
+  const std::size_t triangleCount = faces.size();
   this->material_ = material;
+
   this->vertices_.reserve(rawVertices.size());
   for (std::size_t i = 0; i < rawVertices.size(); ++i) {
     HVertex vertex;
@@ -17,15 +22,20 @@ Mesh::Mesh(const std::vector<kwp::Point3> &rawVertices,
     this->vertices_.push_back(vertex);
   }
   this->faces_.reserve(triangleCount);
-  this->edges_.reserve(indices.size() * 2);
+  this->edges_.reserve(triangleCount * 6);
   for (std::size_t t = 0; t < triangleCount; ++t) {
-    const std::size_t i0 = indices[3 * t + 0];
-    const std::size_t i1 = indices[3 * t + 1];
-    const std::size_t i2 = indices[3 * t + 2];
-    HFace face;
-    face.index = t;
-    this->faces_.push_back(face);
-    HFace *facePtr = &this->faces_.back();
+    if (faces[t].size() != 3) {
+      LC_LOG(core::logging::LogLevel::ERROR, "Only triangular faces supported");
+      exit(1);
+    }
+    const std::size_t i0 = faces[t][0];
+    const std::size_t i1 = faces[t][1];
+    const std::size_t i2 = faces[t][2];
+    if (i0 >= rawVertices.size() || i1 >= rawVertices.size() ||
+        i2 >= rawVertices.size()) {
+      LC_LOG(core::logging::LogLevel::ERROR, "Invalid vertex index");
+      exit(1);
+    }
     const std::size_t base = this->edges_.size();
     this->edges_.push_back(HEdge{});
     this->edges_.push_back(HEdge{});
@@ -33,6 +43,10 @@ Mesh::Mesh(const std::vector<kwp::Point3> &rawVertices,
     HEdge *e0 = &this->edges_[base + 0];
     HEdge *e1 = &this->edges_[base + 1];
     HEdge *e2 = &this->edges_[base + 2];
+    HFace face;
+    face.index = t;
+    this->faces_.push_back(face);
+    HFace *facePtr = &this->faces_.back();
     e0->tip = &this->vertices_[i1];
     e1->tip = &this->vertices_[i2];
     e2->tip = &this->vertices_[i0];
@@ -86,14 +100,14 @@ bool Mesh::intersect(const core::math::Ray &ray,
 
 void Mesh::linkTwins() {
   std::unordered_map<EdgeKey, HEdge *, EdgeKeyHash> edgeMap;
-  edgeMap.reserve(this->edges_.size() * 2);
   const std::size_t interiorCount = this->edges_.size();
+  edgeMap.reserve(interiorCount * 2);
+
   for (std::size_t i = 0; i < interiorCount; ++i) {
     HEdge &e = this->edges_[i];
-    const std::size_t originIdx = e.prev->tip->index;
-    const std::size_t destIdx = e.tip->index;
-    edgeMap[EdgeKey{.a = originIdx, .b = destIdx}] = &e;
+    edgeMap[EdgeKey{.a = e.prev->tip->index, .b = e.tip->index}] = &e;
   }
+
   for (std::size_t i = 0; i < interiorCount; ++i) {
     HEdge &e = this->edges_[i];
     if (e.twin != nullptr) {
@@ -101,18 +115,18 @@ void Mesh::linkTwins() {
     }
     const std::size_t originIdx = e.prev->tip->index;
     const std::size_t destIdx = e.tip->index;
-    if (auto it = edgeMap.find(EdgeKey{.a = destIdx, .b = originIdx});
-        it != edgeMap.end()) {
+
+    auto it = edgeMap.find(EdgeKey{.a = destIdx, .b = originIdx});
+    if (it != edgeMap.end() && it->second != &e) {
       e.twin = it->second;
       it->second->twin = &e;
     } else {
       HEdge boundary;
       boundary.tip = &this->vertices_[originIdx];
       boundary.lFace = nullptr;
+      boundary.twin = &e;
       this->edges_.push_back(boundary);
-      HEdge *boundaryPtr = &this->edges_.back();
-      e.twin = boundaryPtr;
-      boundaryPtr->twin = &e;
+      e.twin = &this->edges_.back();
     }
   }
 }

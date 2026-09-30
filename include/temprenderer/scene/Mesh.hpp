@@ -37,7 +37,7 @@ struct HFace {
 class Mesh : public Hittable {
 public:
   Mesh(const std::vector<kwp::Point3> &rawVertices,
-       const std::vector<std::size_t> &indices,
+       const std::vector<std::vector<std::size_t>> &faces,
        const core::math::Material &material);
 
   [[nodiscard]] bool

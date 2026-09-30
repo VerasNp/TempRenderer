@@ -1,5 +1,6 @@
 #pragma once
 #include "Hittable.hpp"
+#include "Mesh.hpp"
 #include "renderer/Camera.hpp"
 #include "renderer/Light.hpp"
 
@@ -10,8 +11,19 @@
 namespace temprenderer::scene {
 class Scene : public Hittable {
 public:
-  void addObject(std::shared_ptr<Hittable> object) {
-    this->objects_.push_back(std::shared_ptr(object));
+  void addObject(std::variant<std::shared_ptr<Hittable>,
+                              std::vector<std::shared_ptr<Mesh>>>
+                     object) {
+    if (std::holds_alternative<std::shared_ptr<Hittable>>(object)) {
+      this->objects_.push_back(
+          std::get<std::shared_ptr<Hittable>>(std::move(object)));
+    } else {
+      auto &meshes = std::get<std::vector<std::shared_ptr<Mesh>>>(object);
+      this->objects_.reserve(this->objects_.size() + meshes.size());
+      for (auto &mesh : meshes) {
+        this->objects_.push_back(std::move(mesh));
+      }
+    }
   }
 
   [[nodiscard]] bool
