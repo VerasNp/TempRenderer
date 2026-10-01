@@ -36,12 +36,9 @@ bool Triangle::intersect(const core::math::Ray &ray,
   kwp::Vec3 r1 = this->p1_ - pi;
   kwp::Vec3 r2 = this->p2_ - pi;
   kwp::Vec3 r3 = this->p3_ - pi;
-  kwp::Scalar alpha = (kwp::dot(kwp::cross(r1, r2), this->normal_)) /
-                      kwp::length(this->normal_);
-  kwp::Scalar beta = (kwp::dot(kwp::cross(r2, r3), this->normal_)) /
-                     kwp::length(this->normal_);
-  kwp::Scalar gamma = (kwp::dot(kwp::cross(r3, r1), this->normal_)) /
-                      kwp::length(this->normal_);
+  kwp::Scalar alpha = (kwp::dot(kwp::cross(r1, r2), this->normal_)) / areaTotal;
+  kwp::Scalar beta = (kwp::dot(kwp::cross(r2, r3), this->normal_)) / areaTotal;
+  kwp::Scalar gamma = (kwp::dot(kwp::cross(r3, r1), this->normal_)) / areaTotal;
   if (alpha < kwp::epsilon || beta < kwp::epsilon || gamma < kwp::epsilon) {
     return false;
   }
