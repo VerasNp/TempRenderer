@@ -109,7 +109,12 @@ void ObjectConfig::setObjectProps(
     if (const auto ambientConfig = materialConfig->get("ka")) {
       object.material.ka = parseColorDataFromConfig(*ambientConfig);
     }
-    object.material.alpha = materialConfig->get("alpha")->asFloat();
+    if (const auto textureConfig = materialConfig->get("texture")) {
+      object.material.texture = parseTextureFromConfig(*textureConfig);
+    }
+    if (const auto alphaConfig = materialConfig->get("alpha")) {
+      object.material.alpha = alphaConfig->asFloat();
+    }
   }
 }
 } // namespace temprenderer::core::config

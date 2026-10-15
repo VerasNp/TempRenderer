@@ -28,4 +28,5 @@ core::math::Ray Camera::generateRay(unsigned int col,
   const kwp::Point3 target{pixelXCenter, pixelYCenter, pixelZCenter};
   return core::math::Ray(this->eye_, (target - this->eye_).normalize());
 }
+
 } // namespace temprenderer::renderer

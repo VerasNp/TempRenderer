@@ -6,6 +6,7 @@
 #include "kwp/Point3.hpp"
 
 namespace temprenderer::core::config {
+
 /**
  * @brief TODO
  *
@@ -46,6 +47,43 @@ parseColorDataFromConfig(const parsers::ConfigValue &colorData) {
   const std::uint8_t gNode = colorData.get("g")->asInt<std::uint8_t>();
   const std::uint8_t bNode = colorData.get("b")->asInt<std::uint8_t>();
   return math::Color{.r = rNode, .g = gNode, .b = bNode}.toFloat();
+}
+
+inline std::shared_ptr<const math::Texture>
+parseTextureFromConfig(const parsers::ConfigValue &textureConfig) {
+  if (!textureConfig.isTable()) {
+    return std::make_shared<const math::SolidColorTexture>(
+        math::ColorF{1.0F, 1.0F, 1.0F});
+  }
+
+  const auto type = textureConfig.get("type");
+  if (type && type->asString() == "solid") {
+    const auto colorConfig = textureConfig.get("color");
+    const auto color = colorConfig ? parseColorDataFromConfig(*colorConfig)
+                                   : math::ColorF{1.0F, 1.0F, 1.0F};
+    return std::make_shared<const math::SolidColorTexture>(color);
+  }
+
+  if (type && type->asString() == "wood") {
+    const auto baseConfig = textureConfig.get("base_color");
+    const auto ringConfig = textureConfig.get("ring_color");
+    const auto baseColor = baseConfig ? parseColorDataFromConfig(*baseConfig)
+                                      : math::ColorF{0.72F, 0.46F, 0.22F};
+    const auto ringColor = ringConfig ? parseColorDataFromConfig(*ringConfig)
+                                      : math::ColorF{0.38F, 0.20F, 0.08F};
+    const float scale = textureConfig.get("scale")
+                            ? textureConfig.get("scale")->asFloat(8.0F)
+                            : 8.0F;
+    const float turbulence =
+        textureConfig.get("turbulence")
+            ? textureConfig.get("turbulence")->asFloat(0.65F)
+            : 0.65F;
+    return std::make_shared<const math::WoodTexture>(baseColor, ringColor,
+                                                     scale, turbulence);
+  }
+
+  return std::make_shared<const math::SolidColorTexture>(
+      math::ColorF{1.0F, 1.0F, 1.0F});
 }
 
 /**

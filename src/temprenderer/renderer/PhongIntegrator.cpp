@@ -9,6 +9,8 @@ core::math::Color PhongIntegrator::li(const core::math::Ray &ray,
                                       const scene::Scene &scene) const {
   scene::SurfaceInteraction isect{};
   if (scene.intersect(ray, &isect)) {
+    const core::math::ColorF baseColor =
+        isect.material.sampleColor(isect.point);
     kwp::Vec3 w = (scene.getSpecificLightByType(core::config::LightType::POINT)
                        ->getPosition() -
                    isect.point)
@@ -41,7 +43,7 @@ core::math::Color PhongIntegrator::li(const core::math::Ray &ray,
             ->getColor();
     kwp::Scalar cosTheta = kwp::dot(isect.normal, w);
     kwp::Scalar cosPhi = std::pow(kwp::dot(v, r), isect.material.alpha.value());
-    core::math::ColorF diffuseTerm = isect.material.kd;
+    core::math::ColorF diffuseTerm = baseColor;
     core::math::ColorF specularTerm = isect.material.ks.value();
     return core::math::Color::fromFloat(
         pointLightColor * cosTheta * (diffuseTerm + (specularTerm * cosPhi)) +

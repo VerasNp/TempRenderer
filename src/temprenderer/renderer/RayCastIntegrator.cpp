@@ -7,7 +7,8 @@ core::math::Color RayCastIntegrator::li(const core::math::Ray &ray,
                                         const scene::Scene &scene) const {
   scene::SurfaceInteraction isect{};
   if (scene.intersect(ray, &isect)) {
-    return core::math::Color::fromFloat(isect.material.kd);
+    const auto sampledColor = isect.material.sampleColor(isect.point);
+    return core::math::Color::fromFloat(sampledColor);
   }
   return backgroundColor_;
 }
