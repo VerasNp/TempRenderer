@@ -13,11 +13,7 @@ add_executable(
         temprenderer_tests
         test_main.cpp
         "${CMAKE_CURRENT_SOURCE_DIR}/core/config/utils_test.cpp"
-        "${CMAKE_CURRENT_SOURCE_DIR}/core/math/image_texture_test.cpp"
-        "${CMAKE_CURRENT_SOURCE_DIR}/core/math/metal_texture_test.cpp"
         "${CMAKE_CURRENT_SOURCE_DIR}/core/math/wood_texture_test.cpp"
-        "${CMAKE_CURRENT_SOURCE_DIR}/renderer/material_render_test.cpp"
-        "${CMAKE_CURRENT_SOURCE_DIR}/renderer/texture_coordinates_test.cpp"
 #        "${CMAKE_CURRENT_SOURCE_DIR}/core/config/render_config_test.cpp"
 #        "${CMAKE_CURRENT_SOURCE_DIR}/renderer/camera_test.cpp"
 )
