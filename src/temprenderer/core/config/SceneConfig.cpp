@@ -3,7 +3,9 @@
 
 namespace temprenderer::core::config {
 
-SceneConfig SceneConfig::loadConfig(const parsers::ConfigValue &config) {
+SceneConfig
+SceneConfig::loadConfig(const parsers::ConfigValue &config,
+                        const std::filesystem::path &baseDirectory) {
   LC_LOG_VERBOSE(logging::LogLevel::INFO, "Loading scene config");
   SceneConfig scene;
   if (const auto *worldConfig = config.get("world")) {
@@ -12,16 +14,15 @@ SceneConfig SceneConfig::loadConfig(const parsers::ConfigValue &config) {
   if (const auto *cameraConfig = config.get("camera")) {
     scene.camera = CameraConfig::loadConfig(*cameraConfig);
   }
-  if (const auto lightsConfig = config.get("lights")->asArray();
-      !lightsConfig.empty()) {
-    for (auto lightConfig : lightsConfig) {
+  if (const auto lightsValue = config.get("lights")) {
+    for (const auto &lightConfig : lightsValue->asArray()) {
       scene.lights.push_back(LightConfig::loadConfig(lightConfig));
     }
   }
-  if (const auto objectsConfig = config.get("objects")->asArray();
-      !objectsConfig.empty()) {
-    for (auto objectConfig : objectsConfig) {
-      scene.objects.push_back(ObjectConfig::loadConfig(objectConfig));
+  if (const auto objectsValue = config.get("objects")) {
+    for (const auto &objectConfig : objectsValue->asArray()) {
+      scene.objects.push_back(
+          ObjectConfig::loadConfig(objectConfig, baseDirectory));
     }
   }
   LC_LOG_VERBOSE(logging::LogLevel::INFO, "Scene config loaded successfully");

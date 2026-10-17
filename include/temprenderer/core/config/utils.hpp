@@ -2,10 +2,15 @@
 #include "RenderConfig.hpp"
 #include "SceneConfig.hpp"
 #include "core/logging/LoggerManager.hpp"
+#include "core/math/ImageTexture.hpp"
 #include "core/math/Materials.hpp"
 #include "kwp/Point3.hpp"
 
+#include <filesystem>
+#include <stdexcept>
+
 namespace temprenderer::core::config {
+
 /**
  * @brief TODO
  *
@@ -46,6 +51,77 @@ parseColorDataFromConfig(const parsers::ConfigValue &colorData) {
   const std::uint8_t gNode = colorData.get("g")->asInt<std::uint8_t>();
   const std::uint8_t bNode = colorData.get("b")->asInt<std::uint8_t>();
   return math::Color{.r = rNode, .g = gNode, .b = bNode}.toFloat();
+}
+
+inline std::shared_ptr<const math::Texture>
+parseTextureFromConfig(const parsers::ConfigValue &textureConfig,
+                       const std::filesystem::path &baseDirectory = {}) {
+  if (!textureConfig.isTable()) {
+    return std::make_shared<const math::SolidColorTexture>(
+        math::ColorF{1.0F, 1.0F, 1.0F});
+  }
+
+  const auto type = textureConfig.get("type");
+  const auto floatOr = [&textureConfig](const char *key, float fallback) {
+    const auto value = textureConfig.get(key);
+    return value ? value->asFloat(fallback) : fallback;
+  };
+  const auto colorOr = [&textureConfig](const char *key,
+                                        math::ColorF fallback) {
+    const auto value = textureConfig.get(key);
+    return value ? parseColorDataFromConfig(*value) : fallback;
+  };
+
+  if (type && type->asString() == "solid") {
+    return std::make_shared<const math::SolidColorTexture>(
+        colorOr("color", math::ColorF{1.0F, 1.0F, 1.0F}));
+  }
+
+  if (type && type->asString() == "image") {
+    const auto pathConfig = textureConfig.get("path");
+    if (!pathConfig || pathConfig->asString().empty()) {
+      throw std::runtime_error("Image texture requires a non-empty 'path'");
+    }
+    const float scale = floatOr("scale", 1.0F);
+    math::ImageProjection projection = math::ImageProjection::UV;
+    if (const auto projectionConfig = textureConfig.get("projection")) {
+      if (projectionConfig->asString() != "sphere_preview") {
+        throw std::runtime_error("Unsupported image texture projection: " +
+                                 projectionConfig->asString());
+      }
+      projection = math::ImageProjection::SPHERE_PREVIEW;
+    }
+    std::filesystem::path imagePath = pathConfig->asString();
+    if (imagePath.is_relative()) {
+      imagePath = baseDirectory / imagePath;
+    }
+    return std::make_shared<const math::ImageTexture>(imagePath, scale,
+                                                      projection);
+  }
+
+  if (type && type->asString() == "metal") {
+    return std::make_shared<const math::MetalTexture>(
+        colorOr("base_color", math::ColorF{0.43F, 0.43F, 0.43F}),
+        colorOr("scratch_color", math::ColorF{0.68F, 0.68F, 0.68F}),
+        floatOr("scale", 1.0F), floatOr("mottling", 0.75F),
+        floatOr("scratch_density", 0.55F), floatOr("pit_strength", 0.2F),
+        floatOr("roughness_variation", 0.2F), floatOr("bump_strength", 0.12F));
+  }
+
+  if (type && type->asString() == "wood") {
+    return std::make_shared<const math::WoodTexture>(
+        colorOr("base_color", math::ColorF{0.72F, 0.46F, 0.22F}),
+        colorOr("ring_color", math::ColorF{0.38F, 0.20F, 0.08F}),
+        floatOr("scale", 8.0F), floatOr("turbulence", 0.65F),
+        floatOr("plank_width", 35.0F), floatOr("plank_length", 120.0F),
+        floatOr("offset_x", 0.0F), floatOr("offset_z", 0.0F));
+  }
+
+  if (type) {
+    throw std::runtime_error("Unsupported texture type: " + type->asString());
+  }
+  return std::make_shared<const math::SolidColorTexture>(
+      math::ColorF{1.0F, 1.0F, 1.0F});
 }
 
 /**

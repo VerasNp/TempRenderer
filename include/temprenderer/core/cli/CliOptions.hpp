@@ -14,7 +14,7 @@ struct CliOptions {
   /**
    * @brief Project config file path
    */
-  std::string projectConfigFilePath;
+  std::string projectConfigFilePath = "tarefa03.json";
   /**
    * @brief Application verbose
    */

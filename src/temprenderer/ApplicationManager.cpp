@@ -32,6 +32,7 @@ void ApplicationManager::startUp() {
   this->renderManager_.startUp();
   this->scene_ = scene::SceneComposer::compose(this->projectConfig_.scene,
                                                this->applicationConfig_.render);
+
   this->editorManager_.mainLayout().setOnRenderRequested([this]() {
     this->renderScene();
     this->editorManager_.renderResult().setTexture(

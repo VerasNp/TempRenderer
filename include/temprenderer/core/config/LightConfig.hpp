@@ -7,7 +7,7 @@ namespace temprenderer::core::config {
 /**
  * Possible types of light
  */
-enum class LightType { POINT, AMBIENT, UNKNOWN };
+enum class LightType { POINT, AREA, AMBIENT, UNKNOWN };
 
 /**
  * @brief Light configs
@@ -18,6 +18,8 @@ struct LightConfig {
   kwp::Point3 position = kwp::Point3(0, 0, 0);
   math::ColorF color = math::ColorF(1.0F, 1.0F, 1.0F);
   float intensity = 10.0F;
+  float width = 0.0F;
+  float height = 0.0F;
 
   [[nodiscard]] static LightConfig
   loadConfig(const parsers::ConfigValue &lightConfig) noexcept;
