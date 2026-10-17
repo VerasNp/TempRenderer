@@ -24,10 +24,10 @@ core::math::Color PhongIntegrator::li(const core::math::Ray &ray,
     }
     const core::math::ColorF ambientCoefficient =
         isect.material.ka.value_or(core::math::ColorF{0.0F, 0.0F, 0.0F});
-    const bool metallic = isect.material.metallic > 0.0F;
+    const float metallic = std::clamp(isect.material.metallic, 0.0F, 1.0F);
     const core::math::ColorF ambientTerm =
-        metallic ? baseColor * ambientLightColor * 1.0F
-                 : ambientLightColor * ambientCoefficient;
+        baseColor * ambientLightColor * metallic +
+        ambientLightColor * ambientCoefficient * (1.0F - metallic);
     kwp::Vec3 v = (ray.getOrigin() - isect.point).normalize();
     const kwp::Scalar alpha = isect.material.alpha.value_or(32.0F);
     const core::math::ColorF specularTerm =
@@ -80,7 +80,7 @@ core::math::Color PhongIntegrator::li(const core::math::Ray &ray,
         const core::math::ColorF incident =
             light->getColor() *
             (light->getIntensity() / static_cast<float>(sampleCount));
-        if (metallic) {
+        if (metallic > 0.0F) {
           const kwp::Scalar nDotV = std::max(kwp::dot(normal, v), 0.0F);
           if (nDotV <= 0.0F) {
             continue;
@@ -94,14 +94,16 @@ core::math::Color PhongIntegrator::li(const core::math::Ray &ray,
               baseColor, nDotL, nDotV,
               std::max(kwp::dot(normal, halfVector), 0.0F),
               std::max(kwp::dot(v, halfVector), 0.0F), roughness);
-          accumulated += incident * specular * nDotL;
-        } else {
+          accumulated += incident * specular * (nDotL * metallic);
+        }
+        if (metallic < 1.0F) {
           const kwp::Vec3 reflection =
               2.0F * kwp::dot(direction, normal) * normal - direction;
           const float highlight =
               std::pow(std::max(kwp::dot(v, reflection), 0.0F), alpha);
-          accumulated +=
-              incident * nDotL * (baseColor + specularTerm * highlight);
+          accumulated += incident * nDotL *
+                         (baseColor + specularTerm * highlight) *
+                         (1.0F - metallic);
         }
       }
       result += accumulated;

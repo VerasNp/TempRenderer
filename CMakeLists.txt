@@ -43,6 +43,7 @@ set(temprenderer_core_source_files
         "${temprenderer_core_source_dir}/temprenderer/core/config/WindowConfig.cpp"
         "${temprenderer_core_source_dir}/temprenderer/core/config/WorldConfig.cpp"
         "${temprenderer_core_source_dir}/temprenderer/core/math/ImageTexture.cpp"
+        "${temprenderer_core_source_dir}/temprenderer/core/math/Materials.cpp"
         "${temprenderer_core_source_dir}/temprenderer/pd/editor/EditorManager.cpp"
         "${temprenderer_core_source_dir}/temprenderer/platform/graphics/WindowManager.cpp"
         "${temprenderer_core_source_dir}/temprenderer/renderer/Camera.cpp"

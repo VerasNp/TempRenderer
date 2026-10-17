@@ -111,7 +111,8 @@ void ObjectConfig::setObjectProps(ObjectConfig &object,
     if (const auto ambientConfig = materialConfig->get("ka")) {
       object.material.ka = parseColorDataFromConfig(*ambientConfig);
     }
-    if (const auto textureConfig = materialConfig->get("texture")) {
+    const auto textureConfig = materialConfig->get("texture");
+    if (textureConfig) {
       object.material.texture =
           parseTextureFromConfig(*textureConfig, baseDirectory);
     }
@@ -121,8 +122,7 @@ void ObjectConfig::setObjectProps(ObjectConfig &object,
     if (const auto metallicConfig = materialConfig->get("metallic")) {
       object.material.metallic =
           std::clamp(metallicConfig->asFloat(), 0.0F, 1.0F);
-    } else if (const auto textureConfig = materialConfig->get("texture");
-               textureConfig) {
+    } else if (textureConfig) {
       if (const auto textureType = textureConfig->get("type");
           textureType && textureType->asString() == "metal") {
         object.material.metallic = 1.0F;

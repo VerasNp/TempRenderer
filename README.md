@@ -91,14 +91,13 @@ O projeto conta com uma executável, use o executável da última release.
 
 Materiais podem usar imagens PPM nos formatos P3 ou P6. O caminho relativo da imagem é resolvido a partir da pasta do arquivo JSON do projeto. `scale` controla a repetição da imagem nos eixos UV.
 
-Imagens que mostram uma esfera renderizada sobre um fundo podem ser aplicadas com `"projection": "sphere_preview"`; isso projeta apenas a área circular da esfera, sem espalhar o fundo preto pela superfície. Para texturas de material comuns, omita `projection`.
+Para uma textura tileable, omita `projection`. Imagens que mostram uma esfera renderizada sobre um fundo podem usar `"projection": "sphere_preview"`; isso projeta apenas a área circular da esfera, sem espalhar o fundo preto pela superfície.
 
 ```json
 "texture": {
 	"type": "image",
 	"path": "assets/texture_demo.ppm",
-	"scale": 1.0,
-	"projection": "sphere_preview"
+	"scale": 1.0
 }
 ```
 
@@ -116,7 +115,7 @@ Para comparar uma textura de imagem, metal e madeira na mesma renderização, ex
 make run PROJECT=texture_material_demo.json
 ```
 
-O arquivo [texture_material_demo.json](texture_material_demo.json) aplica a imagem PPM à esfera, o metal galvanizado ao cilindro e a madeira ao plano usado como piso.
+O arquivo [texture_material_demo.json](texture_material_demo.json) aplica uma textura PPM tileable à esfera da esquerda, metal galvanizado procedural ao cilindro, a imagem de uma esfera renderizada à esfera da direita com `sphere_preview` e madeira procedural ao piso.
 
 ## Testes
 

@@ -1,6 +1,7 @@
 #include "temprenderer/renderer/Sphere.hpp"
 #include "temprenderer/core/math/utils.hpp"
 
+#include <algorithm>
 #include <memory>
 namespace temprenderer::renderer {} // namespace temprenderer::renderer
 temprenderer::scene::Sphere::Sphere(const kwp::Point3 &center,
