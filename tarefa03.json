@@ -21,14 +21,16 @@
     },
     "lights": [
       {
-        "name": "point light",
-        "type": "point",
+        "name": "softbox",
+        "type": "area",
         "position": {
           "x": 0.0,
           "y": 35.0,
           "z": -20.0
         },
         "intensity": 1.0,
+        "width": 55.0,
+        "height": 42.0,
         "color": {
           "r": 255,
           "g": 255,
@@ -73,13 +75,56 @@
             "b": 255
           },
           "alpha": 32.0,
+          "metallic": 1.0,
+          "roughness": 0.48,
           "texture": {
-            "type": "solid",
-            "color": {
-              "r": 255,
-              "g": 0,
-              "b": 128
-            }
+            "type": "metal",
+            "base_color": {
+              "r": 110,
+              "g": 110,
+              "b": 110
+            },
+            "scratch_color": {
+              "r": 174,
+              "g": 174,
+              "b": 174
+            },
+            "scale": 0.8,
+            "mottling": 0.85,
+            "scratch_density": 0.42,
+            "pit_strength": 0.3,
+            "roughness_variation": 0.28,
+            "bump_strength": 0.16
+          }
+        }
+      },
+      {
+        "name": "galvanized_cone",
+        "type": "cone",
+        "base_center": {
+          "x": 48.0,
+          "y": -39.0,
+          "z": -100.0
+        },
+        "base_radius": 11.0,
+        "vertex": {
+          "x": 48.0,
+          "y": 18.0,
+          "z": -100.0
+        },
+        "material": {
+          "metallic": 1.0,
+          "roughness": 0.48,
+          "texture": {
+            "type": "metal",
+            "base_color": { "r": 110, "g": 110, "b": 110 },
+            "scratch_color": { "r": 174, "g": 174, "b": 174 },
+            "scale": 0.8,
+            "mottling": 0.85,
+            "scratch_density": 0.42,
+            "pit_strength": 0.3,
+            "roughness_variation": 0.28,
+            "bump_strength": 0.16
           }
         }
       },

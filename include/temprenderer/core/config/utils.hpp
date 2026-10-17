@@ -2,8 +2,12 @@
 #include "RenderConfig.hpp"
 #include "SceneConfig.hpp"
 #include "core/logging/LoggerManager.hpp"
+#include "core/math/ImageTexture.hpp"
 #include "core/math/Materials.hpp"
 #include "kwp/Point3.hpp"
+
+#include <filesystem>
+#include <stdexcept>
 
 namespace temprenderer::core::config {
 
@@ -50,7 +54,8 @@ parseColorDataFromConfig(const parsers::ConfigValue &colorData) {
 }
 
 inline std::shared_ptr<const math::Texture>
-parseTextureFromConfig(const parsers::ConfigValue &textureConfig) {
+parseTextureFromConfig(const parsers::ConfigValue &textureConfig,
+                       const std::filesystem::path &baseDirectory = {}) {
   if (!textureConfig.isTable()) {
     return std::make_shared<const math::SolidColorTexture>(
         math::ColorF{1.0F, 1.0F, 1.0F});
@@ -62,6 +67,64 @@ parseTextureFromConfig(const parsers::ConfigValue &textureConfig) {
     const auto color = colorConfig ? parseColorDataFromConfig(*colorConfig)
                                    : math::ColorF{1.0F, 1.0F, 1.0F};
     return std::make_shared<const math::SolidColorTexture>(color);
+  }
+
+  if (type && type->asString() == "image") {
+    const auto pathConfig = textureConfig.get("path");
+    if (!pathConfig || pathConfig->asString().empty()) {
+      throw std::runtime_error("Image texture requires a non-empty 'path'");
+    }
+    const auto scaleConfig = textureConfig.get("scale");
+    const float scale = scaleConfig ? scaleConfig->asFloat(1.0F) : 1.0F;
+    math::ImageProjection projection = math::ImageProjection::UV;
+    if (const auto projectionConfig = textureConfig.get("projection")) {
+      if (projectionConfig->asString() != "sphere_preview") {
+        throw std::runtime_error("Unsupported image texture projection: " +
+                                 projectionConfig->asString());
+      }
+      projection = math::ImageProjection::SPHERE_PREVIEW;
+    }
+    std::filesystem::path imagePath = pathConfig->asString();
+    if (imagePath.is_relative()) {
+      imagePath = baseDirectory / imagePath;
+    }
+    return std::make_shared<const math::ImageTexture>(imagePath, scale,
+                                                      projection);
+  }
+
+  if (type && type->asString() == "metal") {
+    const auto baseConfig = textureConfig.get("base_color");
+    const auto scratchConfig = textureConfig.get("scratch_color");
+    const auto baseColor = baseConfig ? parseColorDataFromConfig(*baseConfig)
+                                      : math::ColorF{0.43F, 0.43F, 0.43F};
+    const auto scratchColor = scratchConfig
+                                  ? parseColorDataFromConfig(*scratchConfig)
+                                  : math::ColorF{0.68F, 0.68F, 0.68F};
+    const float scale = textureConfig.get("scale")
+                            ? textureConfig.get("scale")->asFloat(1.0F)
+                            : 1.0F;
+    const float mottling = textureConfig.get("mottling")
+                               ? textureConfig.get("mottling")->asFloat(0.75F)
+                               : 0.75F;
+    const float scratchDensity =
+        textureConfig.get("scratch_density")
+            ? textureConfig.get("scratch_density")->asFloat(0.55F)
+            : 0.55F;
+    const float pitStrength =
+        textureConfig.get("pit_strength")
+            ? textureConfig.get("pit_strength")->asFloat(0.2F)
+            : 0.2F;
+    const float roughnessVariation =
+        textureConfig.get("roughness_variation")
+            ? textureConfig.get("roughness_variation")->asFloat(0.2F)
+            : 0.2F;
+    const float bumpStrength =
+        textureConfig.get("bump_strength")
+            ? textureConfig.get("bump_strength")->asFloat(0.12F)
+            : 0.12F;
+    return std::make_shared<const math::MetalTexture>(
+        baseColor, scratchColor, scale, mottling, scratchDensity, pitStrength,
+        roughnessVariation, bumpStrength);
   }
 
   if (type && type->asString() == "wood") {
@@ -78,8 +141,23 @@ parseTextureFromConfig(const parsers::ConfigValue &textureConfig) {
         textureConfig.get("turbulence")
             ? textureConfig.get("turbulence")->asFloat(0.65F)
             : 0.65F;
-    return std::make_shared<const math::WoodTexture>(baseColor, ringColor,
-                                                     scale, turbulence);
+    const float plankWidth =
+        textureConfig.get("plank_width")
+            ? textureConfig.get("plank_width")->asFloat(35.0F)
+            : 35.0F;
+    const float plankLength =
+        textureConfig.get("plank_length")
+            ? textureConfig.get("plank_length")->asFloat(120.0F)
+            : 120.0F;
+    const float offsetX = textureConfig.get("offset_x")
+                              ? textureConfig.get("offset_x")->asFloat(0.0F)
+                              : 0.0F;
+    const float offsetZ = textureConfig.get("offset_z")
+                              ? textureConfig.get("offset_z")->asFloat(0.0F)
+                              : 0.0F;
+    return std::make_shared<const math::WoodTexture>(
+        baseColor, ringColor, scale, turbulence, plankWidth, plankLength,
+        offsetX, offsetZ);
   }
 
   return std::make_shared<const math::SolidColorTexture>(

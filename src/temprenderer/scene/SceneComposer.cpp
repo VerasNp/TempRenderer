@@ -49,9 +49,11 @@ Scene SceneComposer::compose(const core::config::SceneConfig &sceneConfig,
       sceneConfig.camera.focalLength, renderConfig.resolutionWidth,
       renderConfig.resolutionHeight, renderConfig.viewportWidth,
       renderConfig.viewportHeight));
-  for (auto [name, type, position, color, intensity] : sceneConfig.lights) {
-    scene.addLight(std::make_shared<renderer::Light>(name, type, position,
-                                                     color, intensity));
+  for (const auto &lightConfig : sceneConfig.lights) {
+    scene.addLight(std::make_shared<renderer::Light>(
+        lightConfig.name, lightConfig.type, lightConfig.position,
+        lightConfig.color, lightConfig.intensity, lightConfig.width,
+        lightConfig.height));
   }
   for (auto objectConfig : sceneConfig.objects) {
     scene.addObject(buildObject(objectConfig));

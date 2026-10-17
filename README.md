@@ -87,6 +87,37 @@ Toda a documentação do projeto está disponível via Doxygen.
 
 O projeto conta com uma executável, use o executável da última release.
 
+### Texturas de imagem
+
+Materiais podem usar imagens PPM nos formatos P3 ou P6. O caminho relativo da imagem é resolvido a partir da pasta do arquivo JSON do projeto. `scale` controla a repetição da imagem nos eixos UV.
+
+Imagens que mostram uma esfera renderizada sobre um fundo podem ser aplicadas com `"projection": "sphere_preview"`; isso projeta apenas a área circular da esfera, sem espalhar o fundo preto pela superfície. Para texturas de material comuns, omita `projection`.
+
+```json
+"texture": {
+	"type": "image",
+	"path": "assets/texture_demo.ppm",
+	"scale": 1.0,
+	"projection": "sphere_preview"
+}
+```
+
+Para ver a imagem de demonstração aplicada a uma esfera, um cilindro e um cone, execute a partir da raiz do projeto:
+
+```bash
+make run PROJECT=image_texture_demo.json
+```
+
+O arquivo [image_texture_demo.json](image_texture_demo.json) reutiliza `assets/texture_demo.ppm` nos três objetos. As coordenadas UV são projetadas para esferas, planos, laterais e tampas de cilindros e cones. O exemplo ativo padrão, `tarefa03.json`, usa uma textura procedural de aço galvanizado desgastado na esfera e mantém a textura de madeira no piso. A textura `metal` oferece controles `mottling`, `scratch_density`, `pit_strength`, `roughness_variation` e `bump_strength`; a rugosidade base é definida no material. Luzes retangulares usam `type: "area"` e aceitam `width` e `height` para highlights mais largos e sombras suaves.
+
+Para comparar uma textura de imagem, metal e madeira na mesma renderização, execute:
+
+```bash
+make run PROJECT=texture_material_demo.json
+```
+
+O arquivo [texture_material_demo.json](texture_material_demo.json) aplica a imagem PPM à esfera, o metal galvanizado ao cilindro e a madeira ao plano usado como piso.
+
 ## Testes
 
 ```bash

@@ -4,6 +4,7 @@
 #include "ObjectConfig.hpp"
 #include "WorldConfig.hpp"
 #include "core/parsers/ParserPort.hpp"
+#include <filesystem>
 #include <vector>
 
 namespace temprenderer::core::config {
@@ -23,6 +24,8 @@ struct SceneConfig {
    * @param config
    * @return
    */
-  static SceneConfig loadConfig(const parsers::ConfigValue &config);
+  static SceneConfig
+  loadConfig(const parsers::ConfigValue &config,
+             const std::filesystem::path &baseDirectory = {});
 };
 } // namespace temprenderer::core::config

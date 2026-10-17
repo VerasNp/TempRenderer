@@ -4,12 +4,13 @@
 #include "core/parsers/ParserPort.hpp"
 namespace temprenderer::core::config {
 [[nodiscard]] ObjectConfig
-ObjectConfig::loadConfig(const parsers::ConfigValue &config) noexcept {
+ObjectConfig::loadConfig(const parsers::ConfigValue &config,
+                         const std::filesystem::path &baseDirectory) {
   LC_LOG_VERBOSE(logging::LogLevel::INFO, "Loading objects config");
   ObjectConfig object;
   object.type = stringToObjectType(config.get("type")->asString());
   object.props = createDefaultObjectProps(object.type);
-  setObjectProps(object, config);
+  setObjectProps(object, config, baseDirectory);
   LC_LOG_VERBOSE(logging::LogLevel::INFO, "Objects config loaded successfully");
   return object;
 }
@@ -55,8 +56,9 @@ ObjectConfig::createDefaultObjectProps(const ObjectType type) noexcept {
  * @param object
  * @param propsConfig
  */
-void ObjectConfig::setObjectProps(
-    ObjectConfig &object, const parsers::ConfigValue &propsConfig) noexcept {
+void ObjectConfig::setObjectProps(ObjectConfig &object,
+                                  const parsers::ConfigValue &propsConfig,
+                                  const std::filesystem::path &baseDirectory) {
   if (object.type == ObjectType::UNKNOWN) {
     exit(1);
   }
@@ -110,10 +112,25 @@ void ObjectConfig::setObjectProps(
       object.material.ka = parseColorDataFromConfig(*ambientConfig);
     }
     if (const auto textureConfig = materialConfig->get("texture")) {
-      object.material.texture = parseTextureFromConfig(*textureConfig);
+      object.material.texture =
+          parseTextureFromConfig(*textureConfig, baseDirectory);
     }
     if (const auto alphaConfig = materialConfig->get("alpha")) {
       object.material.alpha = alphaConfig->asFloat();
+    }
+    if (const auto metallicConfig = materialConfig->get("metallic")) {
+      object.material.metallic =
+          std::clamp(metallicConfig->asFloat(), 0.0F, 1.0F);
+    } else if (const auto textureConfig = materialConfig->get("texture");
+               textureConfig) {
+      if (const auto textureType = textureConfig->get("type");
+          textureType && textureType->asString() == "metal") {
+        object.material.metallic = 1.0F;
+      }
+    }
+    if (const auto roughnessConfig = materialConfig->get("roughness")) {
+      object.material.roughness =
+          std::clamp(roughnessConfig->asFloat(0.35F), 0.04F, 1.0F);
     }
   }
 }

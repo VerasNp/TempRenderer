@@ -32,6 +32,8 @@ private:
   kwp::Scalar topRadius_;
   kwp::Scalar height_;
   kwp::Vec3 cylinderDirection_;
+  kwp::Vec3 tangent_;
+  kwp::Vec3 bitangent_;
   core::math::Material material_;
 };
 

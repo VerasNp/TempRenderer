@@ -1,5 +1,7 @@
 #include "core/config/ProjectConfig.hpp"
 
+#include <filesystem>
+
 namespace temprenderer::core::config {
 ProjectConfig
 ProjectConfig::loadFromFile(const std::string &projectConfigFilePath) {
@@ -17,7 +19,9 @@ ProjectConfig::loadFromFile(const std::string &projectConfigFilePath) {
   try {
     config.name = rootProject.get("name")->asString();
     if (const auto sceneConfig = rootProject.get("scene")) {
-      config.scene = SceneConfig::loadConfig(*sceneConfig);
+      const auto baseDirectory =
+          std::filesystem::absolute(projectConfigFilePath).parent_path();
+      config.scene = SceneConfig::loadConfig(*sceneConfig, baseDirectory);
     }
   } catch (const std::exception &err) {
     LC_LOG(logging::LogLevel::ERROR,

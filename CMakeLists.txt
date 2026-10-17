@@ -42,6 +42,7 @@ set(temprenderer_core_source_files
         "${temprenderer_core_source_dir}/temprenderer/core/config/SceneConfig.cpp"
         "${temprenderer_core_source_dir}/temprenderer/core/config/WindowConfig.cpp"
         "${temprenderer_core_source_dir}/temprenderer/core/config/WorldConfig.cpp"
+        "${temprenderer_core_source_dir}/temprenderer/core/math/ImageTexture.cpp"
         "${temprenderer_core_source_dir}/temprenderer/pd/editor/EditorManager.cpp"
         "${temprenderer_core_source_dir}/temprenderer/platform/graphics/WindowManager.cpp"
         "${temprenderer_core_source_dir}/temprenderer/renderer/Camera.cpp"
@@ -92,6 +93,10 @@ add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory
         ${CMAKE_SOURCE_DIR}/shaders
         $<TARGET_FILE_DIR:${PROJECT_NAME}>/shaders
+
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_SOURCE_DIR}/assets
+        $<TARGET_FILE_DIR:${PROJECT_NAME}>/assets
 )
 
 if (temprenderer_BUILD_TESTS)
