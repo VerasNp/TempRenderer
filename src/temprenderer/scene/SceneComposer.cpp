@@ -32,9 +32,10 @@ buildObject(const core::config::ObjectConfig &objectConfig) {
                                              objectConfig.material);
   }
   if (objectConfig.type == core::config::ObjectType::CYLINDER) {
-    const auto [baseCenter, baseRadius, height] =
+    const auto [baseCenter, baseRadius, height, direction, hasBottom, hasTop] =
         std::get<core::config::CylinderConfig>(objectConfig.props);
     return std::make_shared<renderer::Cylinder>(baseCenter, baseRadius, height,
+                                                direction, hasBottom, hasTop,
                                                 objectConfig.material);
   }
   if (objectConfig.type == core::config::ObjectType::TRIANGLE) {

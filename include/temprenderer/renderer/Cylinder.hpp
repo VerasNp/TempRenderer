@@ -9,7 +9,7 @@ namespace temprenderer::renderer {
 class Cylinder : public scene::Hittable {
 public:
   Cylinder(const kwp::Point3 &baseCenter, kwp::Scalar baseRadius,
-           const kwp::Point3 &topCenter,
+           kwp::Scalar height, kwp::Vec3 direction, bool hasTop, bool hasBottom,
            const core::math::Material &material) noexcept;
 
   /**
@@ -32,6 +32,8 @@ private:
   kwp::Scalar topRadius_;
   kwp::Scalar height_;
   kwp::Vec3 cylinderDirection_;
+  bool hasTop_;
+  bool hasBottom_;
   core::math::Material material_;
 };
 

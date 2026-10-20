@@ -22,14 +22,14 @@ inline bool quadratic(const kwp::Scalar a, const kwp::Scalar b,
     return false;
   }
   const double rootDiscriminant = std::sqrt(discriminant);
-  double q;
-  if (b < 0) {
-    q = -.5 * (b - rootDiscriminant);
-  } else {
-    q = -.5 * (b + rootDiscriminant);
+  const double q =
+      (b < 0) ? -0.5F * (b - rootDiscriminant) : -0.5F * (b + rootDiscriminant);
+  if (q == 0) {
+    *t0 = *t1 = 0;
+    return true;
   }
-  *t0 = q / a;
-  *t1 = c / q;
+  *t0 = static_cast<kwp::Scalar>(q / a);
+  *t1 = static_cast<kwp::Scalar>(c / q);
   if (*t0 > *t1) {
     std::swap(*t0, *t1);
   }

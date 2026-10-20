@@ -106,9 +106,13 @@ void ObjectConfig::setObjectProps(
     if (const auto radiusOpt = propsConfig.get("base_radius")) {
       cylinder.baseRadius = radiusOpt->asFloat(cylinder.baseRadius);
     }
-    if (const auto position = propsConfig.get("top_center")) {
-      cylinder.topCenter = parsePoint3DDataFromConfig(*position);
+    if (const auto directionConfig = propsConfig.get("direction")) {
+      cylinder.direction = parseVector3DDataFromConfig(*directionConfig);
     }
+    cylinder.height = propsConfig.get("height")->asFloat(cylinder.height);
+    cylinder.hasTop = propsConfig.get("has_top")->asBool(cylinder.hasTop);
+    cylinder.hasBottom =
+        propsConfig.get("has_bottom")->asBool(cylinder.hasBottom);
   } else if (object.type == ObjectType::TRIANGLE) {
     auto &triangle = std::get<TriangleConfig>(object.props);
     if (const auto position = propsConfig.get("p1")) {

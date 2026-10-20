@@ -19,7 +19,10 @@ struct CameraConfig {
    * Distance from viewport
    */
   float focalLength = 1.0F;
-
+  /**
+   * @brief TODO
+   */
+  kwp::Point3 lookAt{0, 0, 0};
   /**
    * @brief Loads camera config into struct
    *

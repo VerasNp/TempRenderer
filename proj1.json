@@ -16,20 +16,25 @@
 		"camera": {
 			"name": "camera",
 			"eye": {
-				"x": 0.0,
-				"y": 1.0,
-				"z": 100.0
+				"x": 60.0,
+				"y": 120.0,
+				"z": 540.0
 			},
-			"focal_length": 1.0
+			"focal_length": 1.0,
+			"look_at": {
+				"x": 99.0,
+				"y": 14.75,
+				"z": 201.0
+			}
 		},
 		"lights": [
 			{
 				"name": "point light",
 				"type": "point",
 				"position": {
-					"x": 50.0,
-					"y": 50.0,
-					"z": 50.0
+					"x": 300.0,
+					"y": 300.0,
+					"z": 1000.0
 				},
 				"intensity": 2500.0,
 				"color": {
@@ -41,40 +46,81 @@
 			{
 				"name": "ambient light",
 				"type": "ambient",
-				"position": {
-					"x": 0.0,
-					"y": 5.0,
-					"z": 0.0
-				},
 				"intensity": 20.0,
 				"color": {
-					"r": 255,
-					"g": 255,
-					"b": 255
+					"r": 128,
+					"g": 128,
+					"b": 128
 				}
 			}
 		],
 		"objects": [
 			{
-				"type": "mesh",
-				"objFilePath": "mashes/Mario64.obj",
+				"name": "0",
+				"type": "plane",
+				"point": {
+					"x": 0.0,
+					"y": 0.0,
+					"z": 0.0
+				},
+				"normal": {
+					"x": 0.0,
+					"y": 1.0,
+					"z": 0.0
+				},
 				"material": {
 					"ka": {
-						"r": 49,
-						"g": 49,
-						"b": 49
+						"r": 128,
+						"g": 64,
+						"b": 128
 					},
 					"kd": {
-						"r": 129,
-						"g": 129,
-						"b": 129
+						"r": 128,
+						"g": 64,
+						"b": 128
 					},
 					"ks": {
-						"r": 130,
-						"g": 130,
-						"b": 130
+						"r": 128,
+						"g": 64,
+						"b": 128
 					},
-					"alpha": 0.4
+					"alpha": 3.0
+				}
+			},
+			{
+				"name": "1",
+				"type": "cylinder",
+				"has_top": false,
+				"has_bottom": false,
+				"base_center": {
+					"x": 99.0,
+					"y": 0.0,
+					"z": 201.0
+				},
+				"base_radius": 11.0,
+				"height": 25.0,
+				"direction": {
+					"x": 1.0,
+					"y": 0.0,
+					"z": 3.0
+				},
+				"material": {
+					"ka": {
+						"r": 128,
+						"g": 64,
+						"b": 128
+					},
+					"kd": {
+						"r": 128,
+						"g": 64,
+						"b": 128
+					},
+					"ks": {
+						"r": 128,
+						"g": 64,
+						"b": 128
+					},
+					"alpha": 3.0
 				}
 			}
 		]

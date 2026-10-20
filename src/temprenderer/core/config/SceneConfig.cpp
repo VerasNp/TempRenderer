@@ -1,4 +1,6 @@
 #include "core/config/SceneConfig.hpp"
+
+#include "core/config/UnitsConfig.hpp"
 #include "core/logging/LoggerManager.hpp"
 
 namespace temprenderer::core::config {
@@ -6,6 +8,9 @@ namespace temprenderer::core::config {
 SceneConfig SceneConfig::loadConfig(const parsers::ConfigValue &config) {
   LC_LOG_VERBOSE(logging::LogLevel::INFO, "Loading scene config");
   SceneConfig scene;
+  if (const auto *unitsConfig = config.get("units")) {
+    scene.units = UnitsConfig::loadConfig(*unitsConfig);
+  }
   if (const auto *worldConfig = config.get("world")) {
     scene.world = WorldConfig::loadConfig(*worldConfig);
   }

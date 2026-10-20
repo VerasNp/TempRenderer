@@ -11,6 +11,9 @@ CameraConfig::loadConfig(const parsers::ConfigValue &cameraConfig) noexcept {
   if (const auto eyeConfig = cameraConfig.get("eye")) {
     config.eye = parsePoint3DDataFromConfig(*eyeConfig);
   }
+  if (const auto lookAtConfig = cameraConfig.get("look_at")) {
+    config.lookAt = parsePoint3DDataFromConfig(*lookAtConfig);
+  }
   config.focalLength =
       cameraConfig.get("focal_length")->asFloat(config.focalLength);
   LC_LOG_VERBOSE(logging::LogLevel::INFO, "Camera config loaded successfully");

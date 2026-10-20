@@ -51,7 +51,10 @@ struct PlaneConfig {
 struct CylinderConfig {
   kwp::Point3 baseCenter{0, 0, 0};
   float baseRadius = 1.0F;
-  kwp::Point3 topCenter{0, 0, 0};
+  float height = 0.0F;
+  kwp::Vec3 direction{0, 0, 0};
+  bool hasTop = false;
+  bool hasBottom = false;
 };
 
 /**

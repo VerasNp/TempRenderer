@@ -40,6 +40,7 @@ set(temprenderer_core_source_files
         "${temprenderer_core_source_dir}/temprenderer/core/config/ProjectConfig.cpp"
         "${temprenderer_core_source_dir}/temprenderer/core/config/RenderConfig.cpp"
         "${temprenderer_core_source_dir}/temprenderer/core/config/SceneConfig.cpp"
+        "${temprenderer_core_source_dir}/temprenderer/core/config/UnitsConfig.cpp"
         "${temprenderer_core_source_dir}/temprenderer/core/config/WindowConfig.cpp"
         "${temprenderer_core_source_dir}/temprenderer/core/config/WorldConfig.cpp"
         "${temprenderer_core_source_dir}/temprenderer/pd/editor/EditorManager.cpp"
