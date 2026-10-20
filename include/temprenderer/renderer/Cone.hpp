@@ -9,7 +9,8 @@ namespace temprenderer::renderer {
 class Cone : public scene::Hittable {
 public:
   Cone(const kwp::Point3 &baseCenter, kwp::Scalar baseRadius,
-       const kwp::Point3 &vertex, core::math::Material material) noexcept;
+       kwp::Scalar height, const kwp::Vec3 &direction, bool hasBottom,
+       const core::math::Material &material) noexcept;
 
   /**
    * @brief Tests whether a ray intersects this cone
@@ -30,6 +31,7 @@ private:
   kwp::Scalar height_;
   kwp::Point3 vertex_;
   kwp::Vec3 coneDirection_;
+  bool hasBottom_;
   core::math::Material material_;
 };
 

@@ -20,9 +20,10 @@ buildObject(const core::config::ObjectConfig &objectConfig) {
     return std::make_shared<Sphere>(position, radius, objectConfig.material);
   }
   if (objectConfig.type == core::config::ObjectType::CONE) {
-    const auto [baseCenter, baseRadius, vertex] =
+    const auto [baseCenter, baseRadius, height, direction, hasBottom] =
         std::get<core::config::ConeConfig>(objectConfig.props);
-    return std::make_shared<renderer::Cone>(baseCenter, baseRadius, vertex,
+    return std::make_shared<renderer::Cone>(baseCenter, baseRadius, height,
+                                            direction, hasBottom,
                                             objectConfig.material);
   }
   if (objectConfig.type == core::config::ObjectType::PLANE) {

@@ -88,22 +88,21 @@
 				}
 			},
 			{
-				"name": "1",
-				"type": "cylinder",
-				"has_top": false,
-				"has_bottom": true,
+				"name": "3",
+				"type": "cone",
 				"base_center": {
 					"x": 0.0,
 					"y": 0.0,
-					"z": -101.0
+					"z": -100.0
 				},
-				"base_radius": 11.0,
-				"height": 25.0,
+				"base_radius": 31.0,
+				"height": 60.0,
 				"direction": {
-					"x": 1.0,
-					"y": 0.0,
-					"z": 3.0
+					"x": 2.0,
+					"y": -3.0,
+					"z": -1.0
 				},
+				"has_bottom": false,
 				"material": {
 					"ka": {
 						"r": 128,

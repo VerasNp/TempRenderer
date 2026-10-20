@@ -34,7 +34,9 @@ struct SphereConfig {
 struct ConeConfig {
   kwp::Point3 baseCenter{0, 0, 0};
   float baseRadius = 0.0F;
-  kwp::Point3 vertex{0, 0, 0};
+  float height = 0.0F;
+  kwp::Vec3 direction{0, 0, 0};
+  bool hasBottom = false;
 };
 
 /**

@@ -81,15 +81,15 @@ void ObjectConfig::setObjectProps(
     }
   } else if (object.type == ObjectType::CONE) {
     auto &cone = std::get<ConeConfig>(object.props);
-    if (const auto position = propsConfig.get("base_center")) {
-      cone.baseCenter = parsePoint3DDataFromConfig(*position);
+    if (const auto baseCenterConfig = propsConfig.get("base_center")) {
+      cone.baseCenter = parsePoint3DDataFromConfig(*baseCenterConfig);
     }
-    if (const auto position = propsConfig.get("vertex")) {
-      cone.vertex = parsePoint3DDataFromConfig(*position);
+    if (const auto directionConfig = propsConfig.get("direction")) {
+      cone.direction = parseVector3DDataFromConfig(*directionConfig);
     }
-    if (const auto radiusOpt = propsConfig.get("base_radius")) {
-      cone.baseRadius = radiusOpt->asFloat(cone.baseRadius);
-    }
+    cone.baseRadius = propsConfig.get("base_radius")->asFloat(cone.baseRadius);
+    cone.height = propsConfig.get("height")->asFloat(cone.height);
+    cone.hasBottom = propsConfig.get("has_bottom")->asBool(cone.hasBottom);
   } else if (object.type == ObjectType::PLANE) {
     auto &plane = std::get<PlaneConfig>(object.props);
     if (const auto position = propsConfig.get("point")) {
