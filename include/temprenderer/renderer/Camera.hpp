@@ -1,6 +1,6 @@
 #pragma once
-#include "core/config/ApplicationConfig.hpp"
 #include "core/config/CameraConfig.hpp"
+#include "kwp/Matrix33.hpp"
 #include "kwp/Point3.hpp"
 #include "temprenderer/core/math/Ray.hpp"
 
@@ -10,7 +10,8 @@ namespace temprenderer::renderer {
  */
 class Camera {
 public:
-  Camera(std::string name, const kwp::Point3 &eye, float focalLength,
+  Camera(const std::string &name, const kwp::Point3 &eye,
+         const kwp::Point3 &lookAt, float focalLength,
          std::uint16_t resolutionWidth, std::uint16_t resolutionHeight,
          float viewportWidth, float viewportHeight);
   /**
@@ -41,11 +42,13 @@ public:
 private:
   std::string name_;
   kwp::Point3 eye_;
+  kwp::Point3 lookAt_;
   float viewPortPixelDx_;
   float viewPortPixelDy_;
   kwp::Point3 viewPortUpperLeft_;
   float focalLength_;
   float resolutionWidth_;
   float resolutionHeight_;
+  kwp::Matrix33 cameraToWorld_;
 };
 } // namespace temprenderer::renderer

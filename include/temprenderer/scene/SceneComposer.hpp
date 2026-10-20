@@ -1,5 +1,6 @@
 #pragma once
 #include "Scene.hpp"
+#include "core/config/RenderConfig.hpp"
 
 namespace temprenderer::scene {
 struct SceneComposer {

@@ -185,6 +185,29 @@
 					},
 					"alpha": 3.0
 				}
+			},
+			{
+				"name": "4",
+				"type": "mesh",
+				"objFilePath": "mashes/piramide.obj",
+				"material": {
+					"ka": {
+						"r": 128,
+						"g": 64,
+						"b": 128
+					},
+					"kd": {
+						"r": 128,
+						"g": 64,
+						"b": 128
+					},
+					"ks": {
+						"r": 128,
+						"g": 64,
+						"b": 128
+					},
+					"alpha": 3.0
+				}
 			}
 		]
 	}

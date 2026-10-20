@@ -67,9 +67,9 @@ Scene SceneComposer::compose(const core::config::SceneConfig &sceneConfig,
   scene.setBackgroundColor(sceneConfig.world.background.color);
   scene.addCamera(std::make_shared<renderer::Camera>(
       sceneConfig.camera.name, sceneConfig.camera.eye,
-      sceneConfig.camera.focalLength, renderConfig.resolutionWidth,
-      renderConfig.resolutionHeight, renderConfig.viewportWidth,
-      renderConfig.viewportHeight));
+      sceneConfig.camera.lookAt, sceneConfig.camera.focalLength,
+      renderConfig.resolutionWidth, renderConfig.resolutionHeight,
+      renderConfig.viewportWidth, renderConfig.viewportHeight));
   for (auto [name, type, position, color, intensity] : sceneConfig.lights) {
     scene.addLight(std::make_shared<renderer::Light>(name, type, position,
                                                      color, intensity));

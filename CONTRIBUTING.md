@@ -195,8 +195,15 @@ A aplicação trabalha com um arquivo di tipo JSON para definição de configura
 		]
 	}
 }
-
 ```
+
+Para maiores detalhes sobre os objetos possíveis:
+
+- [Esfera](./docs/TempRenderer/SphereObject.md)
+- [Cone](./docs/TempRenderer/ConeObject.md)
+- [Cilindro](./docs/TempRenderer/CylinderObject.md)
+- [Malha](./docs/TempRenderer/MeshObject.md)
+- [Plano](./docs/TempRenderer/PlaneObject.md)
 
 ## Setup Rápido (Exemplo para Debian/Ubuntu)
 
