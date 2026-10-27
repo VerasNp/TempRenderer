@@ -20,6 +20,9 @@ public:
    * @param scene The scene to render against.
    * @return A Canvas with every pixel resolved
    */
+
+   // definir aqui a quantidade de samples
+   // setar no canvas a cor acumulada
   [[nodiscard]] Canvas render(const scene::Scene &scene) final {
     Canvas canvas(width_, height_);
     for (unsigned int row = 0; row < height_; ++row) {

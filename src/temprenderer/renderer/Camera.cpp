@@ -16,6 +16,7 @@ Camera::Camera(std::string name, const kwp::Point3 &eye, float focalLength,
                              kwp::Vec3(0, viewportHeight / 2, 0);
 }
 
+// add offset to the pixel center
 core::math::Ray Camera::generateRay(unsigned int col,
                                     unsigned int row) const noexcept {
   const kwp::Scalar pixelXCenter = this->viewPortUpperLeft_.x +
