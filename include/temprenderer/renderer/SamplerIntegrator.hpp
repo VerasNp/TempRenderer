@@ -23,12 +23,19 @@ public:
 
    // definir aqui a quantidade de samples
    // setar no canvas a cor acumulada
+   // Widht e Height é como se fosse i e j do pixel
   [[nodiscard]] Canvas render(const scene::Scene &scene) final {
     Canvas canvas(width_, height_);
+    constexpr unsigned int samples = 4;
+    core::math::Color pixel_color;
     for (unsigned int row = 0; row < height_; ++row) {
       for (unsigned int col = 0; col < width_; ++col) {
-        const core::math::Ray ray = camera_.generateRay(col, row);
-        canvas.set(col, row, li(ray, scene));
+        pixel_color = core::math::Color(0.0f);
+        for (unsigned int s = 0; s < samples; ++s) {  
+          const core::math::Ray ray = camera_.generateRay(col, row);
+          pixel_color += li(ray, scene);
+        }
+        canvas.set(col, row, pixel_color / static_cast<float>(samples));
       }
     }
     return canvas;
