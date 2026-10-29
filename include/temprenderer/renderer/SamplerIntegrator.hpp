@@ -33,9 +33,10 @@ public:
         pixel_color = core::math::Color(0.0f);
         for (unsigned int s = 0; s < samples; ++s) {  
           const core::math::Ray ray = camera_.generateRay(col, row);
-          pixel_color += li(ray, scene);
+          pixel_color = pixel_color.fromFloat(pixel_color.toFloat() + li(ray, scene).toFloat());
         }
-        canvas.set(col, row, pixel_color / static_cast<float>(samples));
+        pixel_color = pixel_color.fromFloat(pixel_color.toFloat() * (1.0f / samples));
+        canvas.set(col, row, pixel_color);
       }
     }
     return canvas;
