@@ -8,8 +8,8 @@ namespace temprenderer::core::math {
  * @param a Quadratic coefficient. Must be non-zero.
  * @param b Linear coefficient.
  * @param c Constant coefficient.
- * @param t0 Pointer to the first root.
- * @param t1 Pointer to the second root.
+ * @param t0 Pointer to the first root, and the smallest root.
+ * @param t1 Pointer to the second root, and the greatest root.
  * @return `true` if the equation has real roots, `false` if the discriminant is negative.
  */
 inline bool quadratic(const kwp::Scalar a, const kwp::Scalar b,
