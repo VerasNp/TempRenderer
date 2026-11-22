@@ -20,8 +20,8 @@ public:
    * @param row Vertical pixel coordinate.
    * @return The ray corresponding to the specified pixel
    */
-  core::math::Ray generateRay(unsigned int col,
-                              unsigned int row) const noexcept;
+  core::math::Ray generateRay(double col,
+                              double row) const noexcept;
 
   /**
    * @brief Set new value to camera eye

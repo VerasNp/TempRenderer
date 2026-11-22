@@ -3,6 +3,7 @@
 #include "temprenderer/renderer/Camera.hpp"
 #include "temprenderer/renderer/Integrator.hpp"
 #include "temprenderer/scene/Scene.hpp"
+#include "temprenderer/renderer/SamplerRandom.hpp"
 
 namespace temprenderer::renderer {
 /**
@@ -20,10 +21,6 @@ public:
    * @param scene The scene to render against.
    * @return A Canvas with every pixel resolved
    */
-
-   // definir aqui a quantidade de samples
-   // setar no canvas a cor acumulada
-   // Widht e Height é como se fosse i e j do pixel
   [[nodiscard]] Canvas render(const scene::Scene &scene) final {
     Canvas canvas(width_, height_);
     constexpr unsigned int samples = 4;
@@ -32,7 +29,7 @@ public:
       for (unsigned int col = 0; col < width_; ++col) {
         pixel_color = core::math::Color(0.0f);
         for (unsigned int s = 0; s < samples; ++s) {  
-          const core::math::Ray ray = camera_.generateRay(col, row);
+          const core::math::Ray ray = camera_.generateRay(col + random_double(), row + random_double()); 
           pixel_color = pixel_color.fromFloat(pixel_color.toFloat() + li(ray, scene).toFloat());
         }
         pixel_color = pixel_color.fromFloat(pixel_color.toFloat() * (1.0f / samples));
