@@ -30,6 +30,8 @@ private:
   kwp::Scalar height_;
   kwp::Point3 vertex_;
   kwp::Vec3 coneDirection_;
+  kwp::Vec3 tangent_;
+  kwp::Vec3 bitangent_;
   core::math::Material material_;
 };
 

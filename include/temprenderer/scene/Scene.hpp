@@ -38,6 +38,11 @@ public:
     this->light_.push_back(light);
   }
 
+  [[nodiscard]] const std::vector<std::shared_ptr<renderer::Light>> &
+  getLights() const noexcept {
+    return light_;
+  }
+
   void addCamera(const std::shared_ptr<renderer::Camera> &camera) {
     this->camera_ = camera;
   };

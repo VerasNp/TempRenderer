@@ -70,6 +70,30 @@ public:
       }
       return static_cast<T>(v);
     }
+    if (auto *p = std::get_if<std::uint8_t>(&value_)) {
+      return static_cast<T>(*p);
+    }
+    if (auto *p = std::get_if<std::uint16_t>(&value_)) {
+      return static_cast<T>(*p);
+    }
+    if (auto *p = std::get_if<std::uint32_t>(&value_)) {
+      return static_cast<T>(*p);
+    }
+    if (auto *p = std::get_if<std::uint64_t>(&value_)) {
+      return static_cast<T>(*p);
+    }
+    if (auto *p = std::get_if<std::int8_t>(&value_)) {
+      return static_cast<T>(*p);
+    }
+    if (auto *p = std::get_if<std::int16_t>(&value_)) {
+      return static_cast<T>(*p);
+    }
+    if (auto *p = std::get_if<std::int32_t>(&value_)) {
+      return static_cast<T>(*p);
+    }
+    if (auto *p = std::get_if<std::int64_t>(&value_)) {
+      return static_cast<T>(*p);
+    }
     return defaultValue;
   }
 

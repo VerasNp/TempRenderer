@@ -5,6 +5,9 @@ Plane::Plane(const kwp::Point3 &point, const kwp::Vec3 &normal,
              core::math::Material material) noexcept {
   this->point_ = point;
   this->normal_ = normal;
+  const auto frame = core::math::makeTextureFrame(this->normal_);
+  this->tangent_ = frame.first;
+  this->bitangent_ = frame.second;
   this->material_ = material;
 }
 bool Plane::intersect(const core::math::Ray &ray,
@@ -21,6 +24,13 @@ bool Plane::intersect(const core::math::Ray &ray,
   }
   isec->point = ray(tIntersection);
   isec->normal = (w < 0) ? this->normal_ : -this->normal_;
+  const kwp::Vec3 localPosition = isec->point - this->point_;
+  isec->textureContext.worldPosition = isec->point;
+  isec->textureContext.localPosition =
+      kwp::Point3{localPosition.x, localPosition.y, localPosition.z};
+  isec->textureContext.normal = isec->normal;
+  isec->textureContext.uv = {kwp::dot(localPosition, this->tangent_),
+                             kwp::dot(localPosition, this->bitangent_)};
   isec->material = material_;
   return true;
 }

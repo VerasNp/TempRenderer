@@ -1,4 +1,5 @@
 #include "temprenderer/renderer/Canvas.hpp"
+
 namespace temprenderer::renderer {
 Canvas::Canvas(unsigned int renderingWidth,
                unsigned int renderingHeight) noexcept

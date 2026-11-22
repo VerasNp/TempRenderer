@@ -25,6 +25,8 @@ public:
 private:
   kwp::Point3 point_;
   kwp::Vec3 normal_;
+  kwp::Vec3 tangent_;
+  kwp::Vec3 bitangent_;
   core::math::Material material_;
 };
 

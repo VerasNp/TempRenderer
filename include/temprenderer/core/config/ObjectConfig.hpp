@@ -3,6 +3,7 @@
 #include "core/math/Materials.hpp"
 #include "core/parsers/ParserPort.hpp"
 #include "kwp/Point3.hpp"
+#include <filesystem>
 #include <string>
 #include <variant>
 
@@ -61,7 +62,8 @@ struct ObjectConfig {
   math::Material material;
 
   [[nodiscard]] static ObjectConfig
-  loadConfig(const parsers::ConfigValue &config) noexcept;
+  loadConfig(const parsers::ConfigValue &config,
+             const std::filesystem::path &baseDirectory = {});
 
   [[nodiscard]] static ObjectType
   stringToObjectType(const std::string &objectType) noexcept;
@@ -70,6 +72,7 @@ struct ObjectConfig {
   createDefaultObjectProps(ObjectType type) noexcept;
 
   static void setObjectProps(ObjectConfig &object,
-                             const parsers::ConfigValue &propsConfig) noexcept;
+                             const parsers::ConfigValue &propsConfig,
+                             const std::filesystem::path &baseDirectory = {});
 };
 } // namespace temprenderer::core::config

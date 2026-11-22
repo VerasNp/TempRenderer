@@ -7,6 +7,7 @@ namespace temprenderer::scene {
 struct SurfaceInteraction {
   kwp::Point3 point;
   kwp::Vec3 normal;
+  core::math::TextureContext textureContext;
   core::math::Material material;
 };
 

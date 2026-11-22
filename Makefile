@@ -1,6 +1,7 @@
 PRESET_DEBUG       := debug
 BUILD_DIR_DEBUG    := build/$(PRESET_DEBUG)
 TARGET             := build/$(PRESET_DEBUG)/temprenderer
+PROJECT            ?= tarefa03.json
 
 RUN_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
 $(eval $(RUN_ARGS):;@:)
@@ -67,7 +68,7 @@ compdb: configure
 # Executa aplicação
 # -----------------------------------------------------------------------------
 run: build
-	 ./$(TARGET) $(RUN_ARGS)
+	 ./$(TARGET) --project "$(PROJECT)" $(RUN_ARGS)
 
 # -----------------------------------------------------------------------------
 # Documentação

@@ -1,9 +1,16 @@
 #include "core/config/ProjectConfig.hpp"
 
+#include <filesystem>
+
 namespace temprenderer::core::config {
 ProjectConfig
 ProjectConfig::loadFromFile(const std::string &projectConfigFilePath) {
   LC_LOG_VERBOSE(logging::LogLevel::INFO, "Loading project config");
+  if (projectConfigFilePath.empty()) {
+    LC_LOG(logging::LogLevel::WARNING,
+           "Project config file path is empty; using default project config");
+    return ProjectConfig{};
+  }
   const std::unique_ptr<parsers::ParserPort> jsonParser =
       std::make_unique<parsers::NlohmannJSONParserAdapter>();
   const parsers::ConfigValue rootProject =
@@ -12,7 +19,9 @@ ProjectConfig::loadFromFile(const std::string &projectConfigFilePath) {
   try {
     config.name = rootProject.get("name")->asString();
     if (const auto sceneConfig = rootProject.get("scene")) {
-      config.scene = SceneConfig::loadConfig(*sceneConfig);
+      const auto baseDirectory =
+          std::filesystem::absolute(projectConfigFilePath).parent_path();
+      config.scene = SceneConfig::loadConfig(*sceneConfig, baseDirectory);
     }
   } catch (const std::exception &err) {
     LC_LOG(logging::LogLevel::ERROR,
